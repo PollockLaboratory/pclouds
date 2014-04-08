@@ -18,21 +18,24 @@ RM = del 2>nul
 # 2>nul suppresses error if file does not exist
 
 # C PreProcessor flags
-CPPFLAGS = -MMD -fprofile-arcs -ftest-coverage
+CPPFLAGS = -MMD #-fprofile-arcs -ftest-coverage
 # Special variable for implicit rule generation
 # -MMD generates (-M) the dependency files (*.d) without 
 # the system header files (-MM) and does not stop compilation at the 
 # preprocessor state (-MMD).
+# -fprofile-arcs -ftest-coverage for coverage checking
 
 # C++ compiler flags
-CXXFLAGS = -g -pg -fprofile-arcs -ftest-coverage
+CXXFLAGS = -g #-pg -fprofile-arcs -ftest-coverage
 # Special variable for implicit rule generation
 # -g for debugging symbols
+# -pg -fprofile-arcs -ftest-coverage for coverage checking
 
 # GCC linker flags
-LDFLAGS = -g -pg -fprofile-arcs -ftest-coverage
+LDFLAGS = -g #-pg -fprofile-arcs -ftest-coverage
 # Special variable for implicit rule generation
 # -g for debugging symbols
+# -pg -fprofile-arcs -ftest-coverage for coverage checking
 
 
 

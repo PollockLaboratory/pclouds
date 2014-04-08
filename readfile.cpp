@@ -157,8 +157,6 @@ bool ReadPcloudsControlfile(const char* pchControlfile, int& oligo_size,
 				keep_SSRs = stringtonumber(m_strResult);
 			else if (m_strTemp == "PrintCloudsInRegions")
 				print_clouds_in_regions = stringtonumber(m_strResult);
-			else if (m_strTemp == "PrintLegacyRegions")
-				print_legacy_regions = stringtonumber(m_strResult);
 			else if (m_strTemp == "ExpandRecursively")
 				expand_recursively = stringtonumber(m_strResult);
 		}

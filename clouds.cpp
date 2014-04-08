@@ -25,13 +25,12 @@ using std::cerr;
 using std::endl;
 using std::sort;
 
-
+// Added by STP
+#include <deque> // For clouds in regions
 bool keep_SSRs = false;
 bool print_clouds_in_regions = false;
-bool print_legacy_regions = false;
 bool expand_recursively = false;
 
-#include <deque> // For clouds in regions
 
 static int sbsearch2(int n, const cloud_type2 *argv, const unsigned long& key) {
 	int m;
@@ -414,61 +413,6 @@ static void getthreesubstitutions(char* core_kmer,
 	free(testmer);
 }
 
-// specific to use 16mers, use some different kind of coding method for each 16mer
-static void buildbitmatrix(bit_matrix& PatternMatrix, int* matrixsize,
-		const int& patternsize) {
-	cout << "Building bit matrix" << endl;
-	exit(0);
-	unsigned long index;
-
-	char* pchPattern = (char*) malloc(sizeof(char) * (patternsize / 2 + 1));
-
-	char* pchReverse = (char*) malloc(sizeof(char) * (patternsize / 2 + 1));
-
-	// each line correspond to each pattern with index of the last 8 chars.
-	for (int i = 0; i < pow(4, patternsize / 2); i++) {
-		// index equal to i, get the last 8 characters of the pattern from index
-		index = i;
-
-		number_pattern_to_kmer_sequence(pchPattern, index, patternsize / 2);
-
-		// get the reverse complement of the last 8 characters, then get the index of the reverse complement LR
-		//the size of the vector[i] is LR+1;
-
-		getreversecomplement(pchPattern, pchReverse);
-
-		patterntoindex(pchReverse, index, patternsize / 2);
-
-		PatternMatrix[i].reserve(index + 1);
-
-		matrixsize[i] = index + 1;
-	}
-
-	free(pchPattern);
-	free(pchReverse);
-
-}
-
-// specific to use 16mers, use some different kind of coding method for each 16mer
-static void getpatternmatrixindex(char* pchPattern, unsigned long& i,
-		unsigned long& j) {
-	int size = strlen(pchPattern);
-
-	char* pchTemp = (char*) malloc(sizeof(char) * (size / 2 + 1));
-
-	// get the index of last 8 chars;
-	strright(size / 2, pchPattern, pchTemp);
-
-	patterntoindex(pchTemp, i, size / 2);
-
-	// get the index of the first 8 chars;
-	strleft(size / 2, pchPattern, pchTemp);
-
-	patterntoindex(pchTemp, j, size / 2);
-
-	free(pchTemp);
-}
-
 static bool isrepeatregion(vector<int>& occurrence, const int& percent) {
 	vector<int>::iterator pOccurrence;
 
@@ -677,7 +621,7 @@ static void buildmainpcloud(cloud_type3* core_kmers, char* pchOutput,
 				core_kmer_number_patterns[core_kmer_index_from_top], kmer_size);
 
 		//cout << "Expanding around seed "
-			//	<< core_kmer_sequences[cloud_number_id - 1] << endl;
+		//	<< core_kmer_sequences[cloud_number_id - 1] << endl;
 
 		strcpy(seed_sequence, core_kmer_sequences[cloud_number_id - 1]);
 
@@ -789,13 +733,13 @@ static void buildmainpcloud(cloud_type3* core_kmers, char* pchOutput,
 						}
 					}
 					//cout << "Done expanding around core " << core_sequence
-						//	<< endl;
+					//	<< endl;
 				}
 			}
 		}
 
 		//cout << "Done expanding around seed "
-			//	<< core_kmer_sequences[cloud_number_id - 1] << endl;
+		//	<< core_kmer_sequences[cloud_number_id - 1] << endl;
 
 		// move to next core repeats
 		// Keep counting up until you find a main oligo that has not been
@@ -806,22 +750,22 @@ static void buildmainpcloud(cloud_type3* core_kmers, char* pchOutput,
 		// core kmers that are 2 steps from a seedmer.
 		// Keep counting if
 		while (
-				// We haven't seen the last core. Stop if we have.
-				(core_kmer_index_from_top < number_of_core_kmers)
-				and
-				(
-				// EITHER
-				// We are not expanding recursively and the core we are
-				// looking at has been assigned already. Stop if it has not.
-				(not expand_recursively and core_kmers[core_kmer_index].cloud != 0)
+		// We haven't seen the last core. Stop if we have.
+		(core_kmer_index_from_top < number_of_core_kmers) and (
+		// EITHER
+		// We are not expanding recursively and the core we are
+		// looking at has been assigned already. Stop if it has not.
+				(not expand_recursively
+						and core_kmers[core_kmer_index].cloud != 0)
 				// OR
-				or
-				// We are expanding recursively and the core we are looking at
-				// has been assigned AND extended. Stop if it has not.
-				(expand_recursively and core_kmers[core_kmer_index].cloud != 0
-						and core_kmers[core_kmer_index].has_been_extended != 0))
-				) {
-			 core_kmer_index_from_top++;
+						or
+						// We are expanding recursively and the core we are looking at
+						// has been assigned AND extended. Stop if it has not.
+						(expand_recursively
+								and core_kmers[core_kmer_index].cloud != 0
+								and core_kmers[core_kmer_index].has_been_extended
+										!= 0))) {
+			core_kmer_index_from_top++;
 
 			// This is doing extra work. It should be outside this while loop.
 			if (core_kmer_index_from_top <= number_of_core_kmers - 1)
@@ -1168,241 +1112,6 @@ static int buildaccessarypcloud(char *pchrepeatfile, char* pchOutput,
 	return (1);
 }
 
-//for 16mers, build the bool patternmatrix to ascertain which oligo is in the P clouds
-static int readclouds(const char* pchMainCloudassign,
-		const char* pchAccCloudassign, bit_matrix& PatternMatrix,
-		int* matrixsize, const int& size) {
-	FILE *pfMainCloudassign;
-	FILE *pfAccCloudassign;
-	char *pchLine;
-	char *pchTemp;
-	char* pchReverse;
-	unsigned long left, right;
-
-	if ((pfMainCloudassign = fopen(pchMainCloudassign, "r")) == NULL) {
-		printf("Can not find the cloud assign file: %s.\n", pchMainCloudassign);
-		return (0);
-	} else {
-		pchLine = (char *) malloc(sizeof(char) * MAXLINECHAR);
-		pchTemp = (char*) malloc(sizeof(char) * (size + 1));
-		pchReverse = (char*) malloc(sizeof(char) * (size + 1));
-
-		while (fgets(pchLine, MAXLINECHAR, pfMainCloudassign) != NULL) {
-			if (strlen(pchLine) < size) {
-				printf("String not long enough %s\n", pchLine);
-			}
-			strncpy(pchTemp, pchLine, size);
-			*(pchTemp + size) = '\0';
-			getpatternmatrixindex(pchTemp, right, left);
-
-			if (left >= matrixsize[right]) {
-				getreversecomplement(pchTemp, pchReverse);
-				strcpy(pchTemp, pchReverse);
-				getpatternmatrixindex(pchTemp, right, left);
-
-			}
-			PatternMatrix[right][left] = true;
-
-		}
-		free(pchLine);
-		free(pchTemp);
-		free(pchReverse);
-		fclose(pfMainCloudassign);
-	}
-
-	if ((pfAccCloudassign = fopen(pchAccCloudassign, "r")) == NULL) {
-		printf("Can not find the cloud assign file: %s.\n", pchAccCloudassign);
-		return (0);
-	} else {
-		pchLine = (char *) malloc(sizeof(char) * MAXLINECHAR);
-		pchTemp = (char*) malloc(sizeof(char) * (size + 1));
-		pchReverse = (char*) malloc(sizeof(char) * (size + 1));
-
-		while (fgets(pchLine, MAXLINECHAR, pfAccCloudassign) != NULL) {
-			strncpy(pchTemp, pchLine, size);
-			*(pchTemp + size) = '\0';
-
-			getpatternmatrixindex(pchTemp, right, left);
-
-			if (left >= matrixsize[right]) {
-				getreversecomplement(pchTemp, pchReverse);
-				strcpy(pchTemp, pchReverse);
-				getpatternmatrixindex(pchTemp, right, left);
-			}
-
-			PatternMatrix[right][left] = true;
-
-		}
-		free(pchLine);
-		free(pchTemp);
-		free(pchReverse);
-		fclose(pfAccCloudassign);
-	}
-
-	return (1);
-}
-
-//for 16mers, annotate the genome based upon whether it is in the p clouds, and get the repeat regions
-//but no p cloud pattern included in that annotation.
-static int GenomeScanAndIdentify(const char* pchGenome, const char* pchOutfile,
-		const char* pchRegionfile, const bit_matrix& PatternMatrix,
-		const int* matrixsize, const int& size, const int& windowsize,
-		const int& percent, const int& m_nChunksize,
-		const unsigned int& m_nGenomesize) {
-	FILE *pfGenome;
-
-	char *pchPattern;
-	int *piReadCount = (int*) malloc(sizeof(int));
-	char *pchSequence = (char*) malloc(sizeof(char) * m_nChunksize);
-	pchPattern = (char *) malloc(sizeof(char) * (size + 1));
-	char *pchReverse = (char *) malloc(sizeof(char) * (size + 1));
-	long long iOffset = 0;
-	int iRead;
-
-	FILE *pfOut;
-
-	pfOut = fopen(pchOutfile, "wb");
-
-	int patternnumber;
-	unsigned long index;
-	unsigned long left;
-	unsigned long right;
-
-	FILE *pfRegion;
-
-	vector<int> occurrence;
-
-	long long icount = 0;
-	long long iStart = 0, iEnd = 0;
-	long long iFormerStart = 0, iFormerEnd = 0;
-	long long totalsize = 0;
-
-	pfRegion = fopen(pchRegionfile, "wb");
-
-	if ((pfGenome = fopen(pchGenome, "r")) == NULL) {
-		printf("Can not find the genome file: %s.\n", pchGenome);
-		return (0);
-	} else {
-		do {
-			if (NULL == pchSequence) {
-				printf("The system can not allocate the memory!\n");
-				free(pchPattern);
-				free(pchReverse);
-				free(piReadCount);
-				return (0);
-			}
-
-			if (iOffset + m_nChunksize - 1 <= m_nGenomesize)
-				iRead = readfromfile(pfGenome, pchSequence, iOffset,
-						m_nChunksize, piReadCount);
-			else
-				iRead = readfromfile(pfGenome, pchSequence, iOffset,
-						m_nGenomesize - iOffset, piReadCount);
-
-			if (iRead == 0) {
-
-				free(pchPattern);
-				free(pchSequence);
-				free(pchReverse);
-				free(piReadCount);
-				return (0);
-			} else {
-				for (int count = 0; count <= *piReadCount - size; count++) {
-					if ((count % 50 == 0) && (count > 0))
-						fprintf(pfOut, "\n");
-
-					getsubstring(pchSequence, pchPattern, count,
-							count + size - 1);
-					pchPattern[size] = '\0';
-					patternnumber = 0;
-
-					if (issegmentvalid(pchPattern) == 1) {
-						getpatternmatrixindex(pchPattern, right, left);
-
-						if (left >= matrixsize[right]) {
-							getreversecomplement(pchPattern, pchReverse);
-							strcpy(pchPattern, pchReverse);
-							getpatternmatrixindex(pchPattern, right, left);
-						}
-
-						if (PatternMatrix[right][left])
-							patternnumber = 1;
-					}
-
-					//output the p cloud annotation file;
-					fprintf(pfOut, "%d ", patternnumber);
-
-					//get the annotated repeat region
-					icount++;
-
-					if (icount <= windowsize) {
-						occurrence.push_back(patternnumber);
-
-						if (icount == windowsize) {
-							if (isrepeatregion(occurrence, percent)) {
-								iStart = icount - windowsize + 1;
-								iFormerStart = iStart;
-								iEnd = 0;
-							}
-						}
-					} else {
-						occurrence.erase(occurrence.begin());
-						occurrence.push_back(patternnumber);
-
-						if (isrepeatregion(occurrence, percent)) {
-							if (iStart == 0) {
-								iStart = icount - windowsize + 1;
-
-								if (iStart > iFormerEnd + 1) {
-									if ((iFormerEnd != 0)
-											&& (iFormerStart != 0)) {
-										fprintf(pfRegion, "%lld %lld\n",
-												iFormerStart, iFormerEnd);
-										totalsize += iFormerEnd - iFormerStart
-												+ 1;
-									}
-
-									iFormerStart = iStart;
-								}
-
-								iEnd = 0;
-							}
-						} else {
-							if ((iStart != 0) && (iEnd == 0)) {
-								int i = windowsize - 1;
-
-								while (occurrence[i] == 0)
-									i--;
-
-								iEnd = icount + size - 2 - (windowsize - 1 - i);
-								iFormerEnd = iEnd;
-								iStart = 0;
-							}
-						}
-					}
-				}
-			}
-			iOffset += m_nChunksize - size + 1;
-		} while ((iOffset < m_nGenomesize - size + 1) && (iRead == 2));
-
-		fclose(pfGenome);
-	}
-
-	fprintf(pfRegion, "%lld %lld\n", iFormerStart, iFormerEnd);
-
-	totalsize += iFormerEnd - iFormerStart + 1;
-
-	fprintf(pfRegion, "%lld", totalsize);
-	fflush(pfRegion);
-	fclose(pfRegion);
-	fclose(pfOut);
-	free(pchPattern);
-	free(pchSequence);
-	free(piReadCount);
-	free(pchReverse);
-
-	return (1);
-}
 
 //for 16mers, build the bool patternmatrix to ascertain which oligo is in the P clouds
 //STP: Modified to annotate the positions of the clouds in repeat regions
@@ -1536,7 +1245,7 @@ static int GenomeScanAndIdentify1(const char* pchGenome, const char* pchOutfile,
 	long long start = 0, end = 0;
 	long long former_start = 0;
 	long long former_end = -1; // This must be initialized to < 0 in case the
-								// first window is repetitive
+							   // first window is repetitive
 	long long totalsize = 0;
 
 	bool previous_window_was_repetitive = false;
@@ -1545,23 +1254,20 @@ static int GenomeScanAndIdentify1(const char* pchGenome, const char* pchOutfile,
 	//STP: Added to print a header
 	if (print_clouds_in_regions) {
 		fputs("Start\tEnd\tClouds\n", pfRegion);
-	}
-	else {
+	} else {
 		fputs("Start\tEnd\n", pfRegion);
 	}
-
-
 
 	if ((pfGenome = fopen(pchGenome, "r")) == NULL) {
 		printf("Can not find the genome file: %s.\n", pchGenome);
 		return (0);
 	} else {
-		//STP: The preprocessed fasta file has ">Processed reads" in the first line
-		// This removes that header so the regions actually correspond to
-		// the regions in the genome
-		if (not print_legacy_regions) {
-			chunk_start = 18;
-		}
+		/*
+		 * STP: The preprocessed fasta file has ">Processed reads" in the first line
+		 * This removes that header so the regions actually correspond to
+		 * the regions in the genome
+		 */
+		chunk_start = 18;
 		do {
 			if (NULL == chunk) {
 				printf("The system can not allocate the memory!\n");
@@ -1635,12 +1341,8 @@ static int GenomeScanAndIdentify1(const char* pchGenome, const char* pchOutfile,
 
 					if (isrepeatregion(occurrence, percent)) {
 						if (not previous_window_was_repetitive) {
-							if (print_legacy_regions) {
-								start = genome_position - (windowsize - 1) + 1;
-							}
-							else {
-								start = genome_position - (windowsize - 1);
-							}
+
+							start = genome_position - (windowsize - 1);
 
 							if (start > former_end) {
 								// If the next repeat starts past the end
@@ -1657,11 +1359,13 @@ static int GenomeScanAndIdentify1(const char* pchGenome, const char* pchOutfile,
 											former_start, former_end);
 
 									if (print_clouds_in_regions) {
-										int number_of_clouds_to_print = former_end
-												- kmer_size - former_start + 1;
+										int number_of_clouds_to_print =
+												former_end - kmer_size
+														- former_start + 1;
 
 										for (int cloud = 0;
-												cloud < number_of_clouds_to_print;
+												cloud
+														< number_of_clouds_to_print;
 												cloud++) {
 											fprintf(pfRegion, "%i ",
 													cloud_ids_in_region.front());
@@ -1675,8 +1379,7 @@ static int GenomeScanAndIdentify1(const char* pchGenome, const char* pchOutfile,
 											cloud_ids_in_region.begin(),
 											cloud_ids_in_region.end()
 													- windowsize);
-								}
-								else {
+								} else {
 									have_annotated_first_region = true;
 								}
 
@@ -1687,26 +1390,12 @@ static int GenomeScanAndIdentify1(const char* pchGenome, const char* pchOutfile,
 					} else {
 						// Current window is not repetitive
 						if (previous_window_was_repetitive) {
-							if (print_legacy_regions) {
-								// find the position of the  last cloud in the
-								// previous repeat region
-								// then add kmer_size to that
-
-								int i = windowsize - 1;
-
-								while (occurrence[i] == 0)
-									i--;
-								// The legacy end is not exclusive
-								former_end = genome_position + kmer_size - 1 - (windowsize - 1 - i);
-							}
-							else {
-								/*
-								 * The new way to calculate the former end is
-								 * more true to the method published in the
-								 * pclouds paper by wanjun.
-								 */
-								former_end = genome_position - 1 + kmer_size; // ends are exclusive
-							}
+							/*
+							 * The new way to calculate the former end is
+							 * more true to the method published in the
+							 * pclouds paper by wanjun.
+							 */
+							former_end = genome_position - 1 + kmer_size; // ends are exclusive
 						} else {
 							if (not have_annotated_first_region) {
 								cloud_ids_in_region.pop_front();
@@ -1727,38 +1416,19 @@ static int GenomeScanAndIdentify1(const char* pchGenome, const char* pchOutfile,
 	// If the last window was repetitive, update the former end
 	// This essentially makes the former end to be the genome size
 	if (previous_window_was_repetitive) {
-		if (print_legacy_regions) {
-			// What should happen here? '
-			// The old Pclouds did not annotate the final region correctly.
-			// Should I fix that here?
-			// For now, I have fixed it...
-
-			// find the position of the  last cloud in the
-			// previous repeat region
-			// then add kmer_size to that
-
-			int i = windowsize - 1;
-
-			while (occurrence[i] == 0)
-				i--;
-			// The legacy end is not exclusive
-			former_end = genome_position + kmer_size - 1 - (windowsize - 1 - i);
-		}
-		else {
-			/*
-			 * The new way to calculate the former end is
-			 * more true to the method published in the
-			 * pclouds paper by wanjun.
-			 */
-			former_end = genome_position - 1 + kmer_size; // ends are exclusive
-		}
+		/*
+		 * The new way to calculate the former end is
+		 * more true to the method published in the
+		 * pclouds paper by wanjun.
+		 */
+		former_end = genome_position - 1 + kmer_size; // ends are exclusive
 	}
 
 	if (have_annotated_first_region) {
 		fprintf(pfRegion, "%lld\t%lld\t", former_start, former_end);
 		if (print_clouds_in_regions) {
-			int number_of_clouds_to_print = former_end - kmer_size - former_start
-					+ 1;
+			int number_of_clouds_to_print = former_end - kmer_size
+					- former_start + 1;
 
 			for (int cloud = 0; cloud < number_of_clouds_to_print; cloud++) {
 				fprintf(pfRegion, "%i ", cloud_ids_in_region.front());
