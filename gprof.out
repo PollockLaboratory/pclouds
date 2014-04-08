@@ -1,0 +1,581 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 44.36      1.73     1.73                             patterntoindex(char const*, unsigned long&, int const&)
+ 34.87      3.09     1.36                             sbsearch3(int, _Pcloud3 const*, unsigned long const&)
+ 12.31      3.57     0.48                             getthreesubstitutions(char*, unsigned long*, int&)
+  2.05      3.65     0.08                             _fu6___ZSt4cout
+  1.54      3.71     0.06                             gettwosubstitutions(char const*, unsigned long*, int&)
+  0.77      3.74     0.03   301473     0.00     0.00  isonessr(char*)
+  0.51      3.76     0.02   301425     0.00     0.00  isthreessr(char*)
+  0.51      3.78     0.02                             number_pattern_to_kmer_sequence(char*, unsigned long const&, int const&)
+  0.51      3.80     0.02                             getnumber(char*)
+  0.51      3.82     0.02                             _fu7___ZSt4cout
+  0.26      3.83     0.01   301290     0.00     0.00  isfourssr(char*)
+  0.26      3.84     0.01     1404     0.01     0.01  _Pcloud3* std::__unguarded_partition<_Pcloud3*, _Pcloud3, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, _Pcloud3 const&, bool (*)(_Pcloud3, _Pcloud3))
+  0.26      3.85     0.01        1    10.00    10.00  ReadPcloudsControlfile(char const*, int&, int&, int&, int&, int&, int&, int&, unsigned int&, int&, int&, int&, int&, char*, char*, char*, char*, char*, char*, char*)
+  0.26      3.86     0.01                             getonesubstitutions(char const*, unsigned long*, int&)
+  0.26      3.87     0.01                             buildaccessarypcloud(char*, char*, _Pcloud2*, int const&, _Pcloud2*, int const&, _Pcloud2*, int const&, int&, int const&, int const&, int const&, int const&)
+  0.26      3.88     0.01                             q_sort(_Pcloud3*, int, int)
+  0.26      3.89     0.01                             _fu1___ZSt4cout
+  0.26      3.90     0.01                             _fu4___ZSt4cout
+  0.00      3.90     0.00 20668147     0.00     0.00  __gcc_deregister_frame
+  0.00      3.90     0.00   305786     0.00     0.00  feof
+  0.00      3.90     0.00   301461     0.00     0.00  istwossr(char*)
+  0.00      3.90     0.00    96733     0.00     0.00  void std::__unguarded_linear_insert<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2))
+  0.00      3.90     0.00    41724     0.00     0.00  void std::__iter_swap<true>::iter_swap<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*)
+  0.00      3.90     0.00    41724     0.00     0.00  void std::swap<_Pcloud3>(_Pcloud3&, _Pcloud3&)
+  0.00      3.90     0.00    41724     0.00     0.00  void std::iter_swap<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*)
+  0.00      3.90     0.00    13088     0.00     0.00  void std::__iter_swap<true>::iter_swap<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*)
+  0.00      3.90     0.00    13088     0.00     0.00  void std::swap<_Pcloud2>(_Pcloud2&, _Pcloud2&)
+  0.00      3.90     0.00    13088     0.00     0.00  void std::iter_swap<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*)
+  0.00      3.90     0.00    12900     0.00     0.00  void std::__unguarded_linear_insert<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3))
+  0.00      3.90     0.00     8258     0.00     0.00  void std::__move_median_first<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2))
+  0.00      3.90     0.00     8258     0.00     0.00  _Pcloud2* std::__unguarded_partition<_Pcloud2*, _Pcloud2, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, _Pcloud2 const&, bool (*)(_Pcloud2, _Pcloud2))
+  0.00      3.90     0.00     8258     0.00     0.00  _Pcloud2* std::__unguarded_partition_pivot<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2))
+  0.00      3.90     0.00     4341     0.00     0.00  getreversecomplement(char const*, char*)
+  0.00      3.90     0.00     4303     0.00     0.00  _Pcloud3::_Pcloud3()
+  0.00      3.90     0.00     1404     0.00     0.00  void std::__move_median_first<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3))
+  0.00      3.90     0.00     1404     0.00     0.01  _Pcloud3* std::__unguarded_partition_pivot<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3))
+  0.00      3.90     0.00      548     0.00     0.00  bool std::operator==<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, char const*)
+  0.00      3.90     0.00       40     0.00     0.00  std::_Iter_base<_Pcloud2*, false>::_S_base(_Pcloud2*)
+  0.00      3.90     0.00       30     0.00     0.00  std::_Iter_base<_Pcloud3*, false>::_S_base(_Pcloud3*)
+  0.00      3.90     0.00       24     0.00     0.00  std::_Niter_base<_Pcloud2*>::iterator_type std::__niter_base<_Pcloud2*>(_Pcloud2*)
+  0.00      3.90     0.00       18     0.00     0.00  stringtonumber(std::string const&)
+  0.00      3.90     0.00       18     0.00     0.00  std::_Niter_base<_Pcloud3*>::iterator_type std::__niter_base<_Pcloud3*>(_Pcloud3*)
+  0.00      3.90     0.00       16     0.00     0.00  std::_Miter_base<_Pcloud2*>::iterator_type std::__miter_base<_Pcloud2*>(_Pcloud2*)
+  0.00      3.90     0.00       12     0.00     0.00  stringtoarray(std::string const&, char*)
+  0.00      3.90     0.00       12     0.00     0.00  std::_Miter_base<_Pcloud3*>::iterator_type std::__miter_base<_Pcloud3*>(_Pcloud3*)
+  0.00      3.90     0.00        8     0.00     0.00  _Pcloud2* std::__copy_move_backward<false, false, std::random_access_iterator_tag>::__copy_move_b<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*)
+  0.00      3.90     0.00        8     0.00     0.00  _Pcloud2* std::copy_backward<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*)
+  0.00      3.90     0.00        8     0.00     0.00  _Pcloud2* std::__copy_move_backward_a<false, _Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*)
+  0.00      3.90     0.00        8     0.00     0.00  _Pcloud2* std::__copy_move_backward_a2<false, _Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*)
+  0.00      3.90     0.00        6     0.00     0.00  _Pcloud3* std::__copy_move_backward<false, false, std::random_access_iterator_tag>::__copy_move_b<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*)
+  0.00      3.90     0.00        6     0.00     0.00  _Pcloud3* std::copy_backward<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*)
+  0.00      3.90     0.00        6     0.00     0.00  _Pcloud3* std::__copy_move_backward_a<false, _Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*)
+  0.00      3.90     0.00        6     0.00     0.00  _Pcloud3* std::__copy_move_backward_a2<false, _Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*)
+  0.00      3.90     0.00        6     0.00     0.00  std::__lg(int)
+  0.00      3.90     0.00        4     0.00     0.00  void std::sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2))
+  0.00      3.90     0.00        3     0.00     0.00  void std::__insertion_sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2))
+  0.00      3.90     0.00        3     0.00     0.00  void std::__insertion_sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3))
+  0.00      3.90     0.00        3     0.00     0.00  void std::__introsort_loop<_Pcloud2*, int, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, int, bool (*)(_Pcloud2, _Pcloud2))
+  0.00      3.90     0.00        3     0.00     3.33  void std::__introsort_loop<_Pcloud3*, int, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, int, bool (*)(_Pcloud3, _Pcloud3))
+  0.00      3.90     0.00        3     0.00     0.00  void std::__final_insertion_sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2))
+  0.00      3.90     0.00        3     0.00     0.00  void std::__final_insertion_sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3))
+  0.00      3.90     0.00        3     0.00     0.00  void std::__unguarded_insertion_sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3))
+  0.00      3.90     0.00        3     0.00     3.33  void std::sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3))
+  0.00      3.90     0.00        2     0.00     0.00  stringtolargenumber(std::string const&)
+  0.00      3.90     0.00        2     0.00     0.00  void std::__unguarded_insertion_sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2))
+  0.00      3.90     0.00        1     0.00     0.00  calculatecounts(char const*)
+  0.00      3.90     0.00        1     0.00    10.00  pcloudsdissection(char const*)
+  0.00      3.90     0.00        1     0.00     0.00  ReadCountsControlfile(char const*, int&, int&, unsigned int&, int&, char*, char*, unsigned int&)
+  0.00      3.90     0.00        1     0.00     0.00  std::operator|(std::_Ios_Openmode, std::_Ios_Openmode)
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+ 
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this 
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 4 byte(s) for 0.26% of 3.90 seconds
+
+index % time    self  children    called     name
+                                                 <spontaneous>
+[1]     44.4    1.73    0.00                 patterntoindex(char const*, unsigned long&, int const&) [1]
+-----------------------------------------------
+                                                 <spontaneous>
+[2]     34.9    1.36    0.00                 sbsearch3(int, _Pcloud3 const*, unsigned long const&) [2]
+-----------------------------------------------
+                                                 <spontaneous>
+[3]     12.3    0.48    0.00                 getthreesubstitutions(char*, unsigned long*, int&) [3]
+                0.00    0.00 8158320/20668147     __gcc_deregister_frame [28]
+                0.00    0.00    1259/4341        getreversecomplement(char const*, char*) [42]
+-----------------------------------------------
+                                                 <spontaneous>
+[4]      2.1    0.08    0.00                 _fu6___ZSt4cout [4]
+                0.00    0.00 9055780/20668147     __gcc_deregister_frame [28]
+-----------------------------------------------
+                                                 <spontaneous>
+[5]      1.5    0.06    0.00                 gettwosubstitutions(char const*, unsigned long*, int&) [5]
+                0.00    0.00 1026270/20668147     __gcc_deregister_frame [28]
+                0.00    0.00    1267/4341        getreversecomplement(char const*, char*) [42]
+-----------------------------------------------
+                0.01    0.00  100491/301473      readrepeatnumber(char*, int&, int&, int const&, int const&, int const&, int const&) [10]
+                0.01    0.00  100491/301473      _fu1___ZSt4cout [8]
+                0.01    0.00  100491/301473      buildaccessarypcloud(char*, char*, _Pcloud2*, int const&, _Pcloud2*, int const&, _Pcloud2*, int const&, int&, int const&, int const&, int const&, int const&) [7]
+[6]      0.8    0.03    0.00  301473         isonessr(char*) [6]
+-----------------------------------------------
+                                                 <spontaneous>
+[7]      0.8    0.01    0.02                 buildaccessarypcloud(char*, char*, _Pcloud2*, int const&, _Pcloud2*, int const&, _Pcloud2*, int const&, int&, int const&, int const&, int const&, int const&) [7]
+                0.01    0.00  100491/301473      isonessr(char*) [6]
+                0.01    0.00  100475/301425      isthreessr(char*) [9]
+                0.00    0.00  100430/301290      isfourssr(char*) [14]
+                0.00    0.00  248975/20668147     __gcc_deregister_frame [28]
+                0.00    0.00  100495/305786      feof [29]
+                0.00    0.00  100487/301461      istwossr(char*) [30]
+                0.00    0.00       1/4           void std::sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [63]
+-----------------------------------------------
+                                                 <spontaneous>
+[8]      0.8    0.01    0.02                 _fu1___ZSt4cout [8]
+                0.01    0.00  100491/301473      isonessr(char*) [6]
+                0.01    0.00  100475/301425      isthreessr(char*) [9]
+                0.00    0.00  100430/301290      isfourssr(char*) [14]
+                0.00    0.00  104794/20668147     __gcc_deregister_frame [28]
+                0.00    0.00  100493/305786      feof [29]
+                0.00    0.00  100487/301461      istwossr(char*) [30]
+-----------------------------------------------
+                0.01    0.00  100475/301425      readrepeatnumber(char*, int&, int&, int const&, int const&, int const&, int const&) [10]
+                0.01    0.00  100475/301425      _fu1___ZSt4cout [8]
+                0.01    0.00  100475/301425      buildaccessarypcloud(char*, char*, _Pcloud2*, int const&, _Pcloud2*, int const&, _Pcloud2*, int const&, int&, int const&, int const&, int const&, int const&) [7]
+[9]      0.5    0.02    0.00  301425         isthreessr(char*) [9]
+-----------------------------------------------
+                                                 <spontaneous>
+[10]     0.5    0.00    0.02                 readrepeatnumber(char*, int&, int&, int const&, int const&, int const&, int const&) [10]
+                0.01    0.00  100491/301473      isonessr(char*) [6]
+                0.01    0.00  100475/301425      isthreessr(char*) [9]
+                0.00    0.00  100430/301290      isfourssr(char*) [14]
+                0.00    0.00  100493/305786      feof [29]
+                0.00    0.00  100491/20668147     __gcc_deregister_frame [28]
+                0.00    0.00  100487/301461      istwossr(char*) [30]
+-----------------------------------------------
+                                                 <spontaneous>
+[11]     0.5    0.02    0.00                 number_pattern_to_kmer_sequence(char*, unsigned long const&, int const&) [11]
+-----------------------------------------------
+                                                 <spontaneous>
+[12]     0.5    0.02    0.00                 getnumber(char*) [12]
+-----------------------------------------------
+                                                 <spontaneous>
+[13]     0.5    0.02    0.00                 _fu7___ZSt4cout [13]
+-----------------------------------------------
+                0.00    0.00  100430/301290      readrepeatnumber(char*, int&, int&, int const&, int const&, int const&, int const&) [10]
+                0.00    0.00  100430/301290      _fu1___ZSt4cout [8]
+                0.00    0.00  100430/301290      buildaccessarypcloud(char*, char*, _Pcloud2*, int const&, _Pcloud2*, int const&, _Pcloud2*, int const&, int&, int const&, int const&, int const&, int const&) [7]
+[14]     0.3    0.01    0.00  301290         isfourssr(char*) [14]
+-----------------------------------------------
+                0.01    0.00    1404/1404        _Pcloud3* std::__unguarded_partition_pivot<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [16]
+[15]     0.3    0.01    0.00    1404         _Pcloud3* std::__unguarded_partition<_Pcloud3*, _Pcloud3, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, _Pcloud3 const&, bool (*)(_Pcloud3, _Pcloud3)) [15]
+                0.00    0.00  143721/20668147     __gcc_deregister_frame [28]
+                0.00    0.00   40417/41724       void std::iter_swap<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*) [34]
+-----------------------------------------------
+                0.00    0.01    1404/1404        void std::__introsort_loop<_Pcloud3*, int, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, int, bool (*)(_Pcloud3, _Pcloud3)) [17]
+[16]     0.3    0.00    0.01    1404         _Pcloud3* std::__unguarded_partition_pivot<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [16]
+                0.01    0.00    1404/1404        _Pcloud3* std::__unguarded_partition<_Pcloud3*, _Pcloud3, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, _Pcloud3 const&, bool (*)(_Pcloud3, _Pcloud3)) [15]
+                0.00    0.00    1404/1404        void std::__move_median_first<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [44]
+-----------------------------------------------
+                                1404             void std::__introsort_loop<_Pcloud3*, int, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, int, bool (*)(_Pcloud3, _Pcloud3)) [17]
+                0.00    0.01       3/3           void std::sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [18]
+[17]     0.3    0.00    0.01       3+1404    void std::__introsort_loop<_Pcloud3*, int, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, int, bool (*)(_Pcloud3, _Pcloud3)) [17]
+                0.00    0.01    1404/1404        _Pcloud3* std::__unguarded_partition_pivot<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [16]
+                                1404             void std::__introsort_loop<_Pcloud3*, int, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, int, bool (*)(_Pcloud3, _Pcloud3)) [17]
+-----------------------------------------------
+                0.00    0.00       1/3           outputmainclouds(_Pcloud3*, char const*, int const&, int const&) [26]
+                0.00    0.01       2/3           buildmainpcloud(_Pcloud3*, char*, int const&, int const&, int const&) [25]
+[18]     0.3    0.00    0.01       3         void std::sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [18]
+                0.00    0.01       3/3           void std::__introsort_loop<_Pcloud3*, int, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, int, bool (*)(_Pcloud3, _Pcloud3)) [17]
+                0.00    0.00       3/6           std::__lg(int) [62]
+                0.00    0.00       3/3           void std::__final_insertion_sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [68]
+-----------------------------------------------
+                0.00    0.01       1/1           _fu20___ZSt4cout [23]
+[19]     0.3    0.00    0.01       1         pcloudsdissection(char const*) [19]
+                0.01    0.00       1/1           ReadPcloudsControlfile(char const*, int&, int&, int&, int&, int&, int&, int&, unsigned int&, int&, int&, int&, int&, char*, char*, char*, char*, char*, char*, char*) [20]
+-----------------------------------------------
+                0.01    0.00       1/1           pcloudsdissection(char const*) [19]
+[20]     0.3    0.01    0.00       1         ReadPcloudsControlfile(char const*, int&, int&, int&, int&, int&, int&, int&, unsigned int&, int&, int&, int&, int&, char*, char*, char*, char*, char*, char*, char*) [20]
+-----------------------------------------------
+                                                 <spontaneous>
+[21]     0.3    0.01    0.00                 getonesubstitutions(char const*, unsigned long*, int&) [21]
+                0.00    0.00  108780/20668147     __gcc_deregister_frame [28]
+                0.00    0.00    1815/4341        getreversecomplement(char const*, char*) [42]
+-----------------------------------------------
+                                                 <spontaneous>
+[22]     0.3    0.01    0.00                 q_sort(_Pcloud3*, int, int) [22]
+-----------------------------------------------
+                                                 <spontaneous>
+[23]     0.3    0.00    0.01                 _fu20___ZSt4cout [23]
+                0.00    0.01       1/1           pcloudsdissection(char const*) [19]
+                0.00    0.00       1/1           calculatecounts(char const*) [72]
+-----------------------------------------------
+                                                 <spontaneous>
+[24]     0.3    0.01    0.00                 _fu4___ZSt4cout [24]
+                0.00    0.00  205892/20668147     __gcc_deregister_frame [28]
+-----------------------------------------------
+                                                 <spontaneous>
+[25]     0.2    0.00    0.01                 buildmainpcloud(_Pcloud3*, char*, int const&, int const&, int const&) [25]
+                0.00    0.01       2/3           void std::sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [18]
+                0.00    0.00       1/20668147     __gcc_deregister_frame [28]
+                0.00    0.00       1/1           std::operator|(std::_Ios_Openmode, std::_Ios_Openmode) [74]
+-----------------------------------------------
+                                                 <spontaneous>
+[26]     0.1    0.00    0.00                 outputmainclouds(_Pcloud3*, char const*, int const&, int const&) [26]
+                0.00    0.00       1/3           void std::sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [18]
+                0.00    0.00    4303/20668147     __gcc_deregister_frame [28]
+-----------------------------------------------
+                0.00    0.00       1/20668147     buildmainpcloud(_Pcloud3*, char*, int const&, int const&, int const&) [25]
+                0.00    0.00       2/20668147     _fu23___ZSt4cerr [763]
+                0.00    0.00       4/20668147     _fu17___ZSt4cout [758]
+                0.00    0.00      28/20668147     _fu2___ZSt4cout [770]
+                0.00    0.00      28/20668147     _fu3___ZSt4cout [771]
+                0.00    0.00      37/20668147     void std::__insertion_sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [64]
+                0.00    0.00      45/20668147     void std::__insertion_sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [65]
+                0.00    0.00    1231/20668147     _fu5___ZSt4cout [772]
+                0.00    0.00    4079/20668147     void std::__move_median_first<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [44]
+                0.00    0.00    4302/20668147     _fu9___ZSt4cout [774]
+                0.00    0.00    4303/20668147     outputmainclouds(_Pcloud3*, char const*, int const&, int const&) [26]
+                0.00    0.00    4859/20668147     readmainclouds(char const*, _Pcloud2*, int&, _Pcloud2*, int&, _Pcloud2*, int&, int const&, int const&, int const&, int const&) [180]
+                0.00    0.00   20662/20668147     void std::__move_median_first<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [39]
+                0.00    0.00   24591/20668147     void std::__unguarded_linear_insert<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [38]
+                0.00    0.00  100491/20668147     readrepeatnumber(char*, int&, int&, int const&, int const&, int const&, int const&) [10]
+                0.00    0.00  104794/20668147     _fu1___ZSt4cout [8]
+                0.00    0.00  108780/20668147     getonesubstitutions(char const*, unsigned long*, int&) [21]
+                0.00    0.00  143721/20668147     _Pcloud3* std::__unguarded_partition<_Pcloud3*, _Pcloud3, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, _Pcloud3 const&, bool (*)(_Pcloud3, _Pcloud3)) [15]
+                0.00    0.00  188127/20668147     void std::__unguarded_linear_insert<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [31]
+                0.00    0.00  205892/20668147     _fu4___ZSt4cout [24]
+                0.00    0.00  248975/20668147     buildaccessarypcloud(char*, char*, _Pcloud2*, int const&, _Pcloud2*, int const&, _Pcloud2*, int const&, int&, int const&, int const&, int const&, int const&) [7]
+                0.00    0.00 1026270/20668147     gettwosubstitutions(char const*, unsigned long*, int&) [5]
+                0.00    0.00 1262825/20668147     _Pcloud2* std::__unguarded_partition<_Pcloud2*, _Pcloud2, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, _Pcloud2 const&, bool (*)(_Pcloud2, _Pcloud2)) [40]
+                0.00    0.00 8158320/20668147     getthreesubstitutions(char*, unsigned long*, int&) [3]
+                0.00    0.00 9055780/20668147     _fu6___ZSt4cout [4]
+[28]     0.0    0.00    0.00 20668147         __gcc_deregister_frame [28]
+-----------------------------------------------
+                0.00    0.00    4305/305786      readmainclouds(char const*, _Pcloud2*, int&, _Pcloud2*, int&, _Pcloud2*, int&, int const&, int const&, int const&, int const&) [180]
+                0.00    0.00  100493/305786      readrepeatnumber(char*, int&, int&, int const&, int const&, int const&, int const&) [10]
+                0.00    0.00  100493/305786      _fu1___ZSt4cout [8]
+                0.00    0.00  100495/305786      buildaccessarypcloud(char*, char*, _Pcloud2*, int const&, _Pcloud2*, int const&, _Pcloud2*, int const&, int&, int const&, int const&, int const&, int const&) [7]
+[29]     0.0    0.00    0.00  305786         feof [29]
+-----------------------------------------------
+                0.00    0.00  100487/301461      readrepeatnumber(char*, int&, int&, int const&, int const&, int const&, int const&) [10]
+                0.00    0.00  100487/301461      _fu1___ZSt4cout [8]
+                0.00    0.00  100487/301461      buildaccessarypcloud(char*, char*, _Pcloud2*, int const&, _Pcloud2*, int const&, _Pcloud2*, int const&, int&, int const&, int const&, int const&, int const&) [7]
+[30]     0.0    0.00    0.00  301461         istwossr(char*) [30]
+-----------------------------------------------
+                0.00    0.00      29/96733       void std::__insertion_sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [64]
+                0.00    0.00   96704/96733       void std::__unguarded_insertion_sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [71]
+[31]     0.0    0.00    0.00   96733         void std::__unguarded_linear_insert<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [31]
+                0.00    0.00  188127/20668147     __gcc_deregister_frame [28]
+-----------------------------------------------
+                0.00    0.00   41724/41724       void std::iter_swap<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*) [34]
+[32]     0.0    0.00    0.00   41724         void std::__iter_swap<true>::iter_swap<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*) [32]
+                0.00    0.00   41724/41724       void std::swap<_Pcloud3>(_Pcloud3&, _Pcloud3&) [33]
+-----------------------------------------------
+                0.00    0.00   41724/41724       void std::__iter_swap<true>::iter_swap<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*) [32]
+[33]     0.0    0.00    0.00   41724         void std::swap<_Pcloud3>(_Pcloud3&, _Pcloud3&) [33]
+-----------------------------------------------
+                0.00    0.00    1307/41724       void std::__move_median_first<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [44]
+                0.00    0.00   40417/41724       _Pcloud3* std::__unguarded_partition<_Pcloud3*, _Pcloud3, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, _Pcloud3 const&, bool (*)(_Pcloud3, _Pcloud3)) [15]
+[34]     0.0    0.00    0.00   41724         void std::iter_swap<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*) [34]
+                0.00    0.00   41724/41724       void std::__iter_swap<true>::iter_swap<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*) [32]
+-----------------------------------------------
+                0.00    0.00   13088/13088       void std::iter_swap<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*) [37]
+[35]     0.0    0.00    0.00   13088         void std::__iter_swap<true>::iter_swap<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*) [35]
+                0.00    0.00   13088/13088       void std::swap<_Pcloud2>(_Pcloud2&, _Pcloud2&) [36]
+-----------------------------------------------
+                0.00    0.00   13088/13088       void std::__iter_swap<true>::iter_swap<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*) [35]
+[36]     0.0    0.00    0.00   13088         void std::swap<_Pcloud2>(_Pcloud2&, _Pcloud2&) [36]
+-----------------------------------------------
+                0.00    0.00    4837/13088       _Pcloud2* std::__unguarded_partition<_Pcloud2*, _Pcloud2, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, _Pcloud2 const&, bool (*)(_Pcloud2, _Pcloud2)) [40]
+                0.00    0.00    8251/13088       void std::__move_median_first<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [39]
+[37]     0.0    0.00    0.00   13088         void std::iter_swap<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*) [37]
+                0.00    0.00   13088/13088       void std::__iter_swap<true>::iter_swap<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*) [35]
+-----------------------------------------------
+                0.00    0.00      39/12900       void std::__insertion_sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [65]
+                0.00    0.00   12861/12900       void std::__unguarded_insertion_sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [69]
+[38]     0.0    0.00    0.00   12900         void std::__unguarded_linear_insert<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [38]
+                0.00    0.00   24591/20668147     __gcc_deregister_frame [28]
+-----------------------------------------------
+                0.00    0.00    8258/8258        _Pcloud2* std::__unguarded_partition_pivot<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [41]
+[39]     0.0    0.00    0.00    8258         void std::__move_median_first<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [39]
+                0.00    0.00   20662/20668147     __gcc_deregister_frame [28]
+                0.00    0.00    8251/13088       void std::iter_swap<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*) [37]
+-----------------------------------------------
+                0.00    0.00    8258/8258        _Pcloud2* std::__unguarded_partition_pivot<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [41]
+[40]     0.0    0.00    0.00    8258         _Pcloud2* std::__unguarded_partition<_Pcloud2*, _Pcloud2, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, _Pcloud2 const&, bool (*)(_Pcloud2, _Pcloud2)) [40]
+                0.00    0.00 1262825/20668147     __gcc_deregister_frame [28]
+                0.00    0.00    4837/13088       void std::iter_swap<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*) [37]
+-----------------------------------------------
+                0.00    0.00    8258/8258        void std::__introsort_loop<_Pcloud2*, int, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, int, bool (*)(_Pcloud2, _Pcloud2)) [66]
+[41]     0.0    0.00    0.00    8258         _Pcloud2* std::__unguarded_partition_pivot<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [41]
+                0.00    0.00    8258/8258        void std::__move_median_first<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [39]
+                0.00    0.00    8258/8258        _Pcloud2* std::__unguarded_partition<_Pcloud2*, _Pcloud2, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, _Pcloud2 const&, bool (*)(_Pcloud2, _Pcloud2)) [40]
+-----------------------------------------------
+                0.00    0.00    1259/4341        getthreesubstitutions(char*, unsigned long*, int&) [3]
+                0.00    0.00    1267/4341        gettwosubstitutions(char const*, unsigned long*, int&) [5]
+                0.00    0.00    1815/4341        getonesubstitutions(char const*, unsigned long*, int&) [21]
+[42]     0.0    0.00    0.00    4341         getreversecomplement(char const*, char*) [42]
+-----------------------------------------------
+                0.00    0.00    4303/4303        _fu23___ZSt4cerr [763]
+[43]     0.0    0.00    0.00    4303         _Pcloud3::_Pcloud3() [43]
+-----------------------------------------------
+                0.00    0.00    1404/1404        _Pcloud3* std::__unguarded_partition_pivot<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [16]
+[44]     0.0    0.00    0.00    1404         void std::__move_median_first<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [44]
+                0.00    0.00    4079/20668147     __gcc_deregister_frame [28]
+                0.00    0.00    1307/41724       void std::iter_swap<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*) [34]
+-----------------------------------------------
+                0.00    0.00     175/548         ReadCountsControlfile(char const*, int&, int&, unsigned int&, int&, char*, char*, unsigned int&) [73]
+                0.00    0.00     373/548         _fu22___ZSt4cout [762]
+[45]     0.0    0.00    0.00     548         bool std::operator==<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, char const*) [45]
+-----------------------------------------------
+                0.00    0.00      16/40          std::_Miter_base<_Pcloud2*>::iterator_type std::__miter_base<_Pcloud2*>(_Pcloud2*) [51]
+                0.00    0.00      24/40          std::_Niter_base<_Pcloud2*>::iterator_type std::__niter_base<_Pcloud2*>(_Pcloud2*) [48]
+[46]     0.0    0.00    0.00      40         std::_Iter_base<_Pcloud2*, false>::_S_base(_Pcloud2*) [46]
+-----------------------------------------------
+                0.00    0.00      12/30          std::_Miter_base<_Pcloud3*>::iterator_type std::__miter_base<_Pcloud3*>(_Pcloud3*) [53]
+                0.00    0.00      18/30          std::_Niter_base<_Pcloud3*>::iterator_type std::__niter_base<_Pcloud3*>(_Pcloud3*) [50]
+[47]     0.0    0.00    0.00      30         std::_Iter_base<_Pcloud3*, false>::_S_base(_Pcloud3*) [47]
+-----------------------------------------------
+                0.00    0.00      24/24          _Pcloud2* std::__copy_move_backward_a2<false, _Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*) [57]
+[48]     0.0    0.00    0.00      24         std::_Niter_base<_Pcloud2*>::iterator_type std::__niter_base<_Pcloud2*>(_Pcloud2*) [48]
+                0.00    0.00      24/40          std::_Iter_base<_Pcloud2*, false>::_S_base(_Pcloud2*) [46]
+-----------------------------------------------
+                0.00    0.00       3/18          ReadCountsControlfile(char const*, int&, int&, unsigned int&, int&, char*, char*, unsigned int&) [73]
+                0.00    0.00      15/18          _fu22___ZSt4cout [762]
+[49]     0.0    0.00    0.00      18         stringtonumber(std::string const&) [49]
+-----------------------------------------------
+                0.00    0.00      18/18          _Pcloud3* std::__copy_move_backward_a2<false, _Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*) [61]
+[50]     0.0    0.00    0.00      18         std::_Niter_base<_Pcloud3*>::iterator_type std::__niter_base<_Pcloud3*>(_Pcloud3*) [50]
+                0.00    0.00      18/30          std::_Iter_base<_Pcloud3*, false>::_S_base(_Pcloud3*) [47]
+-----------------------------------------------
+                0.00    0.00      16/16          _Pcloud2* std::copy_backward<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*) [55]
+[51]     0.0    0.00    0.00      16         std::_Miter_base<_Pcloud2*>::iterator_type std::__miter_base<_Pcloud2*>(_Pcloud2*) [51]
+                0.00    0.00      16/40          std::_Iter_base<_Pcloud2*, false>::_S_base(_Pcloud2*) [46]
+-----------------------------------------------
+                0.00    0.00       2/12          ReadCountsControlfile(char const*, int&, int&, unsigned int&, int&, char*, char*, unsigned int&) [73]
+                0.00    0.00      10/12          _fu22___ZSt4cout [762]
+[52]     0.0    0.00    0.00      12         stringtoarray(std::string const&, char*) [52]
+-----------------------------------------------
+                0.00    0.00      12/12          _Pcloud3* std::copy_backward<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*) [59]
+[53]     0.0    0.00    0.00      12         std::_Miter_base<_Pcloud3*>::iterator_type std::__miter_base<_Pcloud3*>(_Pcloud3*) [53]
+                0.00    0.00      12/30          std::_Iter_base<_Pcloud3*, false>::_S_base(_Pcloud3*) [47]
+-----------------------------------------------
+                0.00    0.00       8/8           _Pcloud2* std::__copy_move_backward_a<false, _Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*) [56]
+[54]     0.0    0.00    0.00       8         _Pcloud2* std::__copy_move_backward<false, false, std::random_access_iterator_tag>::__copy_move_b<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*) [54]
+-----------------------------------------------
+                0.00    0.00       8/8           void std::__insertion_sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [64]
+[55]     0.0    0.00    0.00       8         _Pcloud2* std::copy_backward<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*) [55]
+                0.00    0.00      16/16          std::_Miter_base<_Pcloud2*>::iterator_type std::__miter_base<_Pcloud2*>(_Pcloud2*) [51]
+                0.00    0.00       8/8           _Pcloud2* std::__copy_move_backward_a2<false, _Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*) [57]
+-----------------------------------------------
+                0.00    0.00       8/8           _Pcloud2* std::__copy_move_backward_a2<false, _Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*) [57]
+[56]     0.0    0.00    0.00       8         _Pcloud2* std::__copy_move_backward_a<false, _Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*) [56]
+                0.00    0.00       8/8           _Pcloud2* std::__copy_move_backward<false, false, std::random_access_iterator_tag>::__copy_move_b<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*) [54]
+-----------------------------------------------
+                0.00    0.00       8/8           _Pcloud2* std::copy_backward<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*) [55]
+[57]     0.0    0.00    0.00       8         _Pcloud2* std::__copy_move_backward_a2<false, _Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*) [57]
+                0.00    0.00      24/24          std::_Niter_base<_Pcloud2*>::iterator_type std::__niter_base<_Pcloud2*>(_Pcloud2*) [48]
+                0.00    0.00       8/8           _Pcloud2* std::__copy_move_backward_a<false, _Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*) [56]
+-----------------------------------------------
+                0.00    0.00       6/6           _Pcloud3* std::__copy_move_backward_a<false, _Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*) [60]
+[58]     0.0    0.00    0.00       6         _Pcloud3* std::__copy_move_backward<false, false, std::random_access_iterator_tag>::__copy_move_b<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*) [58]
+-----------------------------------------------
+                0.00    0.00       6/6           void std::__insertion_sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [65]
+[59]     0.0    0.00    0.00       6         _Pcloud3* std::copy_backward<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*) [59]
+                0.00    0.00      12/12          std::_Miter_base<_Pcloud3*>::iterator_type std::__miter_base<_Pcloud3*>(_Pcloud3*) [53]
+                0.00    0.00       6/6           _Pcloud3* std::__copy_move_backward_a2<false, _Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*) [61]
+-----------------------------------------------
+                0.00    0.00       6/6           _Pcloud3* std::__copy_move_backward_a2<false, _Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*) [61]
+[60]     0.0    0.00    0.00       6         _Pcloud3* std::__copy_move_backward_a<false, _Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*) [60]
+                0.00    0.00       6/6           _Pcloud3* std::__copy_move_backward<false, false, std::random_access_iterator_tag>::__copy_move_b<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*) [58]
+-----------------------------------------------
+                0.00    0.00       6/6           _Pcloud3* std::copy_backward<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*) [59]
+[61]     0.0    0.00    0.00       6         _Pcloud3* std::__copy_move_backward_a2<false, _Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*) [61]
+                0.00    0.00      18/18          std::_Niter_base<_Pcloud3*>::iterator_type std::__niter_base<_Pcloud3*>(_Pcloud3*) [50]
+                0.00    0.00       6/6           _Pcloud3* std::__copy_move_backward_a<false, _Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*) [60]
+-----------------------------------------------
+                0.00    0.00       3/6           void std::sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [63]
+                0.00    0.00       3/6           void std::sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [18]
+[62]     0.0    0.00    0.00       6         std::__lg(int) [62]
+-----------------------------------------------
+                0.00    0.00       1/4           buildaccessarypcloud(char*, char*, _Pcloud2*, int const&, _Pcloud2*, int const&, _Pcloud2*, int const&, int&, int const&, int const&, int const&, int const&) [7]
+                0.00    0.00       3/4           readmainclouds(char const*, _Pcloud2*, int&, _Pcloud2*, int&, _Pcloud2*, int&, int const&, int const&, int const&, int const&) [180]
+[63]     0.0    0.00    0.00       4         void std::sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [63]
+                0.00    0.00       3/6           std::__lg(int) [62]
+                0.00    0.00       3/3           void std::__introsort_loop<_Pcloud2*, int, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, int, bool (*)(_Pcloud2, _Pcloud2)) [66]
+                0.00    0.00       3/3           void std::__final_insertion_sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [67]
+-----------------------------------------------
+                0.00    0.00       3/3           void std::__final_insertion_sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [67]
+[64]     0.0    0.00    0.00       3         void std::__insertion_sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [64]
+                0.00    0.00      37/20668147     __gcc_deregister_frame [28]
+                0.00    0.00      29/96733       void std::__unguarded_linear_insert<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [31]
+                0.00    0.00       8/8           _Pcloud2* std::copy_backward<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*) [55]
+-----------------------------------------------
+                0.00    0.00       3/3           void std::__final_insertion_sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [68]
+[65]     0.0    0.00    0.00       3         void std::__insertion_sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [65]
+                0.00    0.00      45/20668147     __gcc_deregister_frame [28]
+                0.00    0.00      39/12900       void std::__unguarded_linear_insert<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [38]
+                0.00    0.00       6/6           _Pcloud3* std::copy_backward<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*) [59]
+-----------------------------------------------
+                                8258             void std::__introsort_loop<_Pcloud2*, int, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, int, bool (*)(_Pcloud2, _Pcloud2)) [66]
+                0.00    0.00       3/3           void std::sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [63]
+[66]     0.0    0.00    0.00       3+8258    void std::__introsort_loop<_Pcloud2*, int, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, int, bool (*)(_Pcloud2, _Pcloud2)) [66]
+                0.00    0.00    8258/8258        _Pcloud2* std::__unguarded_partition_pivot<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [41]
+                                8258             void std::__introsort_loop<_Pcloud2*, int, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, int, bool (*)(_Pcloud2, _Pcloud2)) [66]
+-----------------------------------------------
+                0.00    0.00       3/3           void std::sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [63]
+[67]     0.0    0.00    0.00       3         void std::__final_insertion_sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [67]
+                0.00    0.00       3/3           void std::__insertion_sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [64]
+                0.00    0.00       2/2           void std::__unguarded_insertion_sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [71]
+-----------------------------------------------
+                0.00    0.00       3/3           void std::sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [18]
+[68]     0.0    0.00    0.00       3         void std::__final_insertion_sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [68]
+                0.00    0.00       3/3           void std::__insertion_sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [65]
+                0.00    0.00       3/3           void std::__unguarded_insertion_sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [69]
+-----------------------------------------------
+                0.00    0.00       3/3           void std::__final_insertion_sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [68]
+[69]     0.0    0.00    0.00       3         void std::__unguarded_insertion_sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [69]
+                0.00    0.00   12861/12900       void std::__unguarded_linear_insert<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [38]
+-----------------------------------------------
+                0.00    0.00       1/2           _fu22___ZSt4cout [762]
+                0.00    0.00       1/2           ReadCountsControlfile(char const*, int&, int&, unsigned int&, int&, char*, char*, unsigned int&) [73]
+[70]     0.0    0.00    0.00       2         stringtolargenumber(std::string const&) [70]
+-----------------------------------------------
+                0.00    0.00       2/2           void std::__final_insertion_sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [67]
+[71]     0.0    0.00    0.00       2         void std::__unguarded_insertion_sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [71]
+                0.00    0.00   96704/96733       void std::__unguarded_linear_insert<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [31]
+-----------------------------------------------
+                0.00    0.00       1/1           _fu20___ZSt4cout [23]
+[72]     0.0    0.00    0.00       1         calculatecounts(char const*) [72]
+-----------------------------------------------
+                0.00    0.00       1/1           _fu18___ZSt4cout [759]
+[73]     0.0    0.00    0.00       1         ReadCountsControlfile(char const*, int&, int&, unsigned int&, int&, char*, char*, unsigned int&) [73]
+                0.00    0.00     175/548         bool std::operator==<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, char const*) [45]
+                0.00    0.00       3/18          stringtonumber(std::string const&) [49]
+                0.00    0.00       2/12          stringtoarray(std::string const&, char*) [52]
+                0.00    0.00       1/2           stringtolargenumber(std::string const&) [70]
+-----------------------------------------------
+                0.00    0.00       1/1           buildmainpcloud(_Pcloud3*, char*, int const&, int const&, int const&) [25]
+[74]     0.0    0.00    0.00       1         std::operator|(std::_Ios_Openmode, std::_Ios_Openmode) [74]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+
+Index by function name
+
+   [9] isthreessr(char*)      [47] std::_Iter_base<_Pcloud3*, false>::_S_base(_Pcloud3*) [57] _Pcloud2* std::__copy_move_backward_a2<false, _Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*)
+  [52] stringtoarray(std::string const&, char*) [35] void std::__iter_swap<true>::iter_swap<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*) [61] _Pcloud3* std::__copy_move_backward_a2<false, _Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*)
+  [49] stringtonumber(std::string const&) [32] void std::__iter_swap<true>::iter_swap<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*) [31] void std::__unguarded_linear_insert<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2))
+  [72] calculatecounts(char const*) [54] _Pcloud2* std::__copy_move_backward<false, false, std::random_access_iterator_tag>::__copy_move_b<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*) [38] void std::__unguarded_linear_insert<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3))
+  [19] pcloudsdissection(char const*) [58] _Pcloud3* std::__copy_move_backward<false, false, std::random_access_iterator_tag>::__copy_move_b<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*) [71] void std::__unguarded_insertion_sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2))
+  [70] stringtolargenumber(std::string const&) [51] std::_Miter_base<_Pcloud2*>::iterator_type std::__miter_base<_Pcloud2*>(_Pcloud2*) [69] void std::__unguarded_insertion_sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3))
+  [42] getreversecomplement(char const*, char*) [53] std::_Miter_base<_Pcloud3*>::iterator_type std::__miter_base<_Pcloud3*>(_Pcloud3*) [41] _Pcloud2* std::__unguarded_partition_pivot<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2))
+  [73] ReadCountsControlfile(char const*, int&, int&, unsigned int&, int&, char*, char*, unsigned int&) [48] std::_Niter_base<_Pcloud2*>::iterator_type std::__niter_base<_Pcloud2*>(_Pcloud2*) [16] _Pcloud3* std::__unguarded_partition_pivot<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3))
+  [20] ReadPcloudsControlfile(char const*, int&, int&, int&, int&, int&, int&, int&, unsigned int&, int&, int&, int&, int&, char*, char*, char*, char*, char*, char*, char*) [50] std::_Niter_base<_Pcloud3*>::iterator_type std::__niter_base<_Pcloud3*>(_Pcloud3*) [62] std::__lg(int)
+   [6] isonessr(char*)        [55] _Pcloud2* std::copy_backward<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*) [63] void std::sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2))
+  [30] istwossr(char*)        [59] _Pcloud3* std::copy_backward<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*) [18] void std::sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3))
+  [14] isfourssr(char*)       [64] void std::__insertion_sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [36] void std::swap<_Pcloud2>(_Pcloud2&, _Pcloud2&)
+   [1] patterntoindex(char const*, unsigned long&, int const&) (clouds.cpp) [65] void std::__insertion_sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [33] void std::swap<_Pcloud3>(_Pcloud3&, _Pcloud3&)
+  [21] getonesubstitutions(char const*, unsigned long*, int&) (clouds.cpp) [66] void std::__introsort_loop<_Pcloud2*, int, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, int, bool (*)(_Pcloud2, _Pcloud2)) [37] void std::iter_swap<_Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*)
+   [5] gettwosubstitutions(char const*, unsigned long*, int&) (clouds.cpp) [17] void std::__introsort_loop<_Pcloud3*, int, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, int, bool (*)(_Pcloud3, _Pcloud3)) [34] void std::iter_swap<_Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*)
+   [7] buildaccessarypcloud(char*, char*, _Pcloud2*, int const&, _Pcloud2*, int const&, _Pcloud2*, int const&, int&, int const&, int const&, int const&, int const&) (clouds.cpp) [39] void std::__move_median_first<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [45] bool std::operator==<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, char const*)
+   [3] getthreesubstitutions(char*, unsigned long*, int&) (clouds.cpp) [44] void std::__move_median_first<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [74] std::operator|(std::_Ios_Openmode, std::_Ios_Openmode)
+  [11] number_pattern_to_kmer_sequence(char*, unsigned long const&, int const&) (clouds.cpp) [40] _Pcloud2* std::__unguarded_partition<_Pcloud2*, _Pcloud2, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, _Pcloud2 const&, bool (*)(_Pcloud2, _Pcloud2)) [28] __gcc_deregister_frame
+  [22] q_sort(_Pcloud3*, int, int) (clouds.cpp) [15] _Pcloud3* std::__unguarded_partition<_Pcloud3*, _Pcloud3, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, _Pcloud3 const&, bool (*)(_Pcloud3, _Pcloud3)) [8] _fu1___ZSt4cout
+  [12] getnumber(char*) (clouds.cpp) [56] _Pcloud2* std::__copy_move_backward_a<false, _Pcloud2*, _Pcloud2*>(_Pcloud2*, _Pcloud2*, _Pcloud2*) [24] _fu4___ZSt4cout
+   [2] sbsearch3(int, _Pcloud3 const*, unsigned long const&) (clouds.cpp) [60] _Pcloud3* std::__copy_move_backward_a<false, _Pcloud3*, _Pcloud3*>(_Pcloud3*, _Pcloud3*, _Pcloud3*) [4] _fu6___ZSt4cout
+  [43] _Pcloud3::_Pcloud3()   [67] void std::__final_insertion_sort<_Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)>(_Pcloud2*, _Pcloud2*, bool (*)(_Pcloud2, _Pcloud2)) [13] _fu7___ZSt4cout
+  [46] std::_Iter_base<_Pcloud2*, false>::_S_base(_Pcloud2*) [68] void std::__final_insertion_sort<_Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)>(_Pcloud3*, _Pcloud3*, bool (*)(_Pcloud3, _Pcloud3)) [29] feof

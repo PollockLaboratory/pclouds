@@ -1,1 +1,1 @@
-clouds.o: clouds.c macrodefine.h readfile.h stringhandle.h
+clouds.o: clouds.cpp macrodefine.h readfile.h stringhandle.h

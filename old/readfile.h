@@ -17,6 +17,6 @@ m_nGenomesize, int& windowsize, int& percent, int& m_nGetclouds, int& m_nDissect
 pchAccAssign, char* pchAnnotationfile, char* pchRegionfile);
 
 bool ReadCountsControlfile(const char* pchControlfile, int& size, int&
-m_nChunksize, unsigned int& m_nGenomesize, int& m_nCounts, char* pchGenome, char* pchCountfile);
+m_nChunksize, unsigned int& m_nGenomesize, int& m_nCounts, char* pchGenome, char* pchCountfile, unsigned int& m_nMemory);
 
 #endif // readfile_h__

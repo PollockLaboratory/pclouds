@@ -1,0 +1,24 @@
+kmer length = 16
+kmers are forward looking
+kmer in pcloud?
+001111111100000
+
+window size = 10
+windows are backward looking
+window is repetitive
+000000000111000
+
+GGAAAAAAAAAAAAAAAAAAAAAAAGG
+00111111110000
+00000000011100
+
+when window 0->1 , save start location
+start = current genome position - (window size - 1)
+
+when window 1->0, save end location
+end = gp - 1  + kmer_size
+
+
+gp = 12
+-1 gives last kmer that was in a repetitive region
+ + kmer_size

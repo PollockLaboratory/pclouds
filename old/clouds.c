@@ -200,7 +200,7 @@ static void swapcloud(cloud_type3& a, cloud_type3& b)
 	swap(a.index, b.index);
 	swap(a.number, b.number);
 	swap(a.cloud, b.cloud);
-	swap(a.extension, b.extension);
+	swap(a.has_been_extended, b.has_been_extended);
 }
 
 static void q_sort(cloud_type3* repeats, int left, int right)
@@ -682,7 +682,7 @@ static void buildmainpcloud(cloud_type3* repeats1, char* pchOutput, const int& n
 		strcpy(pchCore, core[pcloudnumber -1]);
 
 		repeats1[coreindex].cloud = pcloudnumber;
-		repeats1[coreindex].extension = 1;
+		repeats1[coreindex].has_been_extended = 1;
 		totalsize[pcloudnumber -1] = 1;
 		totalnumber[pcloudnumber -1] = repeats1[coreindex].number;
 
@@ -706,9 +706,9 @@ static void buildmainpcloud(cloud_type3* repeats1, char* pchOutput, const int& n
 				}
 
 				// get another 1-sub, 2-sub and 3-sub with repeat wbove some threshold
-				if (repeats1[result].extension == 0)
+				if (repeats1[result].has_been_extended == 0)
 				{
-					repeats1[result].extension = 1;
+					repeats1[result].has_been_extended = 1;
 
 					iRepeatThreesubstitution = 0;
 					indextopattern(pchRepeat, repeats1[result].index, size);
@@ -1765,7 +1765,7 @@ const int& size, const int& m_nStep3, const int& m_nStep2, const int& m_nStep1, 
 		*/
 		
 		repeats1[coreindex].cloud = pcloudnumber;
-		repeats1[coreindex].extension = 1;
+		repeats1[coreindex].has_been_extended = 1;
 		totalsize[pcloudnumber -1] = 1;
 		totalnumber[pcloudnumber -1] = repeats1[coreindex].number;
 
@@ -1784,9 +1784,9 @@ const int& size, const int& m_nStep3, const int& m_nStep2, const int& m_nStep1, 
 				}
 
 				// get another 1-sub, 2-sub and 3-sub with repeat wbove some threshold
-				if (repeats1[result].extension == 0)
+				if (repeats1[result].has_been_extended == 0)
 				{
-					repeats1[result].extension = 1;
+					repeats1[result].has_been_extended = 1;
 
 					if (repeats1[result].number >=  m_nStep3)
 					{
@@ -1918,9 +1918,9 @@ const int& size, const int& m_nStep3, const int& m_nStep2, const int& m_nStep1, 
 
 			// extension of repeats
 
-			if ((repeats1[coreindex].extension == 0) && (repeats1[coreindex].cloud != 0))
+			if ((repeats1[coreindex].has_been_extended == 0) && (repeats1[coreindex].cloud != 0))
 			{
-				repeats1[coreindex].extension = 1;
+				repeats1[coreindex].has_been_extended = 1;
 
 				if (repeats1[coreindex].number >=  m_nStep3)
 				{

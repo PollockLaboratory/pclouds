@@ -409,7 +409,7 @@ int getnumberstohash(char *pchSequence, int iLength, int patternsize, patternhas
 			index = indexsize[right] + left;
 
 			pPatterns = Patterns.find(index);
-	
+			
 			if (pPatterns != Patterns.end())
 				((*pPatterns).second)++;
 		}
@@ -530,7 +530,6 @@ int matrixindextopattern(unsigned long index, char* pchPattern, const unsigned l
 	indextopattern(pchTemp, i, patternsize/2);
 
 	strcat(pchPattern, pchTemp);
-
 	free(pchTemp);
 	return(1);
 }
@@ -541,6 +540,7 @@ int patterntoindex(char *pchPattern, unsigned long& index, int patternsize)
 {	
 	int i;
 	index = 0;
+
 	for (i = 0; i< patternsize; i++)
 	{
 		index *= 4;
@@ -583,6 +583,7 @@ int getpatternmatrixindex(char* pchPattern, unsigned long& i, unsigned long& j)
 {
 	char* pchTemp = (char*) malloc( sizeof(char) * (strlen(pchPattern) /2+1));
 
+
 	// get the index of last 8 chars;
 	strright(strlen(pchPattern)/2, pchPattern, pchTemp);
 	
@@ -590,9 +591,7 @@ int getpatternmatrixindex(char* pchPattern, unsigned long& i, unsigned long& j)
 
 	// get the index of the first 8 chars;
 	strleft(strlen(pchPattern)/2, pchPattern, pchTemp);
-
 	patterntoindex(pchTemp, j, strlen(pchPattern)/2);
-
 	free(pchTemp);
 	return(1);
 }
@@ -609,7 +608,6 @@ int getmatrixindextopattern(char* pchPattern, const unsigned long& i, const unsi
 	indextopattern(pchTemp, i, patternsize/2);
 
 	strcat(pchPattern, pchTemp);
-
 	free(pchTemp);
 	return(1);
 }

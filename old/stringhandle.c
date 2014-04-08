@@ -238,7 +238,7 @@ bool issegmentvalid(char *pchPattern)
 	int count;
 	
 	int size = strlen(pchPattern);
-	
+	if(size == 0) { return(0); }
 	char temp;
 	
 	for (count =0; count < size; count ++)

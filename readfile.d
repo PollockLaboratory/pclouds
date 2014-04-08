@@ -1,1 +1,1 @@
-readfile.o: readfile.c readfile.h stringhandle.h
+readfile.o: readfile.cpp readfile.h stringhandle.h

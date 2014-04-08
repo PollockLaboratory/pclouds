@@ -1,38 +1,40 @@
-Word size:
-#OligoSize -> 14
+Stephen's Hacked options
+#KeepSSRs => 1
+#PrintCloudsInRegions => 1
+#PrintLegacyRegions => 0
+#ExpandRecursively => 0
 
-Parameters to build P clouds:
-#COPYTHRESHOLD -> 2
-#ENDTHRESHOLD -> 10
-#STEP1THRESHOLD -> 20
-#STEP2THRESHOLD -> 200
-#STEP3THRESHOLD -> 2000
-#CALCHUNCKSIZE -> 10000000
-#GENOMESIZE -> 4000000000
 
-Parameters to define the repeat region:
-#WindowSize -> 10
-#PercentCutoff -> 80
 
-Inputfile:
-Input file to calculate counts:
-#CountGenome -> HumanX.up
 
-Input file to build p clouds and dissection
-#OligoSets -> out_lumped.txt
-#GenomeInput -> HumanX.up
+#OligoSize => 8
 
-Outputfile:
-Clouds associated:
-#MaincloudsInfo -> mainclouds.info
-#MaincloudsAssign -> mainclouds.assign
-#AcccloudsAssign -> accclouds.assign
+#CALCOUNTS => 0
+#CountGenome => small_temp.fasta.processed
+#GENOMESIZE => 4000000000
+#OligoSets => kmer_counts
 
-Genome related:
-#CloudAnnotation -> HumanX.cloud
-#RepeatRegion -> HumanX.region
 
-Selection of Program parameter: (0 = not run, 1 = run)
-#CALCOUNTS -> 1
-#GETPCLOUDS -> 1
-#DISSECTION -> 1
+#GETPCLOUDS => 1
+#COPYTHRESHOLD => 2
+#ENDTHRESHOLD => 5
+#STEP1THRESHOLD => 10
+#STEP2THRESHOLD => 100
+#STEP3THRESHOLD => 1000
+
+#MaincloudsInfo => testing.mainclouds.info
+#MaincloudsAssign => testing.mainclouds.assign
+#AcccloudsAssign => testing.accclouds.assign
+
+
+#DISSECTION => 0
+#GenomeInput => small_temp.fasta.processed
+#GenomeInput => human_mitochondria_test.fasta
+#WindowSize => 1
+#PercentCutoff => 50
+#CALCHUNCKSIZE => 10000
+#RepeatRegion => small_temp.fasta.processed.C5.region
+#RepeatRegion => human_mitochonrdia_test.region
+#CloudAnnotation => small_temp.fasta.processed.C5.cloud
+#CloudAnnotation => human_mitochonrdia_test.annotation
+

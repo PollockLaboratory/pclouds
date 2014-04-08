@@ -428,7 +428,6 @@ int getnumberstohash(char *pchSequence, int iLength, int patternsize, patternhas
 			getreversedindex(pchPattern, index, patternsize);
 
 			pPatterns = Patterns.find(index);
-	
 			if (pPatterns != Patterns.end())
 				((*pPatterns).second)++;
 		}
@@ -458,6 +457,7 @@ int outputpatternsequence(patternhash_type& Patterns, FILE *pfResult, int patter
 int patterntoindex(char *pchPattern, unsigned long& index, int patternsize)
 {	
 	int i;
+
 	index = 0;
 	for (i = 0; i< patternsize; i++)
 	{
@@ -510,12 +510,11 @@ int getreversedindex(char* pchPattern, unsigned long& index, const int& patterns
 	getreversecomplement(pchPattern, pchReversed);
 	
 	patterntoindex(pchReversed, index2, patternsize);
-	
+
 	if (index1 < index2)
 		index = index1;
 	else
-		index = index2;
-			
+		index = index2;	
 	free(pchReversed);
 	return(1);
 }

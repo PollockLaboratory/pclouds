@@ -1,2 +1,2 @@
-directmethod.o: directmethod.c directmethod.h macrodefine.h \
+directmethod.o: directmethod.cpp directmethod.h macrodefine.h \
  genomehandle.h readfile.h stringhandle.h

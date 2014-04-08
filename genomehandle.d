@@ -1,1 +1,1 @@
-genomehandle.o: genomehandle.c genomehandle.h macrodefine.h readfile.h
+genomehandle.o: genomehandle.cpp genomehandle.h macrodefine.h readfile.h

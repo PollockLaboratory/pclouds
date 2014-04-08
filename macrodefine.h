@@ -5,11 +5,15 @@
 #include <vector>
 #include <ext/hash_map>
 
+#include <iostream>
+
+using namespace std;
+
 using std::vector;
 using __gnu_cxx::hash;
-using __gnu_cxx::hashtable;
+//using __gnu_cxx::hashtable;
 using __gnu_cxx::hash_map;
-using __gnu_cxx::hash_multimap;
+//using __gnu_cxx::hash_multimap;
 
 struct equalint
 {
@@ -19,7 +23,7 @@ struct equalint
 	}
 };
 
-typedef hash_map<unsigned long, unsigned long, hash<unsigned long>, equalint> patternhash_type;
+typedef hash_map<unsigned long, unsigned long> patternhash_type;
 typedef vector<int> intvector;
 typedef vector<intvector> intmatrix;
 typedef vector <bool> bitvector;
@@ -42,14 +46,22 @@ typedef struct _Pcloud2
 {
 	unsigned long index;
 	int cloud;
+	_Pcloud2() {
+		cloud = 0;
+	}
 } cloud_type2;
 
 typedef struct _Pcloud3
 {
-	unsigned long index;
+	unsigned long number_pattern;
 	int number;
 	int cloud;
-	bool extension;
+	bool has_been_extended;
+
+	_Pcloud3() {
+		cloud = 0;
+		has_been_extended = 0;
+	}
 } cloud_type3;
 
 

@@ -1,38 +1,63 @@
-EXECUTABLE = ./Pclouds
-SOURCE = $(wildcard *.c) $(wildcard *.cpp)
-OBJS = $(patsubst %.c, %.o, $(patsubst %.cpp, %.o, $(SOURCE)))
-DEPS = $(patsubst %.o, %.d, $(OBJS))
-MISSING_DEPS = $(filter-out $(wildcard $(DEPS)),$(DEPS))
-MISSING_DEPS_SOURCES = $(wildcard $(patsubst %.d, %.c, $(MISSING_DEPS))\
-$(patsubst %.d, %.cpp, $(MISSING_DEPS)))
+EXECUTABLE = Pclouds_STP
 
-CC = /usr/bin/g++  
-RM-F = rm -f
-CPPFLAGS += -O3 -MMD -g -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -Wno-deprecated -I /usr/include -fpermissive 
+# List of sources to include
+include sources.mk
 
-.PHONY : all deps objs clean veryclean rebuild
+OBJECTS = $(patsubst %.cpp, %.o, $(SOURCES))
+DEPS = $(patsubst %.o, %.d, $(OBJECTS))
+MISSING_DEPS = $(filter-out $(wildcard $(DEPS)), $(DEPS))
+
+# Implicit rule for cpp files
+#  ‘$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c’ 
+# http://www.gnu.org/software/make/manual/html_node/Using-Implicit.html#Using-Implicit
+
+# C++ compiler
+CXX = g++ 
+
+RM = del 2>nul
+# 2>nul suppresses error if file does not exist
+
+# C PreProcessor flags
+CPPFLAGS = -MMD -fprofile-arcs -ftest-coverage
+# Special variable for implicit rule generation
+# -MMD generates (-M) the dependency files (*.d) without 
+# the system header files (-MM) and does not stop compilation at the 
+# preprocessor state (-MMD).
+
+# C++ compiler flags
+CXXFLAGS = -g -pg -fprofile-arcs -ftest-coverage
+# Special variable for implicit rule generation
+# -g for debugging symbols
+
+# GCC linker flags
+LDFLAGS = -g -pg -fprofile-arcs -ftest-coverage
+# Special variable for implicit rule generation
+# -g for debugging symbols
+
+
+
+# This protects against any files called 'all', 'clean', etc. 
+.PHONY : all clean rebuild 
 
 all : $(EXECUTABLE)
 
-deps : $(DEPS)
-
-objs : $(OBJS)
-	
 clean: 
-	@$(RM-F) *.o
-	@$(RM-F) *.d
+	$(RM) *.o
+	$(RM) *.d
+	$(RM) $(EXECUTABLE)
 
-veryclean: clean
-	@$(RM-F) $(EXECUTABLE)
+rebuild: clean all
 
-rebuild: veryclean all
-
+# This protects against having a missing dependency file and remakes the object 
 ifneq ($(MISSING_DEPS),)
 $(MISSING_DEPS) :
-	@$(RM-F) $(patsubst %.d, %.o, $@)
+	$(RM) $(patsubst %.d, %.o, $@)
 endif
 
--include $(DEPS)
 
-$(EXECUTABLE) : $(OBJS)
-	$(CC) -o $(EXECUTABLE) $(OBJS)
+$(EXECUTABLE) : $(OBJECTS)
+	$(CXX) $(LDFLAGS) -o $(EXECUTABLE) $(OBJECTS)
+
+# The recipes for the dependencies are determined using make's implicit rules
+include $(DEPS)
+
