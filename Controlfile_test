@@ -1,0 +1,35 @@
+#OligoSize => 10
+
+#CALCOUNTS => 0
+#CountGenome => small_temp.fasta.processed
+#GENOMESIZE => 4000000000
+#OligoSets => kmer_counts
+
+#GETPCLOUDS => 1
+#COPYTHRESHOLD => 2
+#ENDTHRESHOLD => 5
+#STEP1THRESHOLD => 10
+#STEP2THRESHOLD => 100
+#STEP3THRESHOLD => 1000
+#MaincloudsAssign => mainclouds.assign
+#MaincloudsInfo => mainclouds.info
+#AcccloudsAssign => maccclouds.assign
+
+
+#DISSECTION => 0
+#GenomeInput => small_temp.fasta.processed
+#WindowSize => 10
+#PercentCutoff => 80
+#RepeatRegion => small_temp.fasta.processed.C5.region
+#CloudAnnotation => cloud
+
+
+
+#CALCHUNCKSIZE => 10000000
+
+
+
+
+
+
+

@@ -1,0 +1,40 @@
+Stephen's Hacked options
+#KeepSSRs => 1
+#PrintCloudsInRegions => 1
+#PrintLegacyRegions => 0
+#ExpandRecursively => 0
+
+
+
+
+#OligoSize => 8
+
+#CALCOUNTS => 0
+#CountGenome => small_temp.fasta.processed
+#GENOMESIZE => 4000000000
+#OligoSets => kmer_counts
+
+
+#GETPCLOUDS => 1
+#COPYTHRESHOLD => 2
+#ENDTHRESHOLD => 5
+#STEP1THRESHOLD => 10
+#STEP2THRESHOLD => 100
+#STEP3THRESHOLD => 1000
+
+#MaincloudsInfo => testing.mainclouds.info
+#MaincloudsAssign => testing.mainclouds.assign
+#AcccloudsAssign => testing.accclouds.assign
+
+
+#DISSECTION => 0
+#GenomeInput => small_temp.fasta.processed
+#GenomeInput => human_mitochondria_test.fasta
+#WindowSize => 1
+#PercentCutoff => 50
+#CALCHUNCKSIZE => 10000
+#RepeatRegion => small_temp.fasta.processed.C5.region
+#RepeatRegion => human_mitochonrdia_test.region
+#CloudAnnotation => small_temp.fasta.processed.C5.cloud
+#CloudAnnotation => human_mitochonrdia_test.annotation
+
