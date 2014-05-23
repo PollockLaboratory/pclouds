@@ -4,12 +4,6 @@
  
 SOURCES = \
  clouds.cpp \
- counts.cpp \
- directmethod.cpp \
- genomehandle.cpp \
- mixedmethod01.cpp \
- mixedmethod02.cpp \
- overlapmethod.cpp \
  PClouds.cpp \
  readfile.cpp \
  stringhandle.cpp \

@@ -1,18 +1,11 @@
-/**
- * STP: This is clearly a cpp file. It used to be named *.c.
- *
- * This used to be named "genomepro.c". I have renamed it to "PClouds.cpp".
- *
- *
- */
 
 
 #include <iostream>
 #include <string>
 
+// In clouds.cpp
+int build_clouds_and_annotate_genome(const char* pchControlfile);
 
-#include "counts.h"
-#include "clouds.h"
 
 int main() {
 	std::cout << "STEPHEN's hacked version of P-clouds" << std::endl;
@@ -20,11 +13,12 @@ int main() {
 	std::string controlfile = "Controlfile";
 
 	//STP: Count kmers
-	calculatecounts(controlfile.c_str());
+	//calculatecounts(controlfile.c_str());
+	// Use Jellyfish or Perl for kmer counting
 
 	//STP: By 'dissect' he means 'possible make clouds and possible annotate
 	// the genome'. Most of the time 'dissect' means 'annotate'.
-	pcloudsdissection(controlfile.c_str());
+	build_clouds_and_annotate_genome(controlfile.c_str());
 
 	std::cout << std::endl << "P-clouds finished!" << std::endl;
 
