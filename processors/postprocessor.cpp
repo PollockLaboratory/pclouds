@@ -15,6 +15,9 @@
 // jason.de.koning@gmail.com
 // http://jasondk.org
 
+// Does not correct for the off by 18 error in the regions file
+// caused by the preproccessor inserting ">Processed reads" before the genome.
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -113,7 +116,7 @@ int main (int argc, const char * argv[]) {
             }
         }
 
-        // Don't allow the end annotation to go into the spacer (this happens due to the annotation algo)
+        // Don't allow the end annotation to go into the spacer (this happens due to the annotation algorithm)
         long long int end = regions.at(i).second;
         if ( closestSeq < (headers.size()-1) ) {
             if ( ( end + spacerLength ) > sequenceHash[ headers.at(closestSeq+1) ] ) {
@@ -129,6 +132,8 @@ int main (int argc, const char * argv[]) {
     return 0;
 }
 
+// Does not correct for the off by 18 error caused by the preproccessor
+// inserting ">Processed reads" before the genome.
 void getRegionsFile( string fname, vector< pair< long long int, long long int > >& regions ) {
     vector<string> tok;
     pair< long long int, long long int > tempRegion;

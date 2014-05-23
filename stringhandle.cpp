@@ -186,56 +186,60 @@ void stringtoarray(const std::string& src, char* target)
 	target[i] = '\0';
 }
 
-bool isonessr(char *pchPattern)
-{
-	int i;
-
-	for (i = 0; i< strlen(pchPattern) -1; i++)
-	{
-		if (pchPattern[i+1] != pchPattern[i])
-			return(0);
-	}
-
-	return(1);
+bool is_SSR(char *kmer) {
+	return is_one_SSR(kmer) or is_two_SSR(kmer) or is_three_SSR(kmer) or is_four_SSR(kmer);
 }
 
-bool istwossr(char *pchPattern)
+bool is_one_SSR(char *kmer)
 {
 	int i;
 
-	for (i = 0; i< strlen(pchPattern)-2; i ++)
+	for (i = 0; i< strlen(kmer) -1; i++)
 	{
-		if (pchPattern[i+2] != pchPattern[i])
-			return(0);
+		if (kmer[i+1] != kmer[i])
+			return(false);
 	}
 
-	return(1);
+	return(true);
 }
 
-bool isthreessr(char *pchPattern)
+bool is_two_SSR(char *kmer)
 {
 	int i;
 
-	for (i = 0; i< strlen(pchPattern)-3; i ++)
+	for (i = 0; i< strlen(kmer)-2; i ++)
 	{
-		if (pchPattern[i+3] != pchPattern[i])
-			return(0);
+		if (kmer[i+2] != kmer[i])
+			return(false);
 	}
 
-	return(1);
+	return(true);
 }
 
-bool isfourssr(char *pchPattern)
+bool is_three_SSR(char *kmer)
 {
 	int i;
 
-	for (i = 0; i< strlen(pchPattern)-4; i ++)
+	for (i = 0; i< strlen(kmer)-3; i ++)
 	{
-		if (pchPattern[i+4] != pchPattern[i])
-			return(0);
+		if (kmer[i+3] != kmer[i])
+			return(false);
 	}
 
-	return(1);
+	return(true);
+}
+
+bool is_four_SSR(char *kmer)
+{
+	int i;
+
+	for (i = 0; i< strlen(kmer)-4; i ++)
+	{
+		if (kmer[i+4] != kmer[i])
+			return(false);
+	}
+
+	return(true);
 }
 
 bool issegmentvalid(char *pchPattern)
