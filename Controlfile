@@ -1,17 +1,19 @@
 Stephen's Hacked options
-KeepSSRs => 1
-PrintCloudsInRegions => 1
+#KeepSSRs => 0
+#PrintCloudsInRegions => 0
 ExpandRecursively => 0
+#DontCareAboutClouds => 1
 
 
 
 
-#OligoSize => 10
+
+#OligoSize => 15
 
 #CALCOUNTS => 0
 #CountGenome => small_temp.fasta.processed
 #GENOMESIZE => 4000000000
-#OligoSets => kmer_counts
+#OligoSets => small_temp.fasta.processed.out_lumped
 
 
 #GETPCLOUDS => 0
@@ -22,15 +24,15 @@ ExpandRecursively => 0
 #STEP3THRESHOLD => 1000
 
 #MaincloudsInfo => testing.mainclouds.info
-#MaincloudsAssign => testing.mainclouds.assign.old
+#MaincloudsAssign => testing.mainclouds.assign
 #AcccloudsAssign => testing.accclouds.assign
 
 
 #DISSECTION => 1
-#GenomeInput => sequence
-#WindowSize => 3
-#PercentCutoff => 50
+#GenomeInput => small_temp.fasta.processed
+#WindowSize => 10
+#PercentCutoff => 80
 #CALCHUNCKSIZE => 10000
-#RepeatRegion => sequence.region
-#CloudAnnotation => sequence.annotation
+#RepeatRegion => testing.region
+#CloudAnnotation => testing.annotation
 

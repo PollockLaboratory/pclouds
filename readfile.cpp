@@ -40,7 +40,7 @@ int readfromfile(FILE *pfSource, char *pchBuff, long long iOffset, int iLength,
 #ifdef _WIN32
 	if (0 != fseek(pfSource, iOffset, SEEK_SET)) {
 #else
-	if (0 != fseeko(pfSource, iOffset, SEEK_SET)) {
+		if (0 != fseeko(pfSource, iOffset, SEEK_SET)) {
 #endif
 		printf("can not go to position: %lld!\n", iOffset);
 		return (0);
@@ -59,14 +59,16 @@ int readfromfile(FILE *pfSource, char *pchBuff, long long iOffset, int iLength,
 }
 
 //Read the controlfile to get the control settings for program
-bool ReadPcloudsControlfile(const char* pchControlfile, int& oligo_size,
-		int& m_nCopy, int& m_nEndthreshold, int& m_nStep1, int& m_nStep2,
-		int& m_nStep3, int& m_nChunksize, unsigned int& m_nGenomesize,
-		int& windowsize, int& percent, int& m_nGetclouds, int& m_nDissection,
-		char* pchrepeatfile, char* pchGenome, char* pchMainClouds,
-		char* pchMainAssign, char* pchAccAssign, char* pchAnnotationfile,
-		char* pchRegionfile) {
-	ifstream ifControlfile(pchControlfile);
+bool ReadPcloudsControlfile(const char* controlfile, int& kmer_size,
+		int& outer_threshold, int& core_1_threshold, int& core_2_threshold,
+		int& core_3_threshold, int& core_4_threshold, int& chunk_size,
+		unsigned int& genome_size, int& window_size, int& percent,
+		bool& build_clouds, bool& annotate_genome, char* kmer_counts_file,
+		char* genome_file, char* clouds_summary_file,
+		char* core_kmers_assign_file, char* outer_kmers_assign_file,
+		char* annotation_file, char* region_file) {
+
+	ifstream ifControlfile(controlfile);
 
 	if (!ifControlfile)
 		return (false);
@@ -116,43 +118,43 @@ bool ReadPcloudsControlfile(const char* pchControlfile, int& oligo_size,
 			cout << "Found option " << option << " : " << value << endl;
 
 			if (option == "OligoSize")
-				oligo_size = stringtonumber(value);
+				kmer_size = stringtonumber(value);
 			else if (option == "COPYTHRESHOLD")
-				m_nCopy = stringtonumber(value);
+				outer_threshold = stringtonumber(value);
 			else if (option == "ENDTHRESHOLD")
-				m_nEndthreshold = stringtonumber(value);
+				core_1_threshold = stringtonumber(value);
 			else if (option == "STEP1THRESHOLD")
-				m_nStep1 = stringtonumber(value);
+				core_2_threshold = stringtonumber(value);
 			else if (option == "STEP2THRESHOLD")
-				m_nStep2 = stringtonumber(value);
+				core_3_threshold = stringtonumber(value);
 			else if (option == "STEP3THRESHOLD")
-				m_nStep3 = stringtonumber(value);
+				core_4_threshold = stringtonumber(value);
 			else if (option == "CALCHUNCKSIZE")
-				m_nChunksize = stringtonumber(value);
+				chunk_size = stringtonumber(value);
 			else if (option == "GENOMESIZE")
-				m_nGenomesize = stringtolargenumber(value);
+				genome_size = stringtolargenumber(value);
 			else if (option == "WindowSize")
-				windowsize = stringtonumber(value);
+				window_size = stringtonumber(value);
 			else if (option == "PercentCutoff")
 				percent = stringtonumber(value);
 			else if (option == "GETPCLOUDS")
-				m_nGetclouds = stringtonumber(value);
+				build_clouds = stringtonumber(value);
 			else if (option == "DISSECTION")
-				m_nDissection = stringtonumber(value);
+				annotate_genome = stringtonumber(value);
 			else if (option == "OligoSets")
-				stringtoarray(value, pchrepeatfile);
+				stringtoarray(value, kmer_counts_file);
 			else if (option == "GenomeInput")
-				stringtoarray(value, pchGenome);
+				stringtoarray(value, genome_file);
 			else if (option == "MaincloudsInfo")
-				stringtoarray(value, pchMainClouds);
+				stringtoarray(value, clouds_summary_file);
 			else if (option == "MaincloudsAssign")
-				stringtoarray(value, pchMainAssign);
+				stringtoarray(value, core_kmers_assign_file);
 			else if (option == "AcccloudsAssign")
-				stringtoarray(value, pchAccAssign);
+				stringtoarray(value, outer_kmers_assign_file);
 			else if (option == "CloudAnnotation")
-				stringtoarray(value, pchAnnotationfile);
+				stringtoarray(value, annotation_file);
 			else if (option == "RepeatRegion")
-				stringtoarray(value, pchRegionfile);
+				stringtoarray(value, region_file);
 			else if (option == "KeepSSRs")
 				keep_SSRs = stringtonumber(value);
 			else if (option == "PrintCloudsInRegions")
