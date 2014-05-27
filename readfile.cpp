@@ -32,8 +32,8 @@ using std::endl;
 
 extern bool keep_SSRs;
 extern bool print_clouds_in_regions;
-extern bool print_legacy_regions;
 extern bool expand_recursively;
+extern bool dont_care_about_clouds;
 
 int readfromfile(FILE *pfSource, char *pchBuff, long long iOffset, int iLength,
 		int *piReadCount) {
@@ -71,7 +71,7 @@ bool ReadPcloudsControlfile(const char* pchControlfile, int& oligo_size,
 	if (!ifControlfile)
 		return (false);
 
-	std::string m_strLine, m_strTemp, m_strResult;
+	std::string m_strLine, option, value;
 
 	int i;
 
@@ -88,10 +88,10 @@ bool ReadPcloudsControlfile(const char* pchControlfile, int& oligo_size,
 			while (m_strLine[i] == ' ')
 				i++;
 
-			m_strTemp = "";
+			option = "";
 
 			while (m_strLine[i] != ' ') {
-				m_strTemp.append(1, m_strLine[i]);
+				option.append(1, m_strLine[i]);
 				i++;
 			}
 
@@ -103,62 +103,64 @@ bool ReadPcloudsControlfile(const char* pchControlfile, int& oligo_size,
 			while (m_strLine[i] == ' ')
 				i++;
 
-			m_strResult = "";
+			value = "";
 			int len = m_strLine.length();
 			while (i < len) //&& ((m_strLine[i] != ' ') || (m_strLine[i] != '\n')))
 			{
 				if ((m_strLine[i] != ' ') || (m_strLine[i] != '\n')) {
-					m_strResult.append(1, m_strLine[i]);
+					value.append(1, m_strLine[i]);
 					i++;
 				}
 			}
 
-			cout << "Found option " << m_strTemp << " : " << m_strResult << endl;
+			cout << "Found option " << option << " : " << value << endl;
 
-			if (m_strTemp == "OligoSize")
-				oligo_size = stringtonumber(m_strResult);
-			else if (m_strTemp == "COPYTHRESHOLD")
-				m_nCopy = stringtonumber(m_strResult);
-			else if (m_strTemp == "ENDTHRESHOLD")
-				m_nEndthreshold = stringtonumber(m_strResult);
-			else if (m_strTemp == "STEP1THRESHOLD")
-				m_nStep1 = stringtonumber(m_strResult);
-			else if (m_strTemp == "STEP2THRESHOLD")
-				m_nStep2 = stringtonumber(m_strResult);
-			else if (m_strTemp == "STEP3THRESHOLD")
-				m_nStep3 = stringtonumber(m_strResult);
-			else if (m_strTemp == "CALCHUNCKSIZE")
-				m_nChunksize = stringtonumber(m_strResult);
-			else if (m_strTemp == "GENOMESIZE")
-				m_nGenomesize = stringtolargenumber(m_strResult);
-			else if (m_strTemp == "WindowSize")
-				windowsize = stringtonumber(m_strResult);
-			else if (m_strTemp == "PercentCutoff")
-				percent = stringtonumber(m_strResult);
-			else if (m_strTemp == "GETPCLOUDS")
-				m_nGetclouds = stringtonumber(m_strResult);
-			else if (m_strTemp == "DISSECTION")
-				m_nDissection = stringtonumber(m_strResult);
-			else if (m_strTemp == "OligoSets")
-				stringtoarray(m_strResult, pchrepeatfile);
-			else if (m_strTemp == "GenomeInput")
-				stringtoarray(m_strResult, pchGenome);
-			else if (m_strTemp == "MaincloudsInfo")
-				stringtoarray(m_strResult, pchMainClouds);
-			else if (m_strTemp == "MaincloudsAssign")
-				stringtoarray(m_strResult, pchMainAssign);
-			else if (m_strTemp == "AcccloudsAssign")
-				stringtoarray(m_strResult, pchAccAssign);
-			else if (m_strTemp == "CloudAnnotation")
-				stringtoarray(m_strResult, pchAnnotationfile);
-			else if (m_strTemp == "RepeatRegion")
-				stringtoarray(m_strResult, pchRegionfile);
-			else if (m_strTemp == "KeepSSRs")
-				keep_SSRs = stringtonumber(m_strResult);
-			else if (m_strTemp == "PrintCloudsInRegions")
-				print_clouds_in_regions = stringtonumber(m_strResult);
-			else if (m_strTemp == "ExpandRecursively")
-				expand_recursively = stringtonumber(m_strResult);
+			if (option == "OligoSize")
+				oligo_size = stringtonumber(value);
+			else if (option == "COPYTHRESHOLD")
+				m_nCopy = stringtonumber(value);
+			else if (option == "ENDTHRESHOLD")
+				m_nEndthreshold = stringtonumber(value);
+			else if (option == "STEP1THRESHOLD")
+				m_nStep1 = stringtonumber(value);
+			else if (option == "STEP2THRESHOLD")
+				m_nStep2 = stringtonumber(value);
+			else if (option == "STEP3THRESHOLD")
+				m_nStep3 = stringtonumber(value);
+			else if (option == "CALCHUNCKSIZE")
+				m_nChunksize = stringtonumber(value);
+			else if (option == "GENOMESIZE")
+				m_nGenomesize = stringtolargenumber(value);
+			else if (option == "WindowSize")
+				windowsize = stringtonumber(value);
+			else if (option == "PercentCutoff")
+				percent = stringtonumber(value);
+			else if (option == "GETPCLOUDS")
+				m_nGetclouds = stringtonumber(value);
+			else if (option == "DISSECTION")
+				m_nDissection = stringtonumber(value);
+			else if (option == "OligoSets")
+				stringtoarray(value, pchrepeatfile);
+			else if (option == "GenomeInput")
+				stringtoarray(value, pchGenome);
+			else if (option == "MaincloudsInfo")
+				stringtoarray(value, pchMainClouds);
+			else if (option == "MaincloudsAssign")
+				stringtoarray(value, pchMainAssign);
+			else if (option == "AcccloudsAssign")
+				stringtoarray(value, pchAccAssign);
+			else if (option == "CloudAnnotation")
+				stringtoarray(value, pchAnnotationfile);
+			else if (option == "RepeatRegion")
+				stringtoarray(value, pchRegionfile);
+			else if (option == "KeepSSRs")
+				keep_SSRs = stringtonumber(value);
+			else if (option == "PrintCloudsInRegions")
+				print_clouds_in_regions = stringtonumber(value);
+			else if (option == "ExpandRecursively")
+				expand_recursively = stringtonumber(value);
+			else if (option == "DontCareAboutClouds")
+				dont_care_about_clouds = stringtonumber(value);
 		}
 	}
 	return (true);

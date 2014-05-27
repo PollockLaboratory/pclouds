@@ -1,8 +1,10 @@
 #include <iostream>
-#include <fstream> // for printing edges between core nodes in expansion network
+#include <fstream> // for printing edges in expansion network
 #include <cstring>
 #include <algorithm>
 #include <math.h>
+#include <vector>
+
 
 #include "macrodefine.h"
 #include "readfile.h"
@@ -21,8 +23,37 @@ using std::sort;
 bool keep_SSRs = false;
 bool print_clouds_in_regions = false;
 bool expand_recursively = false;
+bool dont_care_about_clouds = false;
 
 ofstream testmers("testmers");
+
+typedef std::vector <bool> bitvector;
+
+
+struct Kmer {
+	unsigned long number_pattern;
+	int cloud;
+	Kmer() {
+		number_pattern = 0;
+		cloud = 0;
+	}
+};
+
+struct CoreKmer {
+	unsigned long number_pattern;
+	int count;
+	int cloud;
+	bool has_been_extended;
+
+	CoreKmer() {
+		number_pattern = -1;
+		count = 0;
+		cloud = 0;
+		has_been_extended = 0;
+	}
+};
+
+
 
 static int sbsearch2(int n, const Kmer *argv, const unsigned long& key) {
 	int m;
@@ -132,7 +163,7 @@ static void getcloudandnumber(char* pchLine, int& cloud, int& number) {
 
 // transform the pattern sequence to the index of the array
 // coding method: A=00, C=01, G= 10, T=11,
-static void patterntoindex(const char *pchPattern, unsigned long& index,
+static void kmer_sequence_to_number_pattern(const char *pchPattern, unsigned long& index,
 		const int& patternsize) {
 	int i;
 	index = 0;
@@ -192,7 +223,7 @@ static void getonesubstitutions(const char* core_kmer,
 				//STP: Added for reverse prototype
 //				testmers << testmer << endl;
 
-				patterntoindex(testmer,
+				kmer_sequence_to_number_pattern(testmer,
 						array_of_testmer_number_patterns[number_of_testmers],
 						size);
 				number_of_testmers++;
@@ -214,7 +245,7 @@ static void getonesubstitutions(const char* core_kmer,
 					//STP: Added for reverse prototype
 //					testmers << testmer << endl;
 
-					patterntoindex(testmer,
+					kmer_sequence_to_number_pattern(testmer,
 							array_of_testmer_number_patterns[number_of_testmers],
 							size);
 					number_of_testmers++;
@@ -251,7 +282,7 @@ static void gettwosubstitutions(const char* core_kmer,
 						//STP: Added for reverse prototype
 //						testmers << testmer << endl;
 
-						patterntoindex(testmer,
+						kmer_sequence_to_number_pattern(testmer,
 								array_of_testmer_number_patterns[number_of_testmers],
 								size);
 						number_of_testmers++;
@@ -278,7 +309,7 @@ static void gettwosubstitutions(const char* core_kmer,
 						//STP: Added for reverse prototype
 //						testmers << testmer << endl;
 
-						patterntoindex(testmer,
+						kmer_sequence_to_number_pattern(testmer,
 								array_of_testmer_number_patterns[number_of_testmers],
 								size);
 						number_of_testmers++;
@@ -318,7 +349,7 @@ static void getthreesubstitutions(char* core_kmer,
 								//STP: Added for reverse prototype
 //								testmers << testmer << endl;
 
-								patterntoindex(testmer,
+								kmer_sequence_to_number_pattern(testmer,
 										array_of_testmer_number_patterns[number_of_testmers],
 										size);
 								number_of_testmers++;
@@ -351,7 +382,7 @@ static void getthreesubstitutions(char* core_kmer,
 								//STP: Added for reverse prototype
 //								testmers << testmer << endl;
 
-								patterntoindex(testmer,
+								kmer_sequence_to_number_pattern(testmer,
 										array_of_testmer_number_patterns[number_of_testmers],
 										size);
 								number_of_testmers++;
@@ -455,7 +486,7 @@ static int read_core_kmers(char *kmer_counts_file, CoreKmer* core_kmers,
 					int kmer_count = getnumber(pchLine);
 
 					if (kmer_count >= core_threshold) {
-						patterntoindex(pchTemp,
+						kmer_sequence_to_number_pattern(pchTemp,
 								core_kmers[number_of_core_kmers].number_pattern,
 								kmer_size);
 						core_kmers[number_of_core_kmers].count = kmer_count;
@@ -501,11 +532,11 @@ static void buildmainpcloud(CoreKmer* core_kmers, char* cloud_summary_file,
 	char* kmer_sequence = (char*) malloc(sizeof(char) * (kmer_size + 1));
 
 	int *total_count_of_members_for_each_cloud = (int *) malloc(
-			sizeof(int) * MAXCLOUD);
+			sizeof(int) * MAX_CLOUDS);
 	char** seed_sequences = (char**) malloc(
-			sizeof(char) * MAXCLOUD * (kmer_size + 1));
+			sizeof(char) * MAX_CLOUDS * (kmer_size + 1));
 	int *number_of_members_for_each_cloud = (int*) malloc(
-			sizeof(int) * MAXCLOUD);
+			sizeof(int) * MAX_CLOUDS);
 	int cloud_number_id = 0;
 
 	int iRepeatThreesubstitution = 0;
@@ -528,205 +559,212 @@ static void buildmainpcloud(CoreKmer* core_kmers, char* cloud_summary_file,
 	edges_out << "Source_core\tDestination_core" << endl;
 
 	int total_number_of_clouds = 0;
-
-	while ((core_kmer_index_from_top < number_of_core_kmers)
-			&& (core_kmers[core_kmer_index].count >= core_threshold)) {
-		// Cloud assignments must begin at 1 NOT 0
-		// If the core kmer has not been assigned
-		if (core_kmers[core_kmer_index].cloud == 0) {
-			total_number_of_clouds++;
-			core_kmers[core_kmer_index].cloud = total_number_of_clouds;
-		}
-		cloud_number_id = core_kmers[core_kmer_index].cloud;
-
-		cout << "Cloud " << cloud_number_id << endl;
-		number_pattern_to_kmer_sequence(kmer_sequence,
-				core_kmers[core_kmer_index].number_pattern, kmer_size);
-
-		cout << "Seed is " << kmer_sequence << endl;
-
-		// get the core sequence of the pcloud
-		seed_sequences[cloud_number_id - 1] = new char[kmer_size + 1];
-
-		number_pattern_to_kmer_sequence(
-				seed_sequences[cloud_number_id - 1],
-				core_kmer_number_patterns[core_kmer_index_from_top], kmer_size);
-
-		//cout << "Expanding around seed "
-		//	<< seed_sequences[cloud_number_id - 1] << endl;
-
-		strcpy(seed_sequence, seed_sequences[cloud_number_id - 1]);
-
-		number_of_members_for_each_cloud[cloud_number_id - 1] = 1;
-		total_count_of_members_for_each_cloud[cloud_number_id - 1] =
-				core_kmers[core_kmer_index].count;
-
-		core_kmers[core_kmer_index].has_been_extended = true;
-
-		//STP: iCoreThreesubstitution is the number of patterns that are 3 subs
-		// away from the seed kmer.
-		iCoreThreesubstitution = 0;
-		// Determine all the patterns within 3 substitutions
-		// Put them in piCoreThreesubstitution
-		getonesubstitutions(seed_sequence, piCoreThreesubstitution,
-				iCoreThreesubstitution);
-		gettwosubstitutions(seed_sequence, piCoreThreesubstitution,
-				iCoreThreesubstitution);
-
-		getthreesubstitutions(seed_sequence, piCoreThreesubstitution,
-				iCoreThreesubstitution);
-//		exit(1);
-		//STP: For outputting all the edges between cores for a network
-		// representation of the building method.
-
-		// For all the testmers within 3 subs of the seedmer
-		for (int i = 0; i < iCoreThreesubstitution; i++) {
-			//STP: result is now the index in main_oligos for the pattern given
-			// by the 'index' piCoreThreesubstitution[i] if found or -1 if not
-			// found
-			result = sbsearch3(number_of_core_kmers, core_kmers,
-					piCoreThreesubstitution[i]);
-
-			//If you find the pattern above in main_oligos
-			if (result >= 0) {
-
-				//If the main_oligo is not assigned, assign it.
-				// The unassigned value of .cloud must be 0
-				// Cloud assignments must begin at 1 NOT 0
-				if (core_kmers[result].cloud == 0) {
-					core_kmers[result].cloud = cloud_number_id;
-					number_pattern_to_kmer_sequence(kmer_sequence,
-							core_kmers[result].number_pattern, kmer_size);
-					//cout << "Adding " << kmer_sequence << endl;
-
-					//STP: Added for expansion network
-					edges_out << seed_sequence << "\t" << kmer_sequence << endl;
-
-					number_of_members_for_each_cloud[cloud_number_id - 1]++;
-					total_count_of_members_for_each_cloud[cloud_number_id - 1] +=
-							core_kmers[result].count;
-				}
-
-				//NOTICE: how assignment and extension (expansion) are
-				// completely independent
-
-				// get another 1-sub, 2-sub and 3-sub with repeat above core
-				// threshold
-				// STP: I think 'extension' means has already been extended.
-				if (not core_kmers[result].has_been_extended) {
-					// STP: These lines are the same as above!
-					core_kmers[result].has_been_extended = true;
-
-					// Find all the oligos that are 3 or less distance
-					iRepeatThreesubstitution = 0;
-					number_pattern_to_kmer_sequence(kmer_sequence,
-							core_kmers[result].number_pattern, kmer_size);
-
-					//cout << "Expanding around core " << kmer_sequence << endl;
-
-					getonesubstitutions(kmer_sequence,
-							piRepeatThreesubstitution,
-							iRepeatThreesubstitution);
-
-					gettwosubstitutions(kmer_sequence,
-							piRepeatThreesubstitution,
-							iRepeatThreesubstitution);
-
-					getthreesubstitutions(kmer_sequence,
-							piRepeatThreesubstitution,
-							iRepeatThreesubstitution);
-
-					//STP: For expansion network
-					string core_sequence(kmer_sequence);
-
-					// Do the second round of expansion
-					for (int j = 0; j < iRepeatThreesubstitution; j++) {
-						result = sbsearch3(number_of_core_kmers, core_kmers,
-								piRepeatThreesubstitution[j]);
-
-						if (result >= 0) {
-							if (core_kmers[result].cloud == 0) {
-								core_kmers[result].cloud = cloud_number_id;
-								number_pattern_to_kmer_sequence(kmer_sequence,
-										core_kmers[result].number_pattern,
-										kmer_size);
-								//cout << "Adding " << kmer_sequence << endl;
-
-								//STP: For making the expansion network
-								edges_out << core_sequence << "\t"
-										<< kmer_sequence << endl;
-
-								//edges_out << distanceBetween(core_sequence, kmer_sequence);
-
-								number_of_members_for_each_cloud[cloud_number_id
-										- 1]++;
-								total_count_of_members_for_each_cloud[cloud_number_id
-										- 1] += core_kmers[result].count;
-							}
-						}
-					}
-					//cout << "Done expanding around core " << core_sequence
-					//	<< endl;
-				}
-			}
-		}
-
-		//cout << "Done expanding around seed "
-		//	<< seed_sequences[cloud_number_id - 1] << endl;
-
-		// move to next core repeats
-		// Keep counting up until you find a main oligo that has not been
-		// assigned
-		// If this line is changed to checking if the main oligo has not been
-		// /extended/ then the method would continue to expand the cloud after
-		// the second expansion. Notice how we have not expanded around the
-		// core kmers that are 2 steps from a seedmer.
-		// Keep counting if
-		while (
-		// We haven't seen the last core. Stop if we have.
-		(core_kmer_index_from_top < number_of_core_kmers) and (
-		// EITHER
-		// We are not expanding recursively and the core we are
-		// looking at has been assigned already. Stop if it has not.
-				(not expand_recursively
-						and core_kmers[core_kmer_index].cloud != 0)
-				// OR
-						or
-						// We are expanding recursively and the core we are looking at
-						// has been assigned AND extended. Stop if it has not.
-						(expand_recursively
-								and core_kmers[core_kmer_index].cloud != 0
-								and core_kmers[core_kmer_index].has_been_extended))) {
-			core_kmer_index_from_top++;
-
-			// This is doing extra work. It should be outside this while loop.
-			if (core_kmer_index_from_top <= number_of_core_kmers - 1)
-				core_kmer_index = sbsearch3(number_of_core_kmers, core_kmers,
-						core_kmer_number_patterns[core_kmer_index_from_top]);
-
+	if (dont_care_about_clouds) {
+		cout << "basically ignoring clouds" << endl;
+		total_number_of_clouds = number_of_core_kmers;
+		for (int i = 0; i < number_of_core_kmers; i++) {
+			core_kmers[i].cloud = i;
 		}
 	}
+	else {
+		while ((core_kmer_index_from_top < number_of_core_kmers)
+				&& (core_kmers[core_kmer_index].count >= core_threshold)) {
+			// Cloud assignments must begin at 1 NOT 0
+			// If the core kmer has not been assigned
+			if (core_kmers[core_kmer_index].cloud == 0) {
+				total_number_of_clouds++;
+				core_kmers[core_kmer_index].cloud = total_number_of_clouds;
+			}
+			cloud_number_id = core_kmers[core_kmer_index].cloud;
 
+//			cout << "Cloud " << cloud_number_id << endl;
+			number_pattern_to_kmer_sequence(kmer_sequence,
+					core_kmers[core_kmer_index].number_pattern, kmer_size);
+
+//			cout << "Seed is " << kmer_sequence << endl;
+
+			// get the core sequence of the pcloud
+			seed_sequences[cloud_number_id - 1] = new char[kmer_size + 1];
+
+			number_pattern_to_kmer_sequence(
+					seed_sequences[cloud_number_id - 1],
+					core_kmer_number_patterns[core_kmer_index_from_top], kmer_size);
+
+			//cout << "Expanding around seed "
+			//	<< seed_sequences[cloud_number_id - 1] << endl;
+
+			strcpy(seed_sequence, seed_sequences[cloud_number_id - 1]);
+
+			number_of_members_for_each_cloud[cloud_number_id - 1] = 1;
+			total_count_of_members_for_each_cloud[cloud_number_id - 1] =
+					core_kmers[core_kmer_index].count;
+
+			core_kmers[core_kmer_index].has_been_extended = true;
+
+			//STP: iCoreThreesubstitution is the number of patterns that are 3 subs
+			// away from the seed kmer.
+			iCoreThreesubstitution = 0;
+			// Determine all the patterns within 3 substitutions
+			// Put them in piCoreThreesubstitution
+			getonesubstitutions(seed_sequence, piCoreThreesubstitution,
+					iCoreThreesubstitution);
+			gettwosubstitutions(seed_sequence, piCoreThreesubstitution,
+					iCoreThreesubstitution);
+
+			getthreesubstitutions(seed_sequence, piCoreThreesubstitution,
+					iCoreThreesubstitution);
+	//		exit(1);
+			//STP: For outputting all the edges between cores for a network
+			// representation of the building method.
+
+			// For all the testmers within 3 subs of the seedmer
+			for (int i = 0; i < iCoreThreesubstitution; i++) {
+				//STP: result is now the index in main_oligos for the pattern given
+				// by the 'index' piCoreThreesubstitution[i] if found or -1 if not
+				// found
+				result = sbsearch3(number_of_core_kmers, core_kmers,
+						piCoreThreesubstitution[i]);
+
+				//If you find the pattern above in main_oligos
+				if (result >= 0) {
+
+					//If the main_oligo is not assigned, assign it.
+					// The unassigned value of .cloud must be 0
+					// Cloud assignments must begin at 1 NOT 0
+					if (core_kmers[result].cloud == 0) {
+						core_kmers[result].cloud = cloud_number_id;
+						number_pattern_to_kmer_sequence(kmer_sequence,
+								core_kmers[result].number_pattern, kmer_size);
+						//cout << "Adding " << kmer_sequence << endl;
+
+						//STP: Added for expansion network
+						edges_out << seed_sequence << "\t" << kmer_sequence << endl;
+
+						number_of_members_for_each_cloud[cloud_number_id - 1]++;
+						total_count_of_members_for_each_cloud[cloud_number_id - 1] +=
+								core_kmers[result].count;
+					}
+
+					//NOTICE: how assignment and extension (expansion) are
+					// completely independent
+
+					// get another 1-sub, 2-sub and 3-sub with repeat above core
+					// threshold
+					// STP: I think 'extension' means has already been extended.
+					if (not core_kmers[result].has_been_extended) {
+						// STP: These lines are the same as above!
+						core_kmers[result].has_been_extended = true;
+
+						// Find all the oligos that have a distance of 3 or less
+						iRepeatThreesubstitution = 0;
+						number_pattern_to_kmer_sequence(kmer_sequence,
+								core_kmers[result].number_pattern, kmer_size);
+
+						//cout << "Expanding around core " << kmer_sequence << endl;
+
+						getonesubstitutions(kmer_sequence,
+								piRepeatThreesubstitution,
+								iRepeatThreesubstitution);
+
+						gettwosubstitutions(kmer_sequence,
+								piRepeatThreesubstitution,
+								iRepeatThreesubstitution);
+
+						getthreesubstitutions(kmer_sequence,
+								piRepeatThreesubstitution,
+								iRepeatThreesubstitution);
+
+						//STP: For expansion network
+						string core_sequence(kmer_sequence);
+
+						// Do the second round of expansion
+						for (int j = 0; j < iRepeatThreesubstitution; j++) {
+							result = sbsearch3(number_of_core_kmers, core_kmers,
+									piRepeatThreesubstitution[j]);
+
+							if (result >= 0) {
+								if (core_kmers[result].cloud == 0) {
+									core_kmers[result].cloud = cloud_number_id;
+									number_pattern_to_kmer_sequence(kmer_sequence,
+											core_kmers[result].number_pattern,
+											kmer_size);
+									//cout << "Adding " << kmer_sequence << endl;
+
+									//STP: For making the expansion network
+									edges_out << core_sequence << "\t"
+											<< kmer_sequence << endl;
+
+									//edges_out << distanceBetween(core_sequence, kmer_sequence);
+
+									number_of_members_for_each_cloud[cloud_number_id
+											- 1]++;
+									total_count_of_members_for_each_cloud[cloud_number_id
+											- 1] += core_kmers[result].count;
+								}
+							}
+						}
+						//cout << "Done expanding around core " << core_sequence
+						//	<< endl;
+					}
+				}
+			}
+
+			//cout << "Done expanding around seed "
+			//	<< seed_sequences[cloud_number_id - 1] << endl;
+
+			// move to next core repeats
+			// Keep counting up until you find a main oligo that has not been
+			// assigned
+			// If this line is changed to checking if the main oligo has not been
+			// /extended/ then the method would continue to expand the cloud after
+			// the second expansion. Notice how we have not expanded around the
+			// core kmers that are 2 steps from a seedmer.
+			// Keep counting if
+			while (
+			// We haven't seen the last core. Stop if we have.
+			(core_kmer_index_from_top < number_of_core_kmers) and (
+			// EITHER
+			// We are not expanding recursively and the core we are
+			// looking at has been assigned already. Stop if it has not.
+					(not expand_recursively
+							and core_kmers[core_kmer_index].cloud != 0)
+					// OR
+							or
+							// We are expanding recursively and the core we are looking at
+							// has been assigned AND extended. Stop if it has not.
+							(expand_recursively
+									and core_kmers[core_kmer_index].cloud != 0
+									and core_kmers[core_kmer_index].has_been_extended))) {
+				core_kmer_index_from_top++;
+
+				// This is doing extra work. It should be outside this while loop.
+				if (core_kmer_index_from_top <= number_of_core_kmers - 1)
+					core_kmer_index = sbsearch3(number_of_core_kmers, core_kmers,
+							core_kmer_number_patterns[core_kmer_index_from_top]);
+
+			}
+		}
+		FILE *pfOutput = fopen(cloud_summary_file, "wb");
+
+			for (int k = 0; k < total_number_of_clouds; k++)
+				fprintf(pfOutput, "%d\t%d\t%d\t%s\n", k + 1,
+						number_of_members_for_each_cloud[k],
+						total_count_of_members_for_each_cloud[k],
+						seed_sequences[k]);
+			fclose(pfOutput);
+
+
+	}
 	cout << "total clouds formed is " << total_number_of_clouds << endl;
 	free(piRepeatThreesubstitution);
 	free(piCoreThreesubstitution);
-	//output the main clouds information
-	FILE *pfOutput = fopen(cloud_summary_file, "wb");
-
-	for (int k = 0; k < total_number_of_clouds; k++)
-		fprintf(pfOutput, "%d\t%d\t%d\t%s\n", k + 1,
-				number_of_members_for_each_cloud[k],
-				total_count_of_members_for_each_cloud[k],
-				seed_sequences[k]);
-
-	free(core_kmer_number_patterns);
-	free(kmer_sequence);
-	free(seed_sequence);
-	fclose(pfOutput);
-
 	for (int k = 0; k < total_number_of_clouds; k++) {
 		delete[] (seed_sequences[k]);
 	}
+	free(core_kmer_number_patterns);
+	free(kmer_sequence);
+	free(seed_sequence);
+
 
 	free(seed_sequences);
 	free(total_count_of_members_for_each_cloud);
@@ -788,21 +826,21 @@ static int readmainclouds(const char* pchMainCloudassign, Kmer* pCloudsA,
 					pCloudsA[numberA].cloud = cloud;
 					strncpy(pchTemp, pchLine, size);
 					*(pchTemp + size) = '\0';
-					patterntoindex(pchTemp, index, size);
+					kmer_sequence_to_number_pattern(pchTemp, index, size);
 					pCloudsA[numberA].number_pattern = index;
 					numberA++;
 				} else if (count >= secondary_threshold) {
 					pCloudsB[numberB].cloud = cloud;
 					strncpy(pchTemp, pchLine, size);
 					*(pchTemp + size) = '\0';
-					patterntoindex(pchTemp, index, size);
+					kmer_sequence_to_number_pattern(pchTemp, index, size);
 					pCloudsB[numberB].number_pattern = index;
 					numberB++;
 				} else if (count >= primary_threshold) {
 					pCloudsC[numberC].cloud = cloud;
 					strncpy(pchTemp, pchLine, size);
 					*(pchTemp + size) = '\0';
-					patterntoindex(pchTemp, index, size);
+					kmer_sequence_to_number_pattern(pchTemp, index, size);
 					pCloudsC[numberC].number_pattern = index;
 					numberC++;
 				}
@@ -889,9 +927,9 @@ static int buildaccessarypcloud(char *pchrepeatfile, char* pchOutput,
 		while (!feof(pfRepeatfile)) {
 			number = 0;
 
-			Kmer* repeatacc = (Kmer*) malloc(sizeof(Kmer) * MAXACCMER);
+			Kmer* repeatacc = (Kmer*) malloc(sizeof(Kmer) * MAX_OUTER_KMERS);
 			// read in a chunk of accessory repeats
-			while ((!feof(pfRepeatfile)) && (number < MAXACCMER)) {
+			while ((!feof(pfRepeatfile)) && (number < MAX_OUTER_KMERS)) {
 				if (fgets(pchLine, MAX_LINE_LENGTH, pfRepeatfile) != NULL) {
 					strncpy(core_kmer, pchLine, oligo_size);
 					*(core_kmer + oligo_size) = '\0';
@@ -901,7 +939,7 @@ static int buildaccessarypcloud(char *pchrepeatfile, char* pchOutput,
 
 						if ((occur < threshold) && (occur >= outer_threshold)) {
 							// insert the acc into repeats[number]
-							patterntoindex(core_kmer,
+							kmer_sequence_to_number_pattern(core_kmer,
 									repeatacc[number].number_pattern,
 									oligo_size);
 
@@ -1068,19 +1106,15 @@ static int readclouds1(const char* pchMainCloudassign,
 				strncpy(pchTemp, pchLine, size);
 				*(pchTemp + size) = '\0';
 
-				patterntoindex(pchTemp, index, size);
+				kmer_sequence_to_number_pattern(pchTemp, index, size);
 
-				cout << "Found kmer " << pchTemp << " with index " << index
-						<< endl;
 
 				PatternVector[index] = true;
 				CloudIdVector[index] = getnumber(pchLine);
 
 				getreversecomplement(pchTemp, pchReverse);
-				patterntoindex(pchReverse, index, size);
+				kmer_sequence_to_number_pattern(pchReverse, index, size);
 
-				cout << "Found kmer " << pchTemp << " with index " << index
-						<< endl;
 
 				PatternVector[index] = true;
 				CloudIdVector[index] = getnumber(pchLine);
@@ -1106,25 +1140,21 @@ static int readclouds1(const char* pchMainCloudassign,
 				strncpy(pchTemp, pchLine, size);
 				*(pchTemp + size) = '\0';
 
-				patterntoindex(pchTemp, index, size);
+				kmer_sequence_to_number_pattern(pchTemp, index, size);
 				PatternVector[index] = true;
 
 				//STP: Added for printing the positions of the clouds
 				// in a repeat region
 				CloudIdVector[index] = getnumber(pchLine);
-				cout << "Found kmer " << pchTemp << " with index " << index
-						<< endl;
 
 				getreversecomplement(pchTemp, pchReverse);
-				patterntoindex(pchReverse, index, size);
+				kmer_sequence_to_number_pattern(pchReverse, index, size);
 
 				PatternVector[index] = true;
 
 				//STP: Added for printing the positions of the clouds
 				// in a repeat region
 				CloudIdVector[index] = getnumber(pchLine);
-				cout << "Found kmer " << pchTemp << " with index " << index
-						<< endl;
 			}
 		}
 
@@ -1245,7 +1275,7 @@ static int GenomeScanAndIdentify1(const char* pchGenome, const char* pchOutfile,
 					cloud_id = 0;
 
 					if (issegmentvalid(kmer_sequence)) {
-						patterntoindex(kmer_sequence, index, kmer_size);
+						kmer_sequence_to_number_pattern(kmer_sequence, index, kmer_size);
 
 						if (PatternVector[index]) {
 							patternnumber = 1;
@@ -1423,9 +1453,9 @@ int build_clouds_and_annotate_genome(const char* controlfile) {
 
 			delete[] (core_kmers);
 
-			Kmer* pMainCloudsA = (Kmer*) malloc(sizeof(Kmer) * MAXMAINMER);
-			Kmer* pMainCloudsB = (Kmer*) malloc(sizeof(Kmer) * MAXMAINMER);
-			Kmer* pMainCloudsC = (Kmer*) malloc(sizeof(Kmer) * MAXMAINMER);
+			Kmer* pMainCloudsA = (Kmer*) malloc(sizeof(Kmer) * MAX_CORE_KMERS);
+			Kmer* pMainCloudsB = (Kmer*) malloc(sizeof(Kmer) * MAX_CORE_KMERS);
+			Kmer* pMainCloudsC = (Kmer*) malloc(sizeof(Kmer) * MAX_CORE_KMERS);
 			int numberA, numberB, numberC;
 
 			readmainclouds(core_kmers_assign_file, pMainCloudsA, numberA,
@@ -1442,7 +1472,7 @@ int build_clouds_and_annotate_genome(const char* controlfile) {
 
 		} else {
 			cerr << "Open word count file error." << endl;
-			return (-1);
+			exit(-1);
 		}
 	}
 
@@ -1459,7 +1489,7 @@ int build_clouds_and_annotate_genome(const char* controlfile) {
 			cerr << "Genome Annotation and Repeat Region Identification Error."
 					<< endl;
 			PatternVector.clear();
-			return (-1);
+			exit(-1);
 		}
 
 		PatternVector.clear();
