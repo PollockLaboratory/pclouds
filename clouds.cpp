@@ -5,7 +5,6 @@
 #include <math.h>
 #include <vector>
 
-
 #include "macrodefine.h"
 #include "readfile.h"
 #include "stringhandle.h"
@@ -27,8 +26,7 @@ bool dont_care_about_clouds = false;
 
 ofstream testmers("testmers");
 
-typedef std::vector <bool> bitvector;
-
+typedef std::vector<bool> bitvector;
 
 struct Kmer {
 	unsigned long number_pattern;
@@ -53,8 +51,6 @@ struct CoreKmer {
 	}
 };
 
-
-
 static int sbsearch2(int n, const Kmer *argv, const unsigned long& key) {
 	int m;
 	int site = 0;
@@ -75,20 +71,20 @@ static int sbsearch2(int n, const Kmer *argv, const unsigned long& key) {
 }
 
 //STP: Is this a binary search algorithm?
-static int sbsearch3(int nOligos, const CoreKmer *oligos,
+static int sbsearch3(int number_of_kmers, const CoreKmer *oligos,
 		const unsigned long& key) {
 	int m;
 	int site = 0;
 
-	while (nOligos >= 1) {
-		m = nOligos / 2;
+	while (number_of_kmers >= 1) {
+		m = number_of_kmers / 2;
 		if (oligos[site + m].number_pattern == key)
 			return (site + m);
 		else if (oligos[site + m].number_pattern > key)
-			nOligos = m;
+			number_of_kmers = m;
 		else {
 			site = site + m + 1;
-			nOligos = nOligos - m - 1;
+			number_of_kmers = number_of_kmers - m - 1;
 		}
 	}
 
@@ -163,8 +159,8 @@ static void getcloudandnumber(char* pchLine, int& cloud, int& number) {
 
 // transform the pattern sequence to the index of the array
 // coding method: A=00, C=01, G= 10, T=11,
-static void kmer_sequence_to_number_pattern(const char *pchPattern, unsigned long& index,
-		const int& patternsize) {
+static void kmer_sequence_to_number_pattern(const char *pchPattern,
+		unsigned long& index, const int& patternsize) {
 	int i;
 	index = 0;
 	for (i = 0; i < patternsize; i++) {
@@ -565,8 +561,7 @@ static void buildmainpcloud(CoreKmer* core_kmers, char* cloud_summary_file,
 		for (int i = 0; i < number_of_core_kmers; i++) {
 			core_kmers[i].cloud = i;
 		}
-	}
-	else {
+	} else {
 		while ((core_kmer_index_from_top < number_of_core_kmers)
 				&& (core_kmers[core_kmer_index].count >= core_threshold)) {
 			// Cloud assignments must begin at 1 NOT 0
@@ -586,9 +581,9 @@ static void buildmainpcloud(CoreKmer* core_kmers, char* cloud_summary_file,
 			// get the core sequence of the pcloud
 			seed_sequences[cloud_number_id - 1] = new char[kmer_size + 1];
 
-			number_pattern_to_kmer_sequence(
-					seed_sequences[cloud_number_id - 1],
-					core_kmer_number_patterns[core_kmer_index_from_top], kmer_size);
+			number_pattern_to_kmer_sequence(seed_sequences[cloud_number_id - 1],
+					core_kmer_number_patterns[core_kmer_index_from_top],
+					kmer_size);
 
 			//cout << "Expanding around seed "
 			//	<< seed_sequences[cloud_number_id - 1] << endl;
@@ -613,7 +608,7 @@ static void buildmainpcloud(CoreKmer* core_kmers, char* cloud_summary_file,
 
 			getthreesubstitutions(seed_sequence, piCoreThreesubstitution,
 					iCoreThreesubstitution);
-	//		exit(1);
+			//		exit(1);
 			//STP: For outputting all the edges between cores for a network
 			// representation of the building method.
 
@@ -638,11 +633,12 @@ static void buildmainpcloud(CoreKmer* core_kmers, char* cloud_summary_file,
 						//cout << "Adding " << kmer_sequence << endl;
 
 						//STP: Added for expansion network
-						edges_out << seed_sequence << "\t" << kmer_sequence << endl;
+						edges_out << seed_sequence << "\t" << kmer_sequence
+								<< endl;
 
 						number_of_members_for_each_cloud[cloud_number_id - 1]++;
-						total_count_of_members_for_each_cloud[cloud_number_id - 1] +=
-								core_kmers[result].count;
+						total_count_of_members_for_each_cloud[cloud_number_id
+								- 1] += core_kmers[result].count;
 					}
 
 					//NOTICE: how assignment and extension (expansion) are
@@ -685,7 +681,8 @@ static void buildmainpcloud(CoreKmer* core_kmers, char* cloud_summary_file,
 							if (result >= 0) {
 								if (core_kmers[result].cloud == 0) {
 									core_kmers[result].cloud = cloud_number_id;
-									number_pattern_to_kmer_sequence(kmer_sequence,
+									number_pattern_to_kmer_sequence(
+											kmer_sequence,
 											core_kmers[result].number_pattern,
 											kmer_size);
 									//cout << "Adding " << kmer_sequence << endl;
@@ -739,20 +736,20 @@ static void buildmainpcloud(CoreKmer* core_kmers, char* cloud_summary_file,
 
 				// This is doing extra work. It should be outside this while loop.
 				if (core_kmer_index_from_top <= number_of_core_kmers - 1)
-					core_kmer_index = sbsearch3(number_of_core_kmers, core_kmers,
-							core_kmer_number_patterns[core_kmer_index_from_top]);
+					core_kmer_index =
+							sbsearch3(number_of_core_kmers, core_kmers,
+									core_kmer_number_patterns[core_kmer_index_from_top]);
 
 			}
 		}
 		FILE *pfOutput = fopen(cloud_summary_file, "wb");
 
-			for (int k = 0; k < total_number_of_clouds; k++)
-				fprintf(pfOutput, "%d\t%d\t%d\t%s\n", k + 1,
-						number_of_members_for_each_cloud[k],
-						total_count_of_members_for_each_cloud[k],
-						seed_sequences[k]);
-			fclose(pfOutput);
-
+		for (int k = 0; k < total_number_of_clouds; k++)
+			fprintf(pfOutput, "%d\t%d\t%d\t%s\n", k + 1,
+					number_of_members_for_each_cloud[k],
+					total_count_of_members_for_each_cloud[k],
+					seed_sequences[k]);
+		fclose(pfOutput);
 
 	}
 	cout << "total clouds formed is " << total_number_of_clouds << endl;
@@ -764,7 +761,6 @@ static void buildmainpcloud(CoreKmer* core_kmers, char* cloud_summary_file,
 	free(core_kmer_number_patterns);
 	free(kmer_sequence);
 	free(seed_sequence);
-
 
 	free(seed_sequences);
 	free(total_count_of_members_for_each_cloud);
@@ -1108,13 +1104,11 @@ static int readclouds1(const char* pchMainCloudassign,
 
 				kmer_sequence_to_number_pattern(pchTemp, index, size);
 
-
 				PatternVector[index] = true;
 				CloudIdVector[index] = getnumber(pchLine);
 
 				getreversecomplement(pchTemp, pchReverse);
 				kmer_sequence_to_number_pattern(pchReverse, index, size);
-
 
 				PatternVector[index] = true;
 				CloudIdVector[index] = getnumber(pchLine);
@@ -1275,7 +1269,8 @@ static int GenomeScanAndIdentify1(const char* pchGenome, const char* pchOutfile,
 					cloud_id = 0;
 
 					if (issegmentvalid(kmer_sequence)) {
-						kmer_sequence_to_number_pattern(kmer_sequence, index, kmer_size);
+						kmer_sequence_to_number_pattern(kmer_sequence, index,
+								kmer_size);
 
 						if (PatternVector[index]) {
 							patternnumber = 1;
@@ -1410,10 +1405,12 @@ static int GenomeScanAndIdentify1(const char* pchGenome, const char* pchOutfile,
 }
 
 int build_clouds_and_annotate_genome(const char* controlfile) {
-	int kmer_size, window_size, percent, build_clouds, annotate_genome;
+	int kmer_size, window_size, percent;
+	bool build_clouds, annotate_genome;
 
-	int core_2_threshold, core_3_threshold, core_4_threshold, core_1_threshold,
-			outer_threshold, chunk_size;
+	int outer_threshold, core_1_threshold, core_2_threshold, core_3_threshold,
+			core_4_threshold;
+	int chunk_size;
 	unsigned int genome_size;
 
 	char kmer_counts_file[MAX_FILENAME_LENGTH],
@@ -1477,8 +1474,8 @@ int build_clouds_and_annotate_genome(const char* controlfile) {
 	}
 
 	if (annotate_genome) {
-		bitvector PatternVector((unsigned long) pow(4, kmer_size), false);
-		vector<int> CloudIdVector((unsigned long) pow(4, kmer_size), 0);
+		bitvector PatternVector(pow(4, kmer_size), false);
+		vector<int> CloudIdVector(pow(4, kmer_size), 0);
 
 		readclouds1(core_kmers_assign_file, outer_kmers_assign_file,
 				PatternVector, CloudIdVector, kmer_size);
