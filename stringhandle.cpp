@@ -186,11 +186,11 @@ void stringtoarray(const std::string& src, char* target)
 	target[i] = '\0';
 }
 
-bool is_SSR(char *kmer) {
+bool is_SSR(const char *kmer) {
 	return is_one_SSR(kmer) or is_two_SSR(kmer) or is_three_SSR(kmer) or is_four_SSR(kmer);
 }
 
-bool is_one_SSR(char *kmer)
+bool is_one_SSR(const char *kmer)
 {
 	int i;
 
@@ -203,7 +203,7 @@ bool is_one_SSR(char *kmer)
 	return(true);
 }
 
-bool is_two_SSR(char *kmer)
+bool is_two_SSR(const char *kmer)
 {
 	int i;
 
@@ -216,7 +216,7 @@ bool is_two_SSR(char *kmer)
 	return(true);
 }
 
-bool is_three_SSR(char *kmer)
+bool is_three_SSR(const char *kmer)
 {
 	int i;
 
@@ -229,7 +229,7 @@ bool is_three_SSR(char *kmer)
 	return(true);
 }
 
-bool is_four_SSR(char *kmer)
+bool is_four_SSR(const char *kmer)
 {
 	int i;
 

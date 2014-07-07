@@ -31,15 +31,15 @@ unsigned int stringtolargenumber(const std::string& m_strTemp);
 
 void stringtoarray(const std::string& src, char* target);
 
-bool is_SSR(char *kmer);
+bool is_SSR(const char *kmer);
 
-bool is_one_SSR(char *kmer);
+bool is_one_SSR(const char *kmer);
 
-bool is_two_SSR(char *kmer);
+bool is_two_SSR(const char *kmer);
 
-bool is_three_SSR(char *kmer);
+bool is_three_SSR(const char *kmer);
 
-bool is_four_SSR(char *kmer);
+bool is_four_SSR(const char *kmer);
 
 bool issegmentvalid(char *pchPattern);
 

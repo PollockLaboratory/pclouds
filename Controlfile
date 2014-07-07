@@ -1,38 +1,32 @@
-Stephen's Hacked options
-#KeepSSRs => 0
-#PrintCloudsInRegions => 0
-ExpandRecursively => 0
-#DontCareAboutClouds => 1
+# Stephen's Hacked options #
+KeepSSRs	0
+PrintCloudsInRegions	0
+ExpandRecursively	0
+DontCareAboutClouds	0
+PrintTestmers	0
 
 
+KmerSize	10
+
+BuildClouds	1
+KmerCounts	small_temp.fasta.processed.out_lumped
+OuterThreshold	2
+CoreThreshold_1	5
+CoreThreshold_2	10
+CoreThreshold_3	100
+CoreThreshold_4	1000
+
+CloudSummaries	testing.clouds
+CoreKmers	testing.core_kmers
+OuterKmers	testing.outer_kmers
 
 
-
-#OligoSize => 15
-
-#CALCOUNTS => 0
-#CountGenome => small_temp.fasta.processed
-#GENOMESIZE => 4000000000
-#OligoSets => small_temp.fasta.processed.out_lumped
-
-
-#GETPCLOUDS => 0
-#COPYTHRESHOLD => 2
-#ENDTHRESHOLD => 5
-#STEP1THRESHOLD => 10
-#STEP2THRESHOLD => 100
-#STEP3THRESHOLD => 1000
-
-#MaincloudsInfo => testing.mainclouds.info
-#MaincloudsAssign => testing.mainclouds.assign
-#AcccloudsAssign => testing.accclouds.assign
-
-
-#DISSECTION => 1
-#GenomeInput => small_temp.fasta.processed
-#WindowSize => 10
-#PercentCutoff => 80
-#CALCHUNCKSIZE => 10000
-#RepeatRegion => testing.region
-#CloudAnnotation => testing.annotation
+Annotate	0
+Genome	small_temp.fasta.processed
+GenomeSize	4000000000
+GenomeChunkSize	10000
+WindowSize	10
+PercentCutoff	80
+RepeatRegion	testing.region
+CloudAnnotation	testing.annotation
 
