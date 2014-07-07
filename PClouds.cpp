@@ -3,24 +3,26 @@
 #include <iostream>
 #include <string>
 
+using namespace std;
+
+
 // In clouds.cpp
-int build_clouds_and_annotate_genome(const char* pchControlfile);
+// I didn't want to have a header file for two functions
+void build_clouds(string pchControlfile);
+void annotate_genome(string pchControlfile);
 
 
 int main() {
-	std::cout << "STEPHEN's hacked version of P-clouds" << std::endl;
+	cout << "STEPHEN's hacked version of P-clouds" << endl;
 
-	std::string controlfile = "Controlfile";
+	string controlfile = "Controlfile";
 
-	//STP: Count kmers
-	//calculatecounts(controlfile.c_str());
-	// Use Jellyfish or Perl for kmer counting
+	build_clouds(controlfile);
 
-	//STP: By 'dissect' he means 'possible make clouds and possible annotate
-	// the genome'. Most of the time 'dissect' means 'annotate'.
-	build_clouds_and_annotate_genome(controlfile.c_str());
+	annotate_genome(controlfile);
 
-	std::cout << std::endl << "P-clouds finished!" << std::endl;
+	std::cout << std::endl <<
+			"STEPHEN's hacked version of P-clouds finished!" << std::endl;
 
 	return (0);
 }
