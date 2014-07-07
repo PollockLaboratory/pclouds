@@ -152,7 +152,7 @@ void read_controlfile(string controlfile, int& kmer_size, int& outer_threshold,
 				percent = stringtonumber(value);
 			else if (option == "BuildClouds")
 				build_clouds = stringtonumber(value);
-			else if (option == "Annotate")
+			else if (option == "AnnotateGenome")
 				annotate_genome = stringtonumber(value);
 			else if (option == "KmerCounts")
 				kmer_counts_file = value;
