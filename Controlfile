@@ -21,10 +21,10 @@ CoreKmers	testing.core_kmers
 OuterKmers	testing.outer_kmers
 
 
-Annotate	0
+Annotate	1
 Genome	small_temp.fasta.processed
-GenomeSize	4000000000
-GenomeChunkSize	10000
+GenomeSize	600000
+GenomeChunkSize	100000
 WindowSize	10
 PercentCutoff	80
 RepeatRegion	testing.region

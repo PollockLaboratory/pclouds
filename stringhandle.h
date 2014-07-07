@@ -24,6 +24,7 @@ int stringinitial(char *pchSource, int iLength);
 int stringcopy(char *pchSource, char *pchTarget, int iLength);
 
 void getreversecomplement(const char* pchSource, char* pchTarget);
+std::string getreversecomplement(std::string kmer);
 
 int stringtonumber(const std::string& m_strTemp);
 

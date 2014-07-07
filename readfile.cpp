@@ -31,45 +31,91 @@ extern bool print_clouds_in_regions;
 extern bool expand_recursively;
 extern bool dont_care_about_clouds;
 extern bool print_testmers;
+extern bool genome_has_header;
 
-int readfromfile(FILE *pfSource, char *pchBuff, long long iOffset, int iLength,
-		int *piReadCount) {
+/*
+ * I do not understand the return status from this function.
+ * return 2 means read was successful.
+ * return 1 means ??
+ * return 0 mean ?? - cannot go to position
+ *
+ */
+int read_chunk_from_genome_file(FILE *genome_file, char *genome_chunk,
+		long long genome_chunk_start, int genome_chunk_size,
+		int& genome_chunk_actual_size) {
 #ifdef _WIN32
-	if (0 != fseek(pfSource, iOffset, SEEK_SET)) {
+	if (fseek(genome_file, genome_chunk_start, SEEK_SET)) {
 #else
-		if (0 != fseeko(pfSource, iOffset, SEEK_SET)) {
+		if (fseeko(genome_file, genome_chunk_start, SEEK_SET) != 0) {
 #endif
-		printf("can not go to position: %lld!\n", iOffset);
+		printf("can not go to position: %lld!\n", genome_chunk_start);
 		return (0);
 	}
 
-	*piReadCount = fread(pchBuff, sizeof(char), iLength, pfSource);
+	genome_chunk_actual_size = fread(genome_chunk, sizeof(char),
+			genome_chunk_size, genome_file);
 
-	if (*piReadCount < (signed) (sizeof(char) * iLength)) {
-		if (feof(pfSource))
+	cerr << "chunk size requested " << genome_chunk_size << "\n";
+	cerr << "chunk size received " << genome_chunk_actual_size << "\n";
+//STP: If read was not successful
+	if (genome_chunk_actual_size != genome_chunk_size) {
+		genome_chunk[genome_chunk_actual_size] = '\0';
+		cout << genome_chunk;
+		if (feof(genome_file)) {
+			cerr << "Reached the end of the genome file" << endl;
 			return (1);
-		else
+		} else {
+			cerr << "Read error in genome file" << endl;
 			return (0);
+		}
 	}
-
 	return (2);
 }
 
-void read_controlfile(string controlfile, int& kmer_size,
-		int& outer_threshold, int& core_threshold_1, int& core_threshold_2,
-		int& core_threshold_3, int& core_threshold_4, int& chunk_size,
-		unsigned int& genome_size, int& window_size, int& percent,
-		bool& build_clouds, bool& annotate_genome, string kmer_counts_file,
-		string genome_file, string clouds_summary_file,
-		string core_kmers_assign_file, string outer_kmers_assign_file,
-		string annotation_file, string region_file) {
+void read_chunk_from_genome_file2(FILE *genome_file, char *genome_chunk,
+		long long genome_chunk_start, int& genome_chunk_size) {
+#ifdef _WIN32
+	if (fseek(genome_file, genome_chunk_start, SEEK_SET)) {
+#else
+		if (fseeko(genome_file, genome_chunk_start, SEEK_SET) != 0) {
+#endif
+		printf("Can not go to genome chunk start position: %lld!\n", genome_chunk_start);
+		exit(-1);
+	}
+	int expected_genome_chunk_size = genome_chunk_size;
+
+	genome_chunk_size = fread(genome_chunk, sizeof(char),
+			genome_chunk_size, genome_file);
+
+	//STP: If read did not return what you expected
+	if (genome_chunk_size != expected_genome_chunk_size) {
+		genome_chunk[genome_chunk_size] = '\0';
+		cout << "This is the last chunk:\n" << genome_chunk << "\n";
+		if (feof(genome_file)) {
+			cout << "Reached the end of the genome file" << endl;
+		} else {
+			cerr << "Read error in genome file" << endl;
+			exit(-1);
+		}
+	}
+}
+
+void read_controlfile(string controlfile, int& kmer_size, int& outer_threshold,
+		int& core_threshold_1, int& core_threshold_2, int& core_threshold_3,
+		int& core_threshold_4, int& chunk_size, unsigned int& genome_size,
+		int& window_size, int& percent, bool& build_clouds,
+		bool& annotate_genome, string& kmer_counts_file, string& genome_file,
+		string& clouds_summary_file, string& core_kmers_assign_file,
+		string& outer_kmers_assign_file, string& annotation_file,
+		string& region_file) {
 
 	ifstream ifControlfile(controlfile.c_str());
 
 	if (not ifControlfile.good()) {
-		cerr << "Cannot read control file" << endl;
+		cerr << "Cannot read control file: " << controlfile << "\n";
 		exit(-1);
 	}
+	cout << "Reading control file: " << controlfile << "\n";
 
 	bool in_comment = false;
 	string option = "";
@@ -82,7 +128,7 @@ void read_controlfile(string controlfile, int& kmer_size,
 			in_comment = not in_comment;
 		} else if (not in_comment) {
 			ifControlfile >> value;
-			cout << "Found option " << option << " : " << value << endl;
+			// cout << "Found option " << option << " : " << value << endl;
 
 			if (option == "KmerSize")
 				kmer_size = stringtonumber(value);
@@ -132,6 +178,8 @@ void read_controlfile(string controlfile, int& kmer_size,
 				dont_care_about_clouds = stringtonumber(value);
 			else if (option == "PrintTestmers")
 				print_testmers = stringtonumber(value);
+			else if (option == "GenomeHasHeader")
+				genome_has_header = stringtonumber(value);
 		}
 	}
 }
