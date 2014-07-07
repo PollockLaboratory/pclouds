@@ -21,6 +21,7 @@ bool print_clouds_in_regions = false;
 bool expand_recursively = false;
 bool dont_care_about_clouds = false;
 bool print_testmers = false;
+bool genome_has_header = false;
 
 ofstream testmers("testmers");
 
@@ -47,7 +48,7 @@ struct CoreKmer {
 	}
 };
 
-static int sbsearch2(int n, const Kmer *argv, const unsigned long& key) {
+int sbsearch2(int n, const Kmer *argv, const unsigned long& key) {
 	int m;
 	int site = 0;
 
@@ -67,7 +68,7 @@ static int sbsearch2(int n, const Kmer *argv, const unsigned long& key) {
 }
 
 //STP: Is this a binary search algorithm?
-static int sbsearch3(int number_of_kmers, const CoreKmer *oligos,
+int sbsearch3(int number_of_kmers, const CoreKmer *oligos,
 		const unsigned long& key) {
 	int m;
 	int site = 0;
@@ -87,28 +88,28 @@ static int sbsearch3(int number_of_kmers, const CoreKmer *oligos,
 	return (-1);
 }
 
-static bool highnumber3(CoreKmer a, CoreKmer b) {
+bool highnumber3(CoreKmer a, CoreKmer b) {
 	if (a.count > b.count)
 		return (1);
 	else
 		return (0);
 }
 
-static bool lowsequence2(Kmer a, Kmer b) {
+bool lowsequence2(Kmer a, Kmer b) {
 	if (a.number_pattern < b.number_pattern)
 		return (1);
 	else
 		return (0);
 }
 
-static bool lowsequence3(CoreKmer a, CoreKmer b) {
+bool lowsequence3(CoreKmer a, CoreKmer b) {
 	if (a.number_pattern < b.number_pattern)
 		return (1);
 	else
 		return (0);
 }
 
-static int get_kmer_count(char* line) {
+int get_kmer_count(char* line) {
 	int i = 0;
 	int count = 0;
 
@@ -125,7 +126,7 @@ static int get_kmer_count(char* line) {
 	return (count);
 }
 
-static void getcloudandnumber(char* pchLine, int& cloud, int& number) {
+void getcloudandnumber(char* pchLine, int& cloud, int& number) {
 	int i = 0;
 
 	cloud = 0;
@@ -155,7 +156,7 @@ static void getcloudandnumber(char* pchLine, int& cloud, int& number) {
 
 // transform the pattern sequence to the index of the array
 // coding method: A=00, C=01, G= 10, T=11,
-static void kmer_sequence_to_number_pattern(const char *pchPattern,
+void kmer_sequence_to_number_pattern(const char *pchPattern,
 		unsigned long& index, const int& patternsize) {
 	int i;
 	index = 0;
@@ -172,7 +173,7 @@ static void kmer_sequence_to_number_pattern(const char *pchPattern,
 	}
 }
 
-static void number_pattern_to_kmer_sequence(char *pchPattern,
+void number_pattern_to_kmer_sequence(char *pchPattern,
 		const unsigned long& index, const int& patternsize) {
 	int i;
 	unsigned long value;
@@ -197,7 +198,7 @@ static void number_pattern_to_kmer_sequence(char *pchPattern,
 
 // Generates all the possible kmers (and their reverse complements) that are
 // one substitution away from pchCore
-static void get_one_substitutions(const char* core_kmer,
+void get_one_substitutions(const char* core_kmer,
 		unsigned long* array_of_testmer_number_patterns,
 		int& number_of_testmers) {
 	char alphabet[5] = "ACGT";
@@ -256,7 +257,7 @@ static void get_one_substitutions(const char* core_kmer,
 	 free(testmer);*/
 }
 
-static void get_two_substitutions(const char* core_kmer,
+void get_two_substitutions(const char* core_kmer,
 		unsigned long* array_of_testmer_number_patterns,
 		int& number_of_testmers) {
 	char alphabet[5] = "ACGT";
@@ -322,7 +323,7 @@ static void get_two_substitutions(const char* core_kmer,
 	free(testmer);
 }
 
-static void get_three_substitutions(char* core_kmer,
+void get_three_substitutions(char* core_kmer,
 		unsigned long* array_of_testmer_number_patterns,
 		int& number_of_testmers) {
 	char alphabet[5] = "ACGT";
@@ -401,7 +402,7 @@ static void get_three_substitutions(char* core_kmer,
 	free(testmer);
 }
 
-static bool is_repeat_region(vector<int>& occurrence, const int& percent) {
+bool is_repeat_region(vector<int>& occurrence, const int& percent) {
 	vector<int>::iterator pOccurrence;
 
 	int count = 0;
@@ -418,7 +419,7 @@ static bool is_repeat_region(vector<int>& occurrence, const int& percent) {
 		return (0);
 }
 
-static void count_core_and_outer_kmers(string kmer_counts_file,
+void count_core_and_outer_kmers(string kmer_counts_file,
 		int& number_of_core_kmers, int& number_of_outer_kmers,
 		const int kmer_size, const int core_threshold,
 		const int outer_threshold) {
@@ -428,7 +429,8 @@ static void count_core_and_outer_kmers(string kmer_counts_file,
 
 	ifstream kmer_counts(kmer_counts_file.c_str());
 	if (not kmer_counts.good()) {
-		cerr << "Can not find the repeat file: " << kmer_counts_file << "\n";
+		cerr << "Can not find the repeat file: " << __LINE__ << kmer_counts_file
+				<< "\n";
 		//STP: This is a fatal error
 		exit(-1);
 	}
@@ -448,7 +450,7 @@ static void count_core_and_outer_kmers(string kmer_counts_file,
 
 // read the oligos which is in mainclouds into repeats1 array
 //STP: This does not take into account reverse complement of kmers.
-static int read_core_kmers(string kmer_counts_file, CoreKmer* core_kmers,
+int read_core_kmers(string kmer_counts_file, CoreKmer* core_kmers,
 		int& number_of_core_kmers, const int kmer_size,
 		const int core_threshold) {
 
@@ -460,7 +462,8 @@ static int read_core_kmers(string kmer_counts_file, CoreKmer* core_kmers,
 	number_of_core_kmers = 0;
 
 	if ((pfRepeatfile = fopen(kmer_counts_file.c_str(), "r")) == NULL) {
-		cerr << "Can not find the repeat file: " << kmer_counts_file << "\n";
+		cerr << "Can not find the repeat file: " << __LINE__ << kmer_counts_file
+				<< "\n";
 		exit(-1);
 	} else {
 		line = (char *) malloc(sizeof(char) * MAX_LINE_LENGTH);
@@ -496,7 +499,7 @@ static int read_core_kmers(string kmer_counts_file, CoreKmer* core_kmers,
 
 // build main clouds based on the algorithm
 //STP: Which algorithm??
-static void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file,
+void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file,
 		const int& number_of_core_kmers, const int& kmer_size,
 		const int& core_threshold) {
 
@@ -754,7 +757,8 @@ static void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file,
 		fclose(pfOutput);
 
 	}
-	cout << "total clouds formed is " << total_number_of_clouds << endl;
+	cout << total_number_of_clouds << " clouds formed\n";
+
 	free(piRepeatThreesubstitution);
 	free(piCoreThreesubstitution);
 	for (int k = 0; k < total_number_of_clouds; k++) {
@@ -771,7 +775,7 @@ static void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file,
 }
 
 //output the mainclouds assignments of each oligo in main clouds
-static void output_cloud_cores(CoreKmer* main_oligos, string pchResult,
+void output_cloud_cores(CoreKmer* main_oligos, string pchResult,
 		const int& nOligos_above_end_threshold, const int& size) {
 	FILE *pfResult = fopen(pchResult.c_str(), "wb");
 
@@ -793,9 +797,9 @@ static void output_cloud_cores(CoreKmer* main_oligos, string pchResult,
 }
 
 // read main clouds assignments information into three different sets
-static int read_cloud_cores(string pchMainCloudassign, Kmer* pCloudsA,
-		int& numberA, Kmer* pCloudsB, int& numberB, Kmer* pCloudsC,
-		int& numberC, const int& size, const int& primary_threshold,
+int read_cloud_cores(string pchMainCloudassign, Kmer* pCloudsA, int& numberA,
+		Kmer* pCloudsB, int& numberB, Kmer* pCloudsC, int& numberC,
+		const int& size, const int& primary_threshold,
 		const int& secondary_threshold, const
 		int& tertiary_threshold) {
 	/*
@@ -862,7 +866,7 @@ static int read_cloud_cores(string pchMainCloudassign, Kmer* pCloudsA,
 }
 
 // assign the oligos in accessory regions into P clouds constructed in former step
-static int build_cloud_outer(string pchrepeatfile, string pchOutput,
+int build_cloud_outer(string pchrepeatfile, string pchOutput,
 		Kmer* core_kmers_above_tertiary,
 		const int& number_of_cores_above_tertiary,
 		Kmer* core_kmers_above_secondary,
@@ -920,7 +924,8 @@ static int build_cloud_outer(string pchrepeatfile, string pchOutput,
 	ofstream edges_out("edges_out", fstream::app);
 
 	if ((pfRepeatfile = fopen(pchrepeatfile.c_str(), "r")) == NULL) {
-		cerr << "Can not find the repeat file: " << pchrepeatfile << "\n";
+		cerr << "Can not find the repeat file: " << __LINE__ << pchrepeatfile
+				<< "\n";
 		exit(-1);
 	} else {
 		pchLine = (char *) malloc(sizeof(char) * MAX_LINE_LENGTH);
@@ -1085,112 +1090,63 @@ static int build_cloud_outer(string pchrepeatfile, string pchOutput,
 	return (1);
 }
 
-//for 16mers, build the bool patternmatrix to ascertain which oligo is in the P clouds
-//STP: Modified to annotate the positions of the clouds in repeat regions
-static int readclouds1(string core_kmers_file, string outer_kmers_file,
+void UpdatePatternAndCloudIdVectors(string kmer_assign_file,
 		vector<bool>& PatternVector, vector<int>& CloudIdVector,
 		const int& size) {
 
-	FILE *pfAccCloudassign;
-	char *line;
-	char *pchTemp;
-	char* pchReverse;
-	unsigned long index;
-
-	ifstream core_kmers(core_kmers_file.c_str());
-	if (not core_kmers.good()) {
-		cerr << "Can not read the cloud assign file: " << core_kmers_file
+	ifstream kmers(kmer_assign_file.c_str());
+	if (not kmers.good()) {
+		cerr << "Can not read the kmer assign file: " << kmer_assign_file
 				<< "\n";
 		exit(-1);
 	}
 
-	pchReverse = (char*) malloc(sizeof(char) * (size + 1));
-	string kmer = "";
-	int cloud = 0;
-	int count = 0;
-	while (core_kmers.good()) {
-		core_kmers >> kmer >> cloud >> count;
+	unsigned long index = 0;
+	while (kmers.good()) {
+		string kmer = "";
+		int assigned_cloud = 0;
+
+		kmers >> kmer >> assigned_cloud;
 		kmer_sequence_to_number_pattern(kmer.c_str(), index, size);
 
 		PatternVector[index] = true;
-		CloudIdVector[index] = cloud;
+		CloudIdVector[index] = assigned_cloud;
 
-		getreversecomplement(kmer.c_str(), pchReverse);
-		kmer_sequence_to_number_pattern(pchReverse, index, size);
+		string reverse_complement = getreversecomplement(kmer);
+		kmer_sequence_to_number_pattern(reverse_complement.c_str(), index,
+				size);
 
 		PatternVector[index] = true;
-		CloudIdVector[index] = cloud;
-
+		CloudIdVector[index] = assigned_cloud;
 	}
-
-	free(pchReverse);
-
-	if ((pfAccCloudassign = fopen(outer_kmers_file.c_str(), "r")) == NULL) {
-		cerr << "Can not find the cloud assign file: " << outer_kmers_file
-				<< "\n";
-		return (0);
-	} else {
-		line = (char *) malloc(sizeof(char) * MAX_LINE_LENGTH);
-		pchTemp = (char*) malloc(sizeof(char) * (size + 1));
-		pchReverse = (char*) malloc(sizeof(char) * (size + 1));
-
-		while (!feof(pfAccCloudassign)) {
-			if (fgets(line, MAX_LINE_LENGTH, pfAccCloudassign) != NULL) {
-				strncpy(pchTemp, line, size);
-				*(pchTemp + size) = '\0';
-
-				kmer_sequence_to_number_pattern(pchTemp, index, size);
-				PatternVector[index] = true;
-
-				//STP: Added for printing the positions of the clouds
-				// in a repeat region
-				CloudIdVector[index] = get_kmer_count(line);
-
-				getreversecomplement(pchTemp, pchReverse);
-				kmer_sequence_to_number_pattern(pchReverse, index, size);
-
-				PatternVector[index] = true;
-
-				//STP: Added for printing the positions of the clouds
-				// in a repeat region
-				CloudIdVector[index] = get_kmer_count(line);
-			}
-		}
-
-		free(line);
-		free(pchTemp);
-		free(pchReverse);
-		fclose(pfAccCloudassign);
-	}
-
-	return (1);
 }
 
-static int GenomeScanAndIdentify1(string genome, string pchOutfile,
+void find_repeat_regions(string genome_file, string pchOutfile,
 		string pchRegionfile, const vector<bool>& PatternVector,
-		const vector<int>& CloudIdVector, const int& kmer_size,
-		const int& windowsize, const int& percent, const int& m_nChunksize,
-		const unsigned int& m_nGenomesize) {
+		const vector<int>& CloudIdVector, const int kmer_size,
+		const int windowsize, const int percent, int& genome_chunk_size,
+		const unsigned int genome_size) {
 
-	cout << "Scanning genome for clouds..." << endl;
-
-	int *actual_chunk_size = (int*) malloc(sizeof(int));
+	int actual_genome_chunk_size = 0;
 
 	char *kmer_sequence = (char *) malloc(sizeof(char) * (kmer_size + 1));
-	char *pchReverse = (char *) malloc(sizeof(char) * (kmer_size + 1));
+	char *reverse_complement_sequence = (char *) malloc(
+			sizeof(char) * (kmer_size + 1));
 
-	char *chunk = (char*) malloc(sizeof(char) * m_nChunksize);
-	if (chunk == NULL) {
-		cerr << "The system can not allocate the memory!\n";
+	char *genome_chunk = (char*) malloc(sizeof(char) * genome_chunk_size);
+	if (genome_chunk == NULL) {
+		cerr
+				<< "The system can not allocate the memory for the genome chunk!\n";
 		exit(-1);
 	}
+
 	/*
 	 * STP: The preprocessed fasta file has ">Processed reads" in the first line
 	 * This removes that header so the regions actually correspond to
 	 * the regions in the genome.
 	 */
-	long long chunk_start = 18;
-	int iRead;
+	long long genome_chunk_start = genome_has_header ? 18 : 0;
+	int read_status = 1;
 
 	FILE *pfOut = fopen(pchOutfile.c_str(), "wb");
 
@@ -1223,148 +1179,136 @@ static int GenomeScanAndIdentify1(string genome, string pchOutfile,
 	} else {
 		fputs("Start\tEnd\n", pfRegion);
 	}
-	FILE *pfGenome = fopen(genome.c_str(), "r");
-	if (pfGenome == NULL) {
-		cerr << "Can not find the genome file: " << genome << "\n";
+	FILE *genome = fopen(genome_file.c_str(), "r");
+	if (genome == NULL) {
+		cerr << "Can not find the genome file: " << genome_file << "\n";
 		exit(-1);
 	}
 
-	do {
+	while (not feof(genome)) {
 
 		/* Does this handle the stretch of sequence at the junction
 		 between reads? Those need to be handled specially.
 		 They are handled specially below when the new iOffset is
 		 calculated. */
-		// STP: all ends should be exclusive -- double check
-		int chunk_end = chunk_start + m_nChunksize - 1;
-		if (chunk_end <= m_nGenomesize)
-			iRead = readfromfile(pfGenome, chunk, chunk_start, m_nChunksize,
-					actual_chunk_size);
-		else
-			iRead = readfromfile(pfGenome, chunk, chunk_start,
-					m_nGenomesize - chunk_start, actual_chunk_size);
 
-		if (iRead == 0) {
-			free(kmer_sequence);
-			free(chunk);
-			free(pchReverse);
-			free(actual_chunk_size);
-			return (0);
-		} else {
-			//STP: Read has succeeded
-			for (int site = 0; site <= *actual_chunk_size - kmer_size;
-					site++, genome_position++) {
+		read_chunk_from_genome_file2(genome, genome_chunk, genome_chunk_start,
+				genome_chunk_size);
 
-				if ((site % 80 == 0) && (site != 0))
-					fprintf(pfOut, "\n");
+		for (int site = 0; site <= genome_chunk_size - kmer_size;
+				site++, genome_position++) {
 
-				//STP: We don't need to copy the sequence here.
-				// We could simply have a pointer to the chunk
-				getsubstring(chunk, kmer_sequence, site, site + kmer_size - 1);
+			if ((site % 80 == 0) && (site != 0))
+				fprintf(pfOut, "\n");
 
-				kmer_sequence[kmer_size] = '\0';
+			//STP: We don't need to copy the sequence here.
+			// We could simply have a pointer to the chunk
+			getsubstring(genome_chunk, kmer_sequence, site,
+					site + kmer_size - 1);
 
-				patternnumber = 0;
-				cloud_id = 0;
+			kmer_sequence[kmer_size] = '\0';
 
-				if (issegmentvalid(kmer_sequence)) {
-					kmer_sequence_to_number_pattern(kmer_sequence, index,
-							kmer_size);
+			patternnumber = 0;
+			cloud_id = 0;
 
-					if (PatternVector[index]) {
-						patternnumber = 1;
+			if (issegmentvalid(kmer_sequence)) {
+				kmer_sequence_to_number_pattern(kmer_sequence, index,
+						kmer_size);
 
-						cloud_id = CloudIdVector[index];
-					}
-				}
+				if (PatternVector[index]) {
+					patternnumber = 1;
 
-				//output the p cloud annotation file;
-				fprintf(pfOut, "%d", patternnumber);
-
-				occurrence.erase(occurrence.begin());
-				occurrence.push_back(patternnumber);
-
-				cloud_ids_in_region.push_back(cloud_id);
-
-				if (genome_position < (windowsize - 1)) {
-					// for example, when genome_position is 9, we have
-					// looked at 10 kmers and filled a window of 10
-					continue;
-					// Don't even consider if it is repetitive or not
-				}
-
-				if (is_repeat_region(occurrence, percent)) {
-					if (not previous_window_was_repetitive) {
-
-						start = genome_position - (windowsize - 1);
-
-						if (start > former_end) {
-							// If the next repeat starts past the end
-							// of the former repeat
-							// If not, merge.
-							// I'm not sure this if statement works with
-							// the legacy regions.
-
-							if (have_annotated_first_region) {
-								// Since we print the previous region,
-								// we need to have seen the first region
-								// before we print
-								fprintf(pfRegion, "%lld\t%lld\t", former_start,
-										former_end);
-
-								if (print_clouds_in_regions) {
-									int number_of_clouds_to_print = former_end
-											- kmer_size - former_start + 1;
-
-									for (int cloud = 0;
-											cloud < number_of_clouds_to_print;
-											cloud++) {
-										fprintf(pfRegion, "%i ",
-												cloud_ids_in_region.front());
-										cloud_ids_in_region.pop_front();
-									}
-								}
-								fputs("\n", pfRegion);
-
-								// Erase all clouds up to a window size before the end
-								cloud_ids_in_region.erase(
-										cloud_ids_in_region.begin(),
-										cloud_ids_in_region.end() - windowsize);
-							} else {
-								have_annotated_first_region = true;
-							}
-
-							former_start = start;
-						}
-					}
-					previous_window_was_repetitive = true;
-				} else {
-					// Current window is not repetitive
-					if (previous_window_was_repetitive) {
-						/*
-						 * The new way to calculate the former end is
-						 * more true to the method published in the
-						 * pclouds paper by wanjun.
-						 */
-						former_end = genome_position - 1 + kmer_size; // ends are exclusive
-					} else {
-						if (not have_annotated_first_region) {
-							cloud_ids_in_region.pop_front();
-						}
-					}
-					previous_window_was_repetitive = false;
+					cloud_id = CloudIdVector[index];
 				}
 			}
-		}
-		// Subtract size in order to handle the break between chunks
-		// properly
-		chunk_start += m_nChunksize - kmer_size + 1;
-	} while ((chunk_start < m_nGenomesize - kmer_size + 1) && (iRead == 2));
 
-	fclose(pfGenome);
+			//output the p cloud annotation file;
+			fprintf(pfOut, "%d", patternnumber);
+
+			occurrence.erase(occurrence.begin());
+			occurrence.push_back(patternnumber);
+
+			cloud_ids_in_region.push_back(cloud_id);
+
+			if (genome_position < (windowsize - 1)) {
+				// for example, when genome_position is 9, we have
+				// looked at 10 kmers and filled a window of 10
+				continue;
+				// Don't even consider if it is repetitive or not
+			}
+
+			if (is_repeat_region(occurrence, percent)) {
+				if (not previous_window_was_repetitive) {
+
+					start = genome_position - (windowsize - 1);
+
+					if (start > former_end) {
+						// If the next repeat starts past the end
+						// of the former repeat
+						// If not, merge.
+						// I'm not sure this if statement works with
+						// the legacy regions.
+
+						if (have_annotated_first_region) {
+							// Since we print the previous region,
+							// we need to have seen the first region
+							// before we print
+							fprintf(pfRegion, "%lld\t%lld\t", former_start,
+									former_end);
+
+							if (print_clouds_in_regions) {
+								int number_of_clouds_to_print = former_end
+										- kmer_size - former_start + 1;
+
+								for (int cloud = 0;
+										cloud < number_of_clouds_to_print;
+										cloud++) {
+									fprintf(pfRegion, "%i ",
+											cloud_ids_in_region.front());
+									cloud_ids_in_region.pop_front();
+								}
+							}
+							fputs("\n", pfRegion);
+
+							// Erase all clouds up to a window size before the end
+							cloud_ids_in_region.erase(
+									cloud_ids_in_region.begin(),
+									cloud_ids_in_region.end() - windowsize);
+						} else {
+							have_annotated_first_region = true;
+						}
+
+						former_start = start;
+					}
+				}
+				previous_window_was_repetitive = true;
+			} else {
+				// Current window is not repetitive
+				if (previous_window_was_repetitive) {
+					/*
+					 * The new way to calculate the former end is
+					 * more true to the method published in the
+					 * pclouds paper by wanjun.
+					 */
+					former_end = genome_position - 1 + kmer_size; // ends are exclusive
+				} else {
+					if (not have_annotated_first_region) {
+						cloud_ids_in_region.pop_front();
+					}
+				}
+				previous_window_was_repetitive = false;
+			}
+		}
+
+		// Subtract kmer size in order to handle the break between chunks
+		// properly
+		genome_chunk_start += genome_chunk_size - kmer_size + 1;
+	}
+
+	fclose(genome);
 
 	// If the last window was repetitive, update the former end
-	// This essentially makes the former end to be the genome size
+	// This essentially makes the former end to be the genome_file size
 	if (previous_window_was_repetitive) {
 		/*
 		 * The new way to calculate the former end is
@@ -1388,15 +1332,11 @@ static int GenomeScanAndIdentify1(string genome, string pchOutfile,
 		fputs("\n", pfRegion);
 	}
 
-	fflush(pfRegion);
 	fclose(pfRegion);
 	fclose(pfOut);
 	free(kmer_sequence);
-	free(chunk);
-	free(actual_chunk_size);
-	free(pchReverse);
-
-	return (1);
+	free(reverse_complement_sequence);
+	free(genome_chunk);
 }
 
 void build_clouds(string controlfile) {
@@ -1422,22 +1362,21 @@ void build_clouds(string controlfile) {
 			region_file);
 
 	if (build_clouds) {
+		cout << "Building clouds" << endl;
 		count_core_and_outer_kmers(kmer_counts_file, number_of_core_kmers,
 				number_of_outer_kmers, kmer_size, core_1_threshold,
 				outer_threshold);
 
 		CoreKmer* core_kmers = new CoreKmer[number_of_core_kmers];
-		cout << "number_of_core_kmers " << number_of_core_kmers << endl;
 
 		read_core_kmers(kmer_counts_file, core_kmers, number_of_core_kmers,
 				kmer_size, core_1_threshold);
-		cout << "number_of_core_kmers " << number_of_core_kmers << endl;
 		build_cloud_cores(core_kmers, clouds_summary_file, number_of_core_kmers,
 				kmer_size, core_1_threshold);
-		cout << "number_of_core_kmers " << number_of_core_kmers << endl;
+
 		output_cloud_cores(core_kmers, core_kmers_assign_file,
 				number_of_core_kmers, kmer_size);
-		cout << "number_of_core_kmers " << number_of_core_kmers << endl;
+
 		delete[] (core_kmers);
 
 		Kmer* pMainCloudsA = (Kmer*) malloc(sizeof(Kmer) * MAX_CORE_KMERS);
@@ -1463,8 +1402,8 @@ void annotate_genome(string controlfile) {
 	int kmer_size, window_size, percent;
 	bool build_clouds, annotate_genome;
 
-	int outer_threshold, core_1_threshold, core_2_threshold, core_3_threshold,
-			core_4_threshold;
+	int outer_threshold, core_threshold_1, core_threshold_2, core_threshold_3,
+			core_threshold_4;
 	int chunk_size;
 	unsigned int genome_size;
 
@@ -1474,29 +1413,25 @@ void annotate_genome(string controlfile) {
 
 	int number_of_core_kmers, number_of_outer_kmers;
 
-	read_controlfile(controlfile, kmer_size, outer_threshold, core_1_threshold,
-			core_2_threshold, core_3_threshold, core_4_threshold, chunk_size,
+	read_controlfile(controlfile, kmer_size, outer_threshold, core_threshold_1,
+			core_threshold_2, core_threshold_3, core_threshold_4, chunk_size,
 			genome_size, window_size, percent, build_clouds, annotate_genome,
 			kmer_counts_file, genome_file, clouds_summary_file,
 			core_kmers_assign_file, outer_kmers_assign_file, annotation_file,
 			region_file);
 
 	if (annotate_genome) {
-		vector<bool> PatternVector(pow(4, kmer_size), false);
-		vector<int> CloudIdVector(pow(4, kmer_size), 0);
+		cout << "Annotating the genome" << endl;
+		vector<bool> pattern_vector(pow(4, kmer_size), false);
+		vector<int> cloud_id_vector(pow(4, kmer_size), 0);
 
-		readclouds1(core_kmers_assign_file, outer_kmers_assign_file,
-				PatternVector, CloudIdVector, kmer_size);
+		UpdatePatternAndCloudIdVectors(core_kmers_assign_file, pattern_vector,
+				cloud_id_vector, kmer_size);
+		UpdatePatternAndCloudIdVectors(outer_kmers_assign_file, pattern_vector,
+				cloud_id_vector, kmer_size);
 
-		if (not GenomeScanAndIdentify1(genome_file, annotation_file,
-				region_file, PatternVector, CloudIdVector, kmer_size,
-				window_size, percent, chunk_size, genome_size)) {
-			cerr << "Genome Annotation and Repeat Region Identification Error."
-					<< endl;
-			PatternVector.clear();
-			exit(-1);
-		}
-
-		PatternVector.clear();
+		find_repeat_regions(genome_file, annotation_file, region_file,
+				pattern_vector, cloud_id_vector, kmer_size, window_size,
+				percent, chunk_size, genome_size);
 	}
 }

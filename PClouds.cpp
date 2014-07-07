@@ -8,12 +8,12 @@ using namespace std;
 
 // In clouds.cpp
 // I didn't want to have a header file for two functions
-void build_clouds(string pchControlfile);
-void annotate_genome(string pchControlfile);
+void build_clouds(string controlfile);
+void annotate_genome(string controlfile);
 
 
 int main() {
-	cout << "STEPHEN's hacked version of P-clouds" << endl;
+	cout << "STEPHEN's hacked version of P-clouds\n" << endl;
 
 	string controlfile = "Controlfile";
 
@@ -21,8 +21,7 @@ int main() {
 
 	annotate_genome(controlfile);
 
-	std::cout << std::endl <<
-			"STEPHEN's hacked version of P-clouds finished!" << std::endl;
+	cout << "\nSTEPHEN's hacked version of P-clouds finished!\n";
 
 	return (0);
 }

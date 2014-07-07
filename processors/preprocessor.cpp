@@ -82,11 +82,14 @@ int main (int argc, const char * argv[]) {
     cout << "Processed " << headers.size() << " sequences" << endl << endl;
 
     // Output
+    /*
+     * tempHead is what causes the off by 18 problem in old p-clouds
+     */
     stringstream tempHead;
-            
+
     tempHead << ">Processed reads";
-    
-    out << tempHead.str() << endl;
+
+//    out << tempHead.str() << endl;
     out << newSeq.str() << endl;
     
     out.close();
