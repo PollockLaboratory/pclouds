@@ -451,51 +451,36 @@ void count_core_and_outer_kmers(string kmer_counts_file,
 
 // read the oligos which is in mainclouds into repeats1 array
 //STP: This does not take into account reverse complement of kmers.
-int read_core_kmers(string kmer_counts_file, CoreKmer* core_kmers,
+void read_core_kmers(string kmer_counts_file, CoreKmer* core_kmers,
 		int& number_of_core_kmers, const int kmer_size,
 		const int core_threshold) {
 
-	FILE *pfRepeatfile;
-	char *line;
-	char *kmer, *pchReverse;
 	unsigned long index;
 
 	number_of_core_kmers = 0;
+	ifstream kmer_counts(kmer_counts_file.c_str());
 
-	if ((pfRepeatfile = fopen(kmer_counts_file.c_str(), "r")) == NULL) {
+	if (not kmer_counts.good()) {
 		cerr << "Can not find the repeat file: " << __LINE__ << kmer_counts_file
 				<< "\n";
+		//STP: This is a fatal error
 		exit(-1);
-	} else {
-		line = (char *) malloc(sizeof(char) * MAX_LINE_LENGTH);
-		kmer = (char*) malloc(sizeof(char) * (kmer_size + 1));
-
-		while (!feof(pfRepeatfile)) {
-			if (fgets(line, MAX_LINE_LENGTH, pfRepeatfile) != NULL) {
-				strncpy(kmer, line, kmer_size);
-				*(kmer + kmer_size) = '\0';
-
-				// Commented out by STP to keep the short simple repeat
-				if (not is_SSR(kmer) or keep_SSRs) {
-					int kmer_count = get_kmer_count(line);
-
-					if (kmer_count >= core_threshold) {
-						kmer_sequence_to_number_pattern(kmer,
-								core_kmers[number_of_core_kmers].number_pattern,
-								kmer_size);
-						core_kmers[number_of_core_kmers].count = kmer_count;
-						number_of_core_kmers++;
-					}
-				}
-			}
-		}
-
-		free(line);
-		free(kmer);
-		fclose(pfRepeatfile);
 	}
 
-	return (1);
+	while (kmer_counts.good()) {
+		string kmer; // These are in here to limit scope.
+		int kmer_count;
+		kmer_counts >> kmer >> kmer_count;
+		if (not is_SSR(kmer.c_str()) or keep_SSRs) {
+			if (kmer_count >= core_threshold) {
+				kmer_sequence_to_number_pattern(kmer.c_str(),
+						core_kmers[number_of_core_kmers].number_pattern,
+						kmer_size);
+				core_kmers[number_of_core_kmers].count = kmer_count;
+				number_of_core_kmers++;
+			}
+		}
+	}
 }
 
 // build main clouds based on the algorithm
@@ -562,8 +547,8 @@ void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file,
 	} else {
 		while ((core_kmer_index_from_top < number_of_core_kmers)
 				&& (core_kmers[core_kmer_index].count >= core_threshold)) {
-			// Cloud assignments must begin at 1 NOT 0
-			// If the core kmer has not been assigned
+// Cloud assignments must begin at 1 NOT 0
+// If the core kmer has not been assigned
 			if (core_kmers[core_kmer_index].cloud == 0) {
 				total_number_of_clouds++;
 				core_kmers[core_kmer_index].cloud = total_number_of_clouds;
@@ -576,15 +561,15 @@ void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file,
 
 //			cout << "Seed is " << kmer_sequence << endl;
 
-			// get the core sequence of the pcloud
+// get the core sequence of the pcloud
 			seed_sequences[cloud_number_id - 1] = new char[kmer_size + 1];
 
 			number_pattern_to_kmer_sequence(seed_sequences[cloud_number_id - 1],
 					core_kmer_number_patterns[core_kmer_index_from_top],
 					kmer_size);
 
-			//cout << "Expanding around seed "
-			//	<< seed_sequences[cloud_number_id - 1] << endl;
+//cout << "Expanding around seed "
+//	<< seed_sequences[cloud_number_id - 1] << endl;
 
 			strcpy(seed_sequence, seed_sequences[cloud_number_id - 1]);
 
@@ -594,11 +579,11 @@ void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file,
 
 			core_kmers[core_kmer_index].has_been_extended = true;
 
-			//STP: iCoreThreesubstitution is the number of patterns that are 3 subs
-			// away from the seed kmer.
+//STP: iCoreThreesubstitution is the number of patterns that are 3 subs
+// away from the seed kmer.
 			iCoreThreesubstitution = 0;
-			// Determine all the patterns within 3 substitutions
-			// Put them in piCoreThreesubstitution
+// Determine all the patterns within 3 substitutions
+// Put them in piCoreThreesubstitution
 //			cout <<"stuff"<< endl;
 			testmers << "EXPANDING AROUND " << seed_sequence << endl;
 			char* reverse_core_kmer = new char[kmer_size + 1];
@@ -615,10 +600,10 @@ void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file,
 			get_three_substitutions(seed_sequence, piCoreThreesubstitution,
 					iCoreThreesubstitution);
 //					exit(1);
-			//STP: For outputting all the edges between cores for a network
-			// representation of the building method.
+//STP: For outputting all the edges between cores for a network
+// representation of the building method.
 
-			// For all the testmers within 3 subs of the seedmer
+// For all the testmers within 3 subs of the seedmer
 			for (int i = 0; i < iCoreThreesubstitution; i++) {
 				//STP: result is now the index in main_oligos for the pattern given
 				// by the 'index' piCoreThreesubstitution[i] if found or -1 if not
@@ -712,23 +697,23 @@ void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file,
 				}
 			}
 
-			//cout << "Done expanding around seed "
-			//	<< seed_sequences[cloud_number_id - 1] << endl;
+//cout << "Done expanding around seed "
+//	<< seed_sequences[cloud_number_id - 1] << endl;
 
-			// move to next core repeats
-			// Keep counting up until you find a main oligo that has not been
-			// assigned
-			// If this line is changed to checking if the main oligo has not been
-			// /extended/ then the method would continue to expand the cloud after
-			// the second expansion. Notice how we have not expanded around the
-			// core kmers that are 2 steps from a seedmer.
-			// Keep counting if
+// move to next core repeats
+// Keep counting up until you find a main oligo that has not been
+// assigned
+// If this line is changed to checking if the main oligo has not been
+// /extended/ then the method would continue to expand the cloud after
+// the second expansion. Notice how we have not expanded around the
+// core kmers that are 2 steps from a seedmer.
+// Keep counting if
 			while (
-			// We haven't seen the last core. Stop if we have.
+// We haven't seen the last core. Stop if we have.
 			(core_kmer_index_from_top < number_of_core_kmers) and (
-			// EITHER
-			// We are not expanding recursively and the core we are
-			// looking at has been assigned already. Stop if it has not.
+// EITHER
+// We are not expanding recursively and the core we are
+// looking at has been assigned already. Stop if it has not.
 					(not expand_recursively
 							and core_kmers[core_kmer_index].cloud != 0)
 					// OR
@@ -798,72 +783,53 @@ void output_cloud_cores(CoreKmer* main_oligos, string pchResult,
 }
 
 // read main clouds assignments information into three different sets
-int read_cloud_cores(string pchMainCloudassign, Kmer* pCloudsA, int& numberA,
-		Kmer* pCloudsB, int& numberB, Kmer* pCloudsC, int& numberC,
+void read_cloud_cores(string core_assign_file, Kmer* tertiary_cores, int& number_of_tertiary_cores,
+		Kmer* secondary_cores, int& number_of_secondary_cores, Kmer* primary_cores, int& number_of_primary_cores,
 		const int& size, const int& primary_threshold,
 		const int& secondary_threshold, const
 		int& tertiary_threshold) {
-	/*
-	 * STP: This is not Fortran. We do not have to declare all of our variables
-	 * at the beginning of the function.
-	 */
 
-	numberA = 0;
-	numberB = 0;
-	numberC = 0;
+	number_of_tertiary_cores = 0;
+	number_of_secondary_cores = 0;
+	number_of_primary_cores = 0;
 
-	int count;
-	int cloud;
-	unsigned long index;
+	ifstream cloud_assign(core_assign_file.c_str());
 
-	FILE *pfCloudassign = fopen(pchMainCloudassign.c_str(), "r");
-
-	if (pfCloudassign == NULL) {
-		cerr << "Can not find the cloud assign file: " << pchMainCloudassign
+	if (not cloud_assign.good()) {
+		cerr << "Can not find the cloud assign file: " << core_assign_file
 				<< "\n";
-		//STP: This is a fatal error
 		exit(-1);
 	}
 
-	char *pchLine = (char *) malloc(sizeof(char) * MAX_LINE_LENGTH);
-	char *pchTemp = (char*) malloc(sizeof(char) * (size + 1));
-	while (!feof(pfCloudassign)) {
-		if (fgets(pchLine, MAX_LINE_LENGTH, pfCloudassign) != NULL) {
-			getcloudandnumber(pchLine, cloud, count);
+	while (cloud_assign.good()) {
+		string kmer; // These declarations are here to limit the scope
+		int cloud;
+		int count;
+		unsigned long number_pattern;
 
-			if (count >= tertiary_threshold) {
-				pCloudsA[numberA].cloud = cloud;
-				strncpy(pchTemp, pchLine, size);
-				*(pchTemp + size) = '\0';
-				kmer_sequence_to_number_pattern(pchTemp, index, size);
-				pCloudsA[numberA].number_pattern = index;
-				numberA++;
-			} else if (count >= secondary_threshold) {
-				pCloudsB[numberB].cloud = cloud;
-				strncpy(pchTemp, pchLine, size);
-				*(pchTemp + size) = '\0';
-				kmer_sequence_to_number_pattern(pchTemp, index, size);
-				pCloudsB[numberB].number_pattern = index;
-				numberB++;
-			} else if (count >= primary_threshold) {
-				pCloudsC[numberC].cloud = cloud;
-				strncpy(pchTemp, pchLine, size);
-				*(pchTemp + size) = '\0';
-				kmer_sequence_to_number_pattern(pchTemp, index, size);
-				pCloudsC[numberC].number_pattern = index;
-				numberC++;
-			}
+		cloud_assign >> kmer >> cloud >> count;
+
+		if (count >= tertiary_threshold) {
+			tertiary_cores[number_of_tertiary_cores].cloud = cloud;
+			kmer_sequence_to_number_pattern(kmer.c_str(), number_pattern, size);
+			tertiary_cores[number_of_tertiary_cores].number_pattern = number_pattern;
+			number_of_tertiary_cores++;
+		} else if (count >= secondary_threshold) {
+			secondary_cores[number_of_secondary_cores].cloud = cloud;
+			kmer_sequence_to_number_pattern(kmer.c_str(), number_pattern, size);
+			secondary_cores[number_of_secondary_cores].number_pattern = number_pattern;
+			number_of_secondary_cores++;
+		} else if (count >= primary_threshold) {
+			primary_cores[number_of_primary_cores].cloud = cloud;
+			kmer_sequence_to_number_pattern(kmer.c_str(), number_pattern, size);
+			primary_cores[number_of_primary_cores].number_pattern = number_pattern;
+			number_of_primary_cores++;
 		}
 	}
-	free(pchLine);
-	free(pchTemp);
-	fclose(pfCloudassign);
 
-	sort(pCloudsA, pCloudsA + numberA, lowsequence2);
-	sort(pCloudsB, pCloudsB + numberB, lowsequence2);
-	sort(pCloudsC, pCloudsC + numberC, lowsequence2);
-
-	return (1);
+	sort(tertiary_cores, tertiary_cores + number_of_tertiary_cores, lowsequence2);
+	sort(secondary_cores, secondary_cores + number_of_secondary_cores, lowsequence2);
+	sort(primary_cores, primary_cores + number_of_primary_cores, lowsequence2);
 }
 
 // assign the oligos in accessory regions into P clouds constructed in former step
@@ -937,7 +903,7 @@ int build_cloud_outer(string pchrepeatfile, string pchOutput,
 			number = 0;
 
 			Kmer* repeatacc = (Kmer*) malloc(sizeof(Kmer) * MAX_OUTER_KMERS);
-			// read in a chunk of accessory repeats
+// read in a chunk of accessory repeats
 			while ((!feof(pfRepeatfile)) && (number < MAX_OUTER_KMERS)) {
 				if (fgets(pchLine, MAX_LINE_LENGTH, pfRepeatfile) != NULL) {
 					strncpy(core_kmer, pchLine, oligo_size);
@@ -961,14 +927,14 @@ int build_cloud_outer(string pchrepeatfile, string pchOutput,
 
 			sort(repeatacc, repeatacc + number, lowsequence2);
 
-			//STP: Sort the core kmers before expanding
-			//STP: This is not possible because the counts are not included in
-			// this type of cloud.
+//STP: Sort the core kmers before expanding
+//STP: This is not possible because the counts are not included in
+// this type of cloud.
 //			sort(core_kmers_above_tertiary, core_kmers_above_tertiary + number_of_cores_above_tertiary, highnumber2);
 //			sort(core_kmers_above_secondary, core_kmers_above_secondary+ number_of_cores_above_secondary, highnumber3);
 //			sort(core_kmers_above_primary, core_kmers_above_primary + number_of_cores_above_primary, highnumber3);
 
-			// build the accessory p clouds for these repeats chunk
+// build the accessory p clouds for these repeats chunk
 			for (int i = 0; i < number_of_cores_above_tertiary; i++) {
 				number_pattern_to_kmer_sequence(core_kmer,
 						core_kmers_above_tertiary[i].number_pattern,
@@ -1003,9 +969,9 @@ int build_cloud_outer(string pchrepeatfile, string pchOutput,
 				}
 			}
 
-			// NOTICE: the piRepeatTwosubstitutions are not cleared between
-			// rounds. This is OK because we keep track of how many repeat
-			// two substitutions we have in iRepeatTwosubstitution.
+// NOTICE: the piRepeatTwosubstitutions are not cleared between
+// rounds. This is OK because we keep track of how many repeat
+// two substitutions we have in iRepeatTwosubstitution.
 			for (int i = 0; i < number_of_cores_above_secondary; i++) {
 				number_pattern_to_kmer_sequence(core_kmer,
 						core_kmers_above_secondary[i].number_pattern,
@@ -1065,7 +1031,7 @@ int build_cloud_outer(string pchrepeatfile, string pchOutput,
 				}
 			}
 
-			//output the accessory p clouds information for these repeats
+//output the accessory p clouds information for these repeats
 			for (int i = 0; i < number; i++) {
 				if (repeatacc[i].cloud != 0) {
 					number_pattern_to_kmer_sequence(core_kmer,
@@ -1202,8 +1168,8 @@ void find_repeat_regions(string genome_file, string pchOutfile,
 			if ((site % 80 == 0) && (site != 0))
 				fprintf(pfOut, "\n");
 
-			//STP: We don't need to copy the sequence here.
-			// We could simply have a pointer to the chunk
+//STP: We don't need to copy the sequence here.
+// We could simply have a pointer to the chunk
 			getsubstring(genome_chunk, kmer_sequence, site,
 					site + kmer_size - 1);
 
@@ -1223,7 +1189,7 @@ void find_repeat_regions(string genome_file, string pchOutfile,
 				}
 			}
 
-			//output the p cloud annotation file;
+//output the p cloud annotation file;
 			fprintf(pfOut, "%d", patternnumber);
 
 			occurrence.erase(occurrence.begin());
@@ -1344,8 +1310,8 @@ void build_clouds(string controlfile) {
 	int kmer_size, window_size, percent;
 	bool build_clouds, annotate_genome;
 
-	int outer_threshold, core_1_threshold, core_2_threshold, core_3_threshold,
-			core_4_threshold;
+	int outer_threshold, core_threshold_1, core_threshold_2, core_threshold_3,
+			core_threshold_4;
 	int chunk_size;
 	unsigned int genome_size;
 
@@ -1355,8 +1321,8 @@ void build_clouds(string controlfile) {
 
 	int number_of_core_kmers, number_of_outer_kmers;
 
-	read_controlfile(controlfile, kmer_size, outer_threshold, core_1_threshold,
-			core_2_threshold, core_3_threshold, core_4_threshold, chunk_size,
+	read_controlfile(controlfile, kmer_size, outer_threshold, core_threshold_1,
+			core_threshold_2, core_threshold_3, core_threshold_4, chunk_size,
 			genome_size, window_size, percent, build_clouds, annotate_genome,
 			kmer_counts_file, genome_file, clouds_summary_file,
 			core_kmers_assign_file, outer_kmers_assign_file, annotation_file,
@@ -1365,37 +1331,48 @@ void build_clouds(string controlfile) {
 	if (build_clouds) {
 		cout << "Building clouds" << endl;
 		count_core_and_outer_kmers(kmer_counts_file, number_of_core_kmers,
-				number_of_outer_kmers, kmer_size, core_1_threshold,
+				number_of_outer_kmers, kmer_size, core_threshold_1,
 				outer_threshold);
 
 		CoreKmer* core_kmers = new CoreKmer[number_of_core_kmers];
-
 		read_core_kmers(kmer_counts_file, core_kmers, number_of_core_kmers,
-				kmer_size, core_1_threshold);
+				kmer_size, core_threshold_1);
 		build_cloud_cores(core_kmers, clouds_summary_file, number_of_core_kmers,
-				kmer_size, core_1_threshold);
+				kmer_size, core_threshold_1);
 
 		output_cloud_cores(core_kmers, core_kmers_assign_file,
 				number_of_core_kmers, kmer_size);
 
 		delete[] (core_kmers);
 
-		Kmer* pMainCloudsA = (Kmer*) malloc(sizeof(Kmer) * MAX_CORE_KMERS);
-		Kmer* pMainCloudsB = (Kmer*) malloc(sizeof(Kmer) * MAX_CORE_KMERS);
-		Kmer* pMainCloudsC = (Kmer*) malloc(sizeof(Kmer) * MAX_CORE_KMERS);
-		int numberA, numberB, numberC;
+		Kmer* tertiary_cores = (Kmer*) malloc(sizeof(Kmer) * MAX_CORE_KMERS);
+		/*
+		 * STP: We could also use vectors. I'm not sure they will be slower but
+		 * it would be much more readable.
+		 *
+		 * vector<Kmer> tertiary_coresv;
+		 * tertiary_coresv.reserve(MAX_CORE_KMERS);
+		 */
 
-		read_cloud_cores(core_kmers_assign_file, pMainCloudsA, numberA,
-				pMainCloudsB, numberB, pMainCloudsC, numberC, kmer_size,
-				core_2_threshold, core_3_threshold, core_4_threshold);
+		Kmer* secondary_cores = (Kmer*) malloc(sizeof(Kmer) * MAX_CORE_KMERS);
+		Kmer* primary_cores = (Kmer*) malloc(sizeof(Kmer) * MAX_CORE_KMERS);
+		int number_of_tertiary_cores, number_of_secondary_cores,
+				number_of_primary_cores;
+
+		read_cloud_cores(core_kmers_assign_file, tertiary_cores,
+				number_of_tertiary_cores, secondary_cores,
+				number_of_secondary_cores, primary_cores,
+				number_of_primary_cores, kmer_size, core_threshold_2,
+				core_threshold_3, core_threshold_4);
 		build_cloud_outer(kmer_counts_file, outer_kmers_assign_file,
-				pMainCloudsA, numberA, pMainCloudsB, numberB, pMainCloudsC,
-				numberC, number_of_outer_kmers, kmer_size, core_2_threshold,
-				core_1_threshold, outer_threshold);
+				tertiary_cores, number_of_tertiary_cores, secondary_cores,
+				number_of_secondary_cores, primary_cores,
+				number_of_primary_cores, number_of_outer_kmers, kmer_size,
+				core_threshold_2, core_threshold_1, outer_threshold);
 
-		free(pMainCloudsA);
-		free(pMainCloudsB);
-		free(pMainCloudsC);
+		free(tertiary_cores);
+		free(secondary_cores);
+		free(primary_cores);
 	}
 }
 

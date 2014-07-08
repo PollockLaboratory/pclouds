@@ -188,4 +188,9 @@ void read_controlfile(string controlfile_name, int& kmer_size,
 			}
 		}
 	}
+	if (dont_care_about_clouds and print_clouds_in_regions) {
+		cerr << "You have selected that you don't care about clouds\n"
+				<< "but you asked to print clouds in regions.\n"
+				<< "The cloud ids printed will not mean much.\n";
+	}
 }
