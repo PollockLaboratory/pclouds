@@ -197,7 +197,8 @@ void number_pattern_to_kmer_sequence(char *pchPattern,
 }
 
 // Generates all the possible kmers (and their reverse complements) that are
-// one substitution away from pchCore
+// one substitution away from core_kmer
+// This fails to get the reverse complement
 void get_one_substitutions(const char* core_kmer,
 		unsigned long* array_of_testmer_number_patterns,
 		int& number_of_testmers) {
