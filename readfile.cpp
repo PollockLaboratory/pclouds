@@ -79,13 +79,14 @@ void read_chunk_from_genome_file2(FILE *genome_file, char *genome_chunk,
 #else
 		if (fseeko(genome_file, genome_chunk_start, SEEK_SET) != 0) {
 #endif
-		printf("Can not go to genome chunk start position: %lld!\n", genome_chunk_start);
+		printf("Can not go to genome chunk start position: %lld!\n",
+				genome_chunk_start);
 		exit(-1);
 	}
 	int expected_genome_chunk_size = genome_chunk_size;
 
-	genome_chunk_size = fread(genome_chunk, sizeof(char),
-			genome_chunk_size, genome_file);
+	genome_chunk_size = fread(genome_chunk, sizeof(char), genome_chunk_size,
+			genome_file);
 
 	//STP: If read did not return what you expected
 	if (genome_chunk_size != expected_genome_chunk_size) {
@@ -100,86 +101,91 @@ void read_chunk_from_genome_file2(FILE *genome_file, char *genome_chunk,
 	}
 }
 
-void read_controlfile(string controlfile, int& kmer_size, int& outer_threshold,
-		int& core_threshold_1, int& core_threshold_2, int& core_threshold_3,
-		int& core_threshold_4, int& chunk_size, unsigned int& genome_size,
-		int& window_size, int& percent, bool& build_clouds,
-		bool& annotate_genome, string& kmer_counts_file, string& genome_file,
-		string& clouds_summary_file, string& core_kmers_assign_file,
-		string& outer_kmers_assign_file, string& annotation_file,
-		string& region_file) {
+void read_controlfile(string controlfile_name, int& kmer_size,
+		int& outer_threshold, int& core_threshold_1, int& core_threshold_2,
+		int& core_threshold_3, int& core_threshold_4, int& chunk_size,
+		unsigned int& genome_size, int& window_size, int& percent,
+		bool& build_clouds, bool& annotate_genome, string& kmer_counts_file,
+		string& genome_file, string& clouds_summary_file,
+		string& core_kmers_assign_file, string& outer_kmers_assign_file,
+		string& annotation_file, string& region_file) {
 
-	ifstream ifControlfile(controlfile.c_str());
+	ifstream controlfile(controlfile_name.c_str());
 
-	if (not ifControlfile.good()) {
-		cerr << "Cannot read control file: " << controlfile << "\n";
+	if (not controlfile.good()) {
+		cerr << "Cannot read control file: " << controlfile_name << "\n";
 		exit(-1);
 	}
-	cout << "Reading control file: " << controlfile << "\n";
+	cout << "Reading control file: " << controlfile_name << "\n";
 
 	bool in_comment = false;
 	string option = "";
 	string value = "";
 
-	while (ifControlfile.good()) {
-		ifControlfile >> option;
+	while (controlfile.good()) {
+		controlfile >> option;
 
 		if (option == "#") {
 			in_comment = not in_comment;
 		} else if (not in_comment) {
-			ifControlfile >> value;
-			// cout << "Found option " << option << " : " << value << endl;
-
 			if (option == "KmerSize")
-				kmer_size = stringtonumber(value);
+				controlfile >> kmer_size;
 			else if (option == "OuterThreshold")
-				outer_threshold = stringtonumber(value);
+				controlfile >> outer_threshold;
 			else if (option == "CoreThreshold_1")
-				core_threshold_1 = stringtonumber(value);
+				controlfile >> core_threshold_1;
 			else if (option == "CoreThreshold_2")
-				core_threshold_2 = stringtonumber(value);
+				controlfile >> core_threshold_2;
 			else if (option == "CoreThreshold_3")
-				core_threshold_3 = stringtonumber(value);
+				controlfile >> core_threshold_3;
 			else if (option == "CoreThreshold_4")
-				core_threshold_4 = stringtonumber(value);
+				controlfile >> core_threshold_4;
 			else if (option == "GenomeChunkSize")
-				chunk_size = stringtonumber(value);
+				controlfile >> chunk_size;
 			else if (option == "GenomeSize")
-				genome_size = stringtolargenumber(value);
+				controlfile >> genome_size;
 			else if (option == "WindowSize")
-				window_size = stringtonumber(value);
+				controlfile >> window_size;
 			else if (option == "PercentCutoff")
-				percent = stringtonumber(value);
+				controlfile >> percent;
 			else if (option == "BuildClouds")
-				build_clouds = stringtonumber(value);
+				controlfile >> build_clouds;
 			else if (option == "AnnotateGenome")
-				annotate_genome = stringtonumber(value);
+				controlfile >> annotate_genome;
 			else if (option == "KmerCounts")
-				kmer_counts_file = value;
+				controlfile >> kmer_counts_file;
 			else if (option == "Genome")
-				genome_file = value;
+				controlfile >> genome_file;
 			else if (option == "CloudSummaries")
-				clouds_summary_file = value;
+				controlfile >> clouds_summary_file;
 			else if (option == "CoreKmers")
-				core_kmers_assign_file = value;
+				controlfile >> core_kmers_assign_file;
 			else if (option == "OuterKmers")
-				outer_kmers_assign_file = value;
+				controlfile >> outer_kmers_assign_file;
 			else if (option == "CloudAnnotation")
-				annotation_file = value;
+				controlfile >> annotation_file;
 			else if (option == "RepeatRegion")
-				region_file = value;
+				controlfile >> region_file;
 			else if (option == "KeepSSRs")
-				keep_SSRs = stringtonumber(value);
+				controlfile >> keep_SSRs;
 			else if (option == "PrintCloudsInRegions")
-				print_clouds_in_regions = stringtonumber(value);
+				controlfile >> print_clouds_in_regions;
 			else if (option == "ExpandRecursively")
-				expand_recursively = stringtonumber(value);
+				controlfile >> expand_recursively;
 			else if (option == "DontCareAboutClouds")
-				dont_care_about_clouds = stringtonumber(value);
+				controlfile >> dont_care_about_clouds;
 			else if (option == "PrintTestmers")
-				print_testmers = stringtonumber(value);
+				controlfile >> print_testmers;
 			else if (option == "GenomeHasHeader")
-				genome_has_header = stringtonumber(value);
+				controlfile >> genome_has_header;
+			else if (option == "CutoffValues") {
+				cout << "Found Cutoff Values" << endl;
+				controlfile >> outer_threshold;
+				controlfile >> core_threshold_1;
+				controlfile >> core_threshold_2;
+				controlfile >> core_threshold_3;
+				controlfile >> core_threshold_4;
+			}
 		}
 	}
 }

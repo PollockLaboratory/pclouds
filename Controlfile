@@ -1,12 +1,14 @@
 # Stephen's Hacked options #
+
+KmerSize	10
 KeepSSRs	0
 PrintCloudsInRegions	0
 ExpandRecursively	0
 DontCareAboutClouds	0
-PrintTestmers	0
+PrintTestmers	1
 
 
-KmerSize	10
+
 
 BuildClouds	1
 KmerCounts	small_temp.fasta.processed.out_lumped
@@ -16,14 +18,15 @@ CoreThreshold_2	10
 CoreThreshold_3	100
 CoreThreshold_4	1000
 
+CutoffValues 2 5 10 100 1000
+
 CloudSummaries	testing.clouds
 CoreKmers	testing.core_kmers
 OuterKmers	testing.outer_kmers
 
 
-Annotate	1
+AnnotateGenome	1
 Genome	small_temp.fasta.processed
-GenomeSize	600000
 GenomeChunkSize	100000
 WindowSize	10
 PercentCutoff	80
