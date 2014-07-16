@@ -6,11 +6,12 @@ PrintCloudsInRegions	0
 ExpandRecursively	0
 DontCareAboutClouds	0
 PrintTestmers	1
+GenomeHasHeader	1
 
 
 
 
-BuildClouds	1
+BuildClouds	0
 KmerCounts	small_temp.fasta.processed.out_lumped
 OuterThreshold	2
 CoreThreshold_1	5
