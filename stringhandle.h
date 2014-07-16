@@ -44,4 +44,6 @@ bool is_four_SSR(const char *kmer);
 
 bool issegmentvalid(char *pchPattern);
 
+bool is_segment_valid(char *sequence_start, int size);
+
 #endif // stringhandle_h__

@@ -156,21 +156,45 @@ void getcloudandnumber(char* pchLine, int& cloud, int& number) {
 
 // transform the pattern sequence to the index of the array
 // coding method: A=00, C=01, G= 10, T=11,
-void kmer_sequence_to_number_pattern(const char *pchPattern,
-		unsigned long& index, const int& patternsize) {
-	int i;
-	index = 0;
-	for (i = 0; i < patternsize; i++) {
-		index *= 4;
-		if ((*(pchPattern + i) == 'a') || (*(pchPattern + i) == 'A'))
-			index += 0;
-		else if ((*(pchPattern + i) == 'c') || (*(pchPattern + i) == 'C'))
-			index += 1;
-		else if ((*(pchPattern + i) == 'g') || (*(pchPattern + i) == 'G'))
-			index += 2;
-		else if ((*(pchPattern + i) == 't') || (*(pchPattern + i) == 'T'))
-			index += 3;
+void kmer_sequence_to_number_pattern(const char *kmer_sequence,
+		unsigned long& number_pattern, const int& kmer_size) {
+	number_pattern = 0;
+	for (int i = 0; i < kmer_size; i++) {
+		number_pattern *= 4;
+		if (kmer_sequence[i] == 'a' or kmer_sequence[i] == 'A')
+			number_pattern += 0;
+		else if (kmer_sequence[i] == 'c' or kmer_sequence[i] == 'C')
+			number_pattern += 1;
+		else if (kmer_sequence[i] == 'g' or kmer_sequence[i] == 'G')
+			number_pattern += 2;
+		else if (kmer_sequence[i] == 't' or kmer_sequence[i] == 'T')
+			number_pattern += 3;
 	}
+}
+
+void update_index(unsigned long& index, char front, char back, int kmer_size) {
+	// subtract 4^(k-1) * value of front character
+	if (front == 'a' or front == 'A')
+		index -= 0 * pow(4, kmer_size - 1);
+	else if (front == 'c' or front == 'C')
+		index -= 1 * pow(4, kmer_size - 1);
+	else if (front == 'g' or front == 'G')
+		index -= 2 * pow(4, kmer_size - 1);
+	else if (front == 't' or front == 'T')
+		index -= 3 * pow(4, kmer_size - 1);
+
+	// Multiply by 4 (this is like a left shift)
+	index *= 4;
+
+	// Subtract out 4^0 * value of back char
+	if (back == 'a' or back == 'A')
+		index += 0;
+	else if (back == 'c' or back == 'C')
+		index += 1;
+	else if (back == 'g' or back == 'G')
+		index += 2;
+	else if (back == 't' or back == 'T')
+		index += 3;
 }
 
 void number_pattern_to_kmer_sequence(char *pchPattern,
@@ -783,10 +807,11 @@ void output_cloud_cores(CoreKmer* main_oligos, string pchResult,
 }
 
 // read main clouds assignments information into three different sets
-void read_cloud_cores(string core_assign_file, Kmer* tertiary_cores, int& number_of_tertiary_cores,
-		Kmer* secondary_cores, int& number_of_secondary_cores, Kmer* primary_cores, int& number_of_primary_cores,
-		const int& size, const int& primary_threshold,
-		const int& secondary_threshold, const
+void read_cloud_cores(string core_assign_file, Kmer* tertiary_cores,
+		int& number_of_tertiary_cores, Kmer* secondary_cores,
+		int& number_of_secondary_cores, Kmer* primary_cores,
+		int& number_of_primary_cores, const int& size,
+		const int& primary_threshold, const int& secondary_threshold, const
 		int& tertiary_threshold) {
 
 	number_of_tertiary_cores = 0;
@@ -812,23 +837,28 @@ void read_cloud_cores(string core_assign_file, Kmer* tertiary_cores, int& number
 		if (count >= tertiary_threshold) {
 			tertiary_cores[number_of_tertiary_cores].cloud = cloud;
 			kmer_sequence_to_number_pattern(kmer.c_str(), number_pattern, size);
-			tertiary_cores[number_of_tertiary_cores].number_pattern = number_pattern;
+			tertiary_cores[number_of_tertiary_cores].number_pattern =
+					number_pattern;
 			number_of_tertiary_cores++;
 		} else if (count >= secondary_threshold) {
 			secondary_cores[number_of_secondary_cores].cloud = cloud;
 			kmer_sequence_to_number_pattern(kmer.c_str(), number_pattern, size);
-			secondary_cores[number_of_secondary_cores].number_pattern = number_pattern;
+			secondary_cores[number_of_secondary_cores].number_pattern =
+					number_pattern;
 			number_of_secondary_cores++;
 		} else if (count >= primary_threshold) {
 			primary_cores[number_of_primary_cores].cloud = cloud;
 			kmer_sequence_to_number_pattern(kmer.c_str(), number_pattern, size);
-			primary_cores[number_of_primary_cores].number_pattern = number_pattern;
+			primary_cores[number_of_primary_cores].number_pattern =
+					number_pattern;
 			number_of_primary_cores++;
 		}
 	}
 
-	sort(tertiary_cores, tertiary_cores + number_of_tertiary_cores, lowsequence2);
-	sort(secondary_cores, secondary_cores + number_of_secondary_cores, lowsequence2);
+	sort(tertiary_cores, tertiary_cores + number_of_tertiary_cores,
+			lowsequence2);
+	sort(secondary_cores, secondary_cores + number_of_secondary_cores,
+			lowsequence2);
 	sort(primary_cores, primary_cores + number_of_primary_cores, lowsequence2);
 }
 
@@ -1088,6 +1118,25 @@ void UpdatePatternAndCloudIdVectors(string kmer_assign_file,
 	}
 }
 
+/*
+ * STP: I was talking with Aaron and he mentioned using a rolling hash for
+ * the index rather than recalculating the entire index when only the end and
+ * beginning actually change. I want to write a function update_index(index,
+ * genome_chunk[site], genome_chunk[site+kmer_size(-1?)]) that removes the value
+ * of the character at genome_chunk[site] from the index, multiplies the index
+ * by 4, and then adds the value of the character at
+ * genome_chunk[site+kmer_size(-1?)]. I don't want to think about if I need the
+ * -1 there or not.
+ *
+ *
+ * This will reduce the annotation time by 1/K because right now calculating
+ * the index scales linearly with K while updating the index will be constant
+ * in K.
+ *
+ * Also, we don't need to copy the kmer from the genome_chunk, instead we are
+ * simply looking at locations along the genome_chunk.
+ */
+
 void find_repeat_regions(string genome_file, string pchOutfile,
 		string pchRegionfile, const vector<bool>& PatternVector,
 		const vector<int>& CloudIdVector, const int kmer_size,
@@ -1097,6 +1146,7 @@ void find_repeat_regions(string genome_file, string pchOutfile,
 	int actual_genome_chunk_size = 0;
 
 	char *kmer_sequence = (char *) malloc(sizeof(char) * (kmer_size + 1));
+	kmer_sequence[kmer_size] = '\0';
 	char *reverse_complement_sequence = (char *) malloc(
 			sizeof(char) * (kmer_size + 1));
 
@@ -1110,14 +1160,14 @@ void find_repeat_regions(string genome_file, string pchOutfile,
 	/*
 	 * STP: The preprocessed fasta file has ">Processed reads" in the first line
 	 * This removes that header so the regions actually correspond to
-	 * the regions in the genome.
+	 * the regions in the genome if the genome_has_header.
 	 */
 	long long genome_chunk_start = genome_has_header ? 18 : 0;
 	int read_status = 1;
 
 	FILE *pfOut = fopen(pchOutfile.c_str(), "wb");
 
-	int patternnumber = 0;
+	bool patternnumber = 0;
 	int cloud_id = 0;
 	unsigned long index = 0;
 
@@ -1140,7 +1190,6 @@ void find_repeat_regions(string genome_file, string pchOutfile,
 	bool previous_window_was_repetitive = false;
 	bool have_annotated_first_region = false;
 
-	//STP: Added to print a header
 	if (print_clouds_in_regions) {
 		fputs("Start\tEnd\tClouds\n", pfRegion);
 	} else {
@@ -1168,28 +1217,32 @@ void find_repeat_regions(string genome_file, string pchOutfile,
 			if ((site % 80 == 0) && (site != 0))
 				fprintf(pfOut, "\n");
 
-//STP: We don't need to copy the sequence here.
-// We could simply have a pointer to the chunk
-			getsubstring(genome_chunk, kmer_sequence, site,
-					site + kmer_size - 1);
+			//STP: We don't need to copy the sequence here.
+			// We could simply have a pointer to the chunk
+			//strncpy(kmer_sequence, genome_chunk + site, kmer_size);
+			/*
+			 * STP: This is where we use the rolling function rather than
+			 * recalculating the index every time. Simply update it.
+			 */
 
-			kmer_sequence[kmer_size] = '\0';
-
-			patternnumber = 0;
-			cloud_id = 0;
-
-			if (issegmentvalid(kmer_sequence)) {
+			if (site == 0)
 				kmer_sequence_to_number_pattern(kmer_sequence, index,
 						kmer_size);
+			else
+				update_index(index, genome_chunk[site - 1],
+						genome_chunk[site + kmer_size - 1], kmer_size);
 
-				if (PatternVector[index]) {
-					patternnumber = 1;
-
+			//if (issegmentvalid(kmer_sequence)) {
+			if (is_segment_valid(genome_chunk + site, kmer_size) and PatternVector[index]) {
+					patternnumber = true;
 					cloud_id = CloudIdVector[index];
-				}
+			}
+			else {
+				patternnumber = false;
+				cloud_id = 0;
 			}
 
-//output the p cloud annotation file;
+			//output the p cloud annotation file;
 			fprintf(pfOut, "%d", patternnumber);
 
 			occurrence.erase(occurrence.begin());

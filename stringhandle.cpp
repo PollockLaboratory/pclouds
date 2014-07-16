@@ -114,7 +114,8 @@ std::string getreversecomplement(std::string kmer) {
 		else
 			complement += 'N';
 	}
-	std::string reverse_complement = std::string(complement.rbegin(), complement.rend());
+	std::string reverse_complement = std::string(complement.rbegin(),
+			complement.rend());
 	return reverse_complement;
 }
 
@@ -265,5 +266,21 @@ bool issegmentvalid(char *pchPattern) {
 	}
 
 	return (1);
+}
+
+bool is_segment_valid(char *sequence_start, int size) {
+	bool is_valid = true;
+	for (int site = 0; site < size; site++) {
+		char character = sequence_start[site];
+
+		if (character != 'A' && character != 'a' && character != 'C'
+				&& character != 'c' && character != 'T' && character != 't'
+				&& character != 'G' && character != 'g') {
+			is_valid = false;
+			break;
+		}
+	}
+
+	return is_valid;
 }
 
