@@ -3,8 +3,9 @@
 # being compiled and linked in. 
  
 SOURCES = \
- clouds.cpp \
  PClouds.cpp \
  readfile.cpp \
  stringhandle.cpp \
+ build_clouds.cpp \
+ annotate_genome.cpp \
  
