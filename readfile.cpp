@@ -33,46 +33,7 @@ extern bool dont_care_about_clouds;
 extern bool print_testmers;
 extern bool genome_has_header;
 
-/*
- * I do not understand the return status from this function.
- * return 2 means read was successful.
- * return 1 means ??
- * return 0 mean ?? - cannot go to position
- *
- */
-int read_chunk_from_genome_file(FILE *genome_file, char *genome_chunk,
-		long long genome_chunk_start, int genome_chunk_size,
-		int& genome_chunk_actual_size) {
-#ifdef _WIN32
-	if (fseek(genome_file, genome_chunk_start, SEEK_SET)) {
-#else
-		if (fseeko(genome_file, genome_chunk_start, SEEK_SET) != 0) {
-#endif
-		printf("can not go to position: %lld!\n", genome_chunk_start);
-		return (0);
-	}
-
-	genome_chunk_actual_size = fread(genome_chunk, sizeof(char),
-			genome_chunk_size, genome_file);
-
-	cerr << "chunk size requested " << genome_chunk_size << "\n";
-	cerr << "chunk size received " << genome_chunk_actual_size << "\n";
-//STP: If read was not successful
-	if (genome_chunk_actual_size != genome_chunk_size) {
-		genome_chunk[genome_chunk_actual_size] = '\0';
-		cout << genome_chunk;
-		if (feof(genome_file)) {
-			cerr << "Reached the end of the genome file" << endl;
-			return (1);
-		} else {
-			cerr << "Read error in genome file" << endl;
-			return (0);
-		}
-	}
-	return (2);
-}
-
-void read_chunk_from_genome_file2(FILE *genome_file, char *genome_chunk,
+void read_chunk_from_genome_file(FILE *genome_file, char *genome_chunk,
 		long long genome_chunk_start, int& genome_chunk_size) {
 #ifdef _WIN32
 	if (fseek(genome_file, genome_chunk_start, SEEK_SET)) {
