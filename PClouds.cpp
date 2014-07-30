@@ -6,10 +6,9 @@
 using namespace std;
 
 
-// In clouds.cpp
 // I didn't want to have a header file for two functions
-void build_clouds(string controlfile);
-void annotate_genome(string controlfile);
+void build_clouds(string controlfile); // In build_clouds.cpp
+void annotate_genome(string controlfile); // In annotate_genome.cpp
 
 
 int main() {
