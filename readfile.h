@@ -11,11 +11,8 @@ using std::string;
 // piReadCount - the actual length of the region which have been read.
 //               when it read the end of the file, piReadcount will be less than iLength;
 //               or these two values should be the same.
-int read_chunk_from_genome_file(FILE *genome_file, char *genome_chunk,
-		long long genome_chunk_start, int genome_chunk_size,
-		int& genome_chunk_actual_size);
 
-void read_chunk_from_genome_file2(FILE *genome_file, char *genome_chunk,
+void read_chunk_from_genome_file(FILE *genome_file, char *genome_chunk,
 		long long genome_chunk_start, int& genome_chunk_size);
 
 

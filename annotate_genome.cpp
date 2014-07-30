@@ -2,7 +2,7 @@
 #include <fstream> // for printing edges in expansion network
 #include <cstring>
 #include <algorithm>
-#include <math.h>
+#include <cmath>
 #include <vector>
 
 #include "macrodefine.h"
