@@ -200,7 +200,7 @@ void find_repeat_regions(string genome_file, string pchOutfile,
 
 			//STP: We don't need to copy the sequence here.
 			// We could simply have a pointer to the chunk
-			//strncpy(kmer_sequence, genome_chunk + site, kmer_size);
+			strncpy(kmer_sequence, genome_chunk + site, kmer_size);
 			/*
 			 * STP: This is where we use the rolling function rather than
 			 * recalculating the index every time. Simply update it.
