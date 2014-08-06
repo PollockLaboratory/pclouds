@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>PClouds</name>
+	<name>P-clouds</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -33,7 +33,7 @@
 	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1394150201941</id>
+			<id>0</id>
 			<name></name>
 			<type>6</type>
 			<matcher>
@@ -42,7 +42,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1394150201952</id>
+			<id>0</id>
 			<name></name>
 			<type>6</type>
 			<matcher>

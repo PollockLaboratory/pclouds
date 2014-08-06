@@ -85,7 +85,6 @@ int sbsearch3(int number_of_kmers, const CoreKmer *oligos,
 	return (-1);
 }
 
-
 bool highnumber3(CoreKmer a, CoreKmer b) {
 	if (a.count > b.count)
 		return (1);
@@ -106,7 +105,6 @@ bool lowsequence3(CoreKmer a, CoreKmer b) {
 	else
 		return (0);
 }
-
 
 int get_kmer_count(char* line) {
 	int i = 0;
@@ -399,6 +397,13 @@ void count_core_and_outer_kmers(string kmer_counts_file,
 			else if (kmer_count >= outer_threshold)
 				number_of_outer_kmers++;
 		}
+	}
+	cout << "Read " << number_of_core_kmers << " cores and "
+			<< number_of_outer_kmers << " outer kmers\n";
+	if (number_of_core_kmers == 0) {
+		cerr << "Did not find any kmers above the core threshold.\n";
+		cerr << "Cannot continue. Set core threshold lower.\n";
+		exit(-1);
 	}
 }
 
@@ -1009,6 +1014,7 @@ int build_cloud_outer(string pchrepeatfile, string pchOutput,
 		fclose(pfOutput);
 
 	}
+
 	free(piRepeatOnesubstitution);
 	free(piRepeatTwosubstitution);
 	free(piRepeatThreesubstitution);
@@ -1045,8 +1051,10 @@ void build_clouds(string controlfile) {
 				outer_threshold);
 
 		CoreKmer* core_kmers = new CoreKmer[number_of_core_kmers];
+
 		read_core_kmers(kmer_counts_file, core_kmers, number_of_core_kmers,
 				kmer_size, core_threshold_1);
+
 		build_cloud_cores(core_kmers, clouds_summary_file, number_of_core_kmers,
 				kmer_size, core_threshold_1);
 
@@ -1074,6 +1082,7 @@ void build_clouds(string controlfile) {
 				number_of_secondary_cores, primary_cores,
 				number_of_primary_cores, kmer_size, core_threshold_2,
 				core_threshold_3, core_threshold_4);
+
 		build_cloud_outer(kmer_counts_file, outer_kmers_assign_file,
 				tertiary_cores, number_of_tertiary_cores, secondary_cores,
 				number_of_secondary_cores, primary_cores,
