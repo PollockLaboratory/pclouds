@@ -49,19 +49,17 @@ static inline std::string &chomp(std::string &s);
 void findAndReplace(std::string& source, const char* find, const char* replace);
 void cleanseNonCanonical(string &in);
 bool _predicate(char c);
-void tokenize(string myString, char separator, vector<string>& tokens,
-		int theSize);
 
 int main(int argc, const char * argv[]) {
 	vector<pair<long long int, long long int> > regions;
 
 	// WARNING: This version reads the contigs into memory one at a time
 	// Check for expected command line args
-	if (argc < 4) {
+	if (argc != 4) {
 		cerr
 				<< "Usage: postprocessor <fastafile> <regionfile> <output annotation filename>"
 				<< endl;
-		return -1;
+		exit(-1);
 	}
 
 	string genome_file = argv[1];

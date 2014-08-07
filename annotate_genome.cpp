@@ -114,6 +114,10 @@ void UpdatePatternAndCloudIdVectors(string kmer_assign_file,
  * the index scales linearly with K while updating the index will be constant
  * in K.
  *
+ * I was wrong. It will not reduce the annotation time by 1/K. Annotating
+ * includes more than just calculating the index. Therefore the speed-up will
+ * be much slower than 1/K.
+ *
  * Also, we don't need to copy the kmer from the genome_chunk, instead we are
  * simply looking at locations along the genome_chunk.
  */
@@ -122,8 +126,6 @@ void find_repeat_regions(string genome_file, string region_file,
 		const vector<bool>& PatternVector, const vector<int>& CloudIdVector,
 		const int kmer_size, const int windowsize, const int percent,
 		int& genome_chunk_size) {
-
-	int actual_genome_chunk_size = 0;
 
 	char *kmer_sequence = (char *) malloc(sizeof(char) * (kmer_size + 1));
 	kmer_sequence[kmer_size] = '\0';
@@ -143,13 +145,11 @@ void find_repeat_regions(string genome_file, string region_file,
 	 * the regions in the genome if the genome_has_header.
 	 */
 	long long genome_chunk_start = genome_has_header ? 18 : 0;
-	int read_status = 1;
 
 	bool patternnumber = 0;
 	int cloud_id = 0;
 	unsigned long index = 0;
 
-	FILE *pfRegion = fopen(region_file.c_str(), "wb");
 	ofstream regions(region_file.c_str());
 
 	vector<int> occurrence(windowsize, 0);
@@ -265,7 +265,7 @@ void find_repeat_regions(string genome_file, string region_file,
 									cloud_ids_in_region.pop_front();
 								}
 							}
-							regions<< "\n";
+							regions << "\n";
 
 							// Erase all clouds up to a window size before the end
 							cloud_ids_in_region.erase(
