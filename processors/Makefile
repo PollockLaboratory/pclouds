@@ -6,10 +6,10 @@ CPPFLAGS += -O3 -MMD -g -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -Wno-deprec
 all : preprocessor postprocessor
 
 preprocessor: preprocessor.o
-	$(CC) -o ../../bin/preprocessor preprocessor.o -I.
+	$(CC) -o preprocessor preprocessor.o
 
 postprocessor: postprocessor.o
-	$(CC) -o ../../bin/postprocessor postprocessor.o -I.
+	$(CC) -o postprocessor postprocessor.o
 
 clean:
-	rm *.o *.d ../../bin/preprocessor ../../bin/postprocessor
+	rm *.o *.d preprocessor postprocessor

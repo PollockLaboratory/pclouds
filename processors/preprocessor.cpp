@@ -7,12 +7,14 @@
 // This program takes an input FASTA formatted file and concatenates multiple sequences together
 // with an 'NNNN..' spacer.  This technique was introduced in the original P-Clouds distribution.
 
-// This version supersedes previous versions.
-
 // This program is meant for use with P-Clouds (Gu et al., 2008; de Koning et al., 2011)
 
 // jason.de.koning@gmail.com
 // http://jasondk.org
+
+// The off-by-18 error introduced by prepending the genome with ">Processed reads\n"
+// has been fixed
+// STP 2014-8-5
 
 #include <iostream>
 #include <fstream>
@@ -33,7 +35,6 @@ using namespace std;
 
 // primary functions
 void getFileContents( string fname, vector<string>& headers, vector<string>& seqs );
-void simulateSequence( string& newSequence, string& theWindow );
 
 // utility functions
 static inline std::string &chomp(std::string &s);
@@ -82,13 +83,13 @@ int main (int argc, const char * argv[]) {
     cout << "Processed " << headers.size() << " sequences" << endl << endl;
 
     // Output
-    /*
+    /*STP:
      * tempHead is what causes the off by 18 problem in old p-clouds
      */
     stringstream tempHead;
 
     tempHead << ">Processed reads";
-
+//STP: tempHead is no longer printed.
 //    out << tempHead.str() << endl;
     out << newSeq.str() << endl;
     
