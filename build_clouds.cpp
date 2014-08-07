@@ -21,6 +21,7 @@ bool dont_care_about_clouds = false;
 bool print_testmers = false;
 
 ofstream testmers("testmers");
+ofstream edges_out("edges_out");
 
 struct Kmer {
 	unsigned long number_pattern;
@@ -492,7 +493,6 @@ void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file,
 									* (kmer_size - 2) / 2)));
 
 	//STP: For expansion network
-	ofstream edges_out("edges_out");
 	edges_out << "Source_core\tDestination_core\n";
 
 	int total_number_of_clouds = 0;
@@ -809,7 +809,7 @@ void build_cloud_outer(string kmer_counts_file, string outer_kmers_assign_file,
 	ofstream outer_assign(outer_kmers_assign_file.c_str());
 
 	//STP: For expansion network
-	ofstream edges_out("edges_out");
+
 
 	ifstream kmer_counts(kmer_counts_file.c_str());
 	if (not kmer_counts.good()) {
