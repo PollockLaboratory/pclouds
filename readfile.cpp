@@ -52,7 +52,7 @@ void read_chunk_from_genome_file(FILE *genome_file, char *genome_chunk,
 	//STP: If read did not return what you expected
 	if (genome_chunk_size != expected_genome_chunk_size) {
 		genome_chunk[genome_chunk_size] = '\0';
-		cout << "This is the last chunk:\n" << genome_chunk << "\n";
+		//cout << "This is the last chunk:\n" << genome_chunk << "\n";
 		if (feof(genome_file)) {
 			cout << "Reached the end of the genome file" << endl;
 		} else {
@@ -65,11 +65,11 @@ void read_chunk_from_genome_file(FILE *genome_file, char *genome_chunk,
 void read_controlfile(string controlfile_name, int& kmer_size,
 		int& outer_threshold, int& core_threshold_1, int& core_threshold_2,
 		int& core_threshold_3, int& core_threshold_4, int& chunk_size,
-		unsigned int& genome_size, int& window_size, int& percent,
+		int& window_size, int& percent,
 		bool& build_clouds, bool& annotate_genome, string& kmer_counts_file,
 		string& genome_file, string& clouds_summary_file,
 		string& core_kmers_assign_file, string& outer_kmers_assign_file,
-		string& annotation_file, string& region_file) {
+		string& region_file) {
 
 	ifstream controlfile(controlfile_name.c_str());
 
@@ -103,8 +103,6 @@ void read_controlfile(string controlfile_name, int& kmer_size,
 				controlfile >> core_threshold_4;
 			else if (option == "GenomeChunkSize")
 				controlfile >> chunk_size;
-			else if (option == "GenomeSize")
-				controlfile >> genome_size;
 			else if (option == "WindowSize")
 				controlfile >> window_size;
 			else if (option == "PercentCutoff")
@@ -123,8 +121,6 @@ void read_controlfile(string controlfile_name, int& kmer_size,
 				controlfile >> core_kmers_assign_file;
 			else if (option == "OuterKmers")
 				controlfile >> outer_kmers_assign_file;
-			else if (option == "CloudAnnotation")
-				controlfile >> annotation_file;
 			else if (option == "RepeatRegion")
 				controlfile >> region_file;
 			else if (option == "KeepSSRs")

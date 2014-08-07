@@ -19,10 +19,10 @@ void read_chunk_from_genome_file(FILE *genome_file, char *genome_chunk,
 void read_controlfile(string controlfile, int& kmer_size,
 		int& outer_threshold, int& core_threshold_1, int& core_threshold_2,
 		int& core_threshold_3, int& core_threshold_4, int& chunk_size,
-		unsigned int& genome_size, int& window_size, int& percent,
+		int& window_size, int& percent,
 		bool& build_clouds, bool& annotate_genome, string& kmer_counts_file,
 		string& genome_file, string& clouds_summary_file,
 		string& core_kmers_assign_file, string& outer_kmers_assign_file,
-		string& annotation_file, string& region_file);
+		string& region_file);
 
 #endif

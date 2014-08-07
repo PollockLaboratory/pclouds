@@ -118,11 +118,10 @@ void UpdatePatternAndCloudIdVectors(string kmer_assign_file,
  * simply looking at locations along the genome_chunk.
  */
 
-void find_repeat_regions(string genome_file, string pchOutfile,
-		string pchRegionfile, const vector<bool>& PatternVector,
-		const vector<int>& CloudIdVector, const int kmer_size,
-		const int windowsize, const int percent, int& genome_chunk_size,
-		const unsigned int genome_size) {
+void find_repeat_regions(string genome_file, string region_file,
+		const vector<bool>& PatternVector, const vector<int>& CloudIdVector,
+		const int kmer_size, const int windowsize, const int percent,
+		int& genome_chunk_size) {
 
 	int actual_genome_chunk_size = 0;
 
@@ -146,13 +145,12 @@ void find_repeat_regions(string genome_file, string pchOutfile,
 	long long genome_chunk_start = genome_has_header ? 18 : 0;
 	int read_status = 1;
 
-	FILE *pfOut = fopen(pchOutfile.c_str(), "wb");
-
 	bool patternnumber = 0;
 	int cloud_id = 0;
 	unsigned long index = 0;
 
-	FILE *pfRegion = fopen(pchRegionfile.c_str(), "wb");
+	FILE *pfRegion = fopen(region_file.c_str(), "wb");
+	ofstream regions(region_file.c_str());
 
 	vector<int> occurrence(windowsize, 0);
 
@@ -172,9 +170,9 @@ void find_repeat_regions(string genome_file, string pchOutfile,
 	bool have_annotated_first_region = false;
 
 	if (print_clouds_in_regions) {
-		fputs("Start\tEnd\tClouds\n", pfRegion);
+		regions << "Start\tEnd\tClouds\n";
 	} else {
-		fputs("Start\tEnd\n", pfRegion);
+		regions << "Start\tEnd\n";
 	}
 	FILE *genome = fopen(genome_file.c_str(), "r");
 	if (genome == NULL) {
@@ -195,9 +193,6 @@ void find_repeat_regions(string genome_file, string pchOutfile,
 		for (int site = 0; site <= genome_chunk_size - kmer_size;
 				site++, genome_position++) {
 
-			if ((site % 80 == 0) && (site != 0))
-				fprintf(pfOut, "\n");
-
 			//STP: We don't need to copy the sequence here.
 			// We could simply have a pointer to the chunk
 			strncpy(kmer_sequence, genome_chunk + site, kmer_size);
@@ -214,17 +209,14 @@ void find_repeat_regions(string genome_file, string pchOutfile,
 						genome_chunk[site + kmer_size - 1], kmer_size);
 
 			//if (issegmentvalid(kmer_sequence)) {
-			if (is_segment_valid(genome_chunk + site, kmer_size) and PatternVector[index]) {
-					patternnumber = true;
-					cloud_id = CloudIdVector[index];
-			}
-			else {
+			if (is_segment_valid(genome_chunk + site, kmer_size)
+					and PatternVector[index]) {
+				patternnumber = true;
+				cloud_id = CloudIdVector[index];
+			} else {
 				patternnumber = false;
 				cloud_id = 0;
 			}
-
-			//output the p cloud annotation file;
-			fprintf(pfOut, "%d", patternnumber);
 
 			occurrence.erase(occurrence.begin());
 			occurrence.push_back(patternnumber);
@@ -254,22 +246,26 @@ void find_repeat_regions(string genome_file, string pchOutfile,
 							// Since we print the previous region,
 							// we need to have seen the first region
 							// before we print
-							fprintf(pfRegion, "%lld\t%lld\t", former_start,
-									former_end);
+							regions << former_start << "\t" << former_end;
 
 							if (print_clouds_in_regions) {
 								int number_of_clouds_to_print = former_end
 										- kmer_size - former_start + 1;
-
+								regions << "\t";
 								for (int cloud = 0;
 										cloud < number_of_clouds_to_print;
 										cloud++) {
-									fprintf(pfRegion, "%i ",
-											cloud_ids_in_region.front());
+									if (cloud == 0) {
+										regions << cloud_ids_in_region.front();
+									}
+									else {
+										regions << " " << cloud_ids_in_region.front();
+									}
+
 									cloud_ids_in_region.pop_front();
 								}
 							}
-							fputs("\n", pfRegion);
+							regions<< "\n";
 
 							// Erase all clouds up to a window size before the end
 							cloud_ids_in_region.erase(
@@ -320,21 +316,26 @@ void find_repeat_regions(string genome_file, string pchOutfile,
 	}
 
 	if (have_annotated_first_region) {
-		fprintf(pfRegion, "%lld\t%lld\t", former_start, former_end);
+		regions << former_start << "\t" << former_end;
 		if (print_clouds_in_regions) {
 			int number_of_clouds_to_print = former_end - kmer_size
 					- former_start + 1;
+			regions << "\t";
 
 			for (int cloud = 0; cloud < number_of_clouds_to_print; cloud++) {
-				fprintf(pfRegion, "%i ", cloud_ids_in_region.front());
+				if (cloud == 0) {
+					regions << cloud_ids_in_region.front();
+				}
+				else {
+					regions << " " << cloud_ids_in_region.front();
+				}
 				cloud_ids_in_region.pop_front();
 			}
 		}
-		fputs("\n", pfRegion);
+		regions << "\n";
 	}
 
-	fclose(pfRegion);
-	fclose(pfOut);
+
 	free(kmer_sequence);
 	free(reverse_complement_sequence);
 	free(genome_chunk);
@@ -357,10 +358,9 @@ void annotate_genome(string controlfile) {
 
 	read_controlfile(controlfile, kmer_size, outer_threshold, core_threshold_1,
 			core_threshold_2, core_threshold_3, core_threshold_4, chunk_size,
-			genome_size, window_size, percent, build_clouds, annotate_genome,
+			window_size, percent, build_clouds, annotate_genome,
 			kmer_counts_file, genome_file, clouds_summary_file,
-			core_kmers_assign_file, outer_kmers_assign_file, annotation_file,
-			region_file);
+			core_kmers_assign_file, outer_kmers_assign_file, region_file);
 
 	if (annotate_genome) {
 		cout << "Annotating the genome" << endl;
@@ -372,8 +372,7 @@ void annotate_genome(string controlfile) {
 		UpdatePatternAndCloudIdVectors(outer_kmers_assign_file, pattern_vector,
 				cloud_id_vector, kmer_size);
 
-		find_repeat_regions(genome_file, annotation_file, region_file,
-				pattern_vector, cloud_id_vector, kmer_size, window_size,
-				percent, chunk_size, genome_size);
+		find_repeat_regions(genome_file, region_file, pattern_vector,
+				cloud_id_vector, kmer_size, window_size, percent, chunk_size);
 	}
 }
