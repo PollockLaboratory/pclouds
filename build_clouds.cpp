@@ -719,24 +719,25 @@ void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file,
 }
 
 //output the mainclouds assignments of each oligo in main clouds
-void output_cloud_cores(CoreKmer* main_oligos, string pchResult,
-		const int& nOligos_above_end_threshold, const int& size) {
-	FILE *pfResult = fopen(pchResult.c_str(), "wb");
+void output_cloud_cores(CoreKmer* core_kmers, string core_kmers_assign_file,
+		const int& number_of_core_kmers, const int& size) {
+	FILE *core_kmers_assign = fopen(core_kmers_assign_file.c_str(), "wb");
 
 	char *pchPattern = (char*) malloc(sizeof(char) * (size + 1));
 
-	sort(main_oligos, main_oligos + nOligos_above_end_threshold, highnumber3);
+	sort(core_kmers, core_kmers + number_of_core_kmers, highnumber3);
 
-	for (int i = 0; i < nOligos_above_end_threshold; i++) {
+	for (int i = 0; i < number_of_core_kmers; i++) {
 		number_pattern_to_kmer_sequence(pchPattern,
-				main_oligos[i].number_pattern, size);
-		if (main_oligos[i].cloud > 9000)
-			cerr << "Cloud id is over 9000. This is probably an error." << endl;
-		fprintf(pfResult, "%s %d %d\n", pchPattern, main_oligos[i].cloud,
-				main_oligos[i].count);
+				core_kmers[i].number_pattern, size);
+		if (core_kmers[i].cloud > 9000)
+			cerr << "Cloud id is over 9000. This is probably an error.\n"
+					"Unless you don't care about clouds." << endl;
+		fprintf(core_kmers_assign, "%s %d %d\n", pchPattern, core_kmers[i].cloud,
+				core_kmers[i].count);
 	}
 
-	fclose(pfResult);
+	fclose(core_kmers_assign);
 	free(pchPattern);
 }
 
@@ -998,6 +999,9 @@ void build_clouds(string controlfile) {
 
 	int number_of_core_kmers, number_of_outer_kmers;
 
+	// Could use an "Options" object to store all these options rather than
+	// giving a variable for each. This function definition is ugly. It has
+	// way too many arguments.
 	read_controlfile(controlfile, kmer_size, outer_threshold, core_threshold_1,
 			core_threshold_2, core_threshold_3, core_threshold_4, chunk_size,
 			window_size, percent, build_clouds, annotate_genome,
