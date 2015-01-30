@@ -4,15 +4,13 @@
 #include <algorithm>
 #include <math.h>
 #include <vector>
+#include <map>
 
 #include "../include/macrodefine.h"
 #include "../filereader/readfile.h"
 #include "../stringhandler/stringhandle.h"
 
 using namespace std;
-
-using std::swap;
-using std::sort;
 
 // Added by STP
 bool keep_SSRs = false;
@@ -26,7 +24,7 @@ ofstream edges_out("edges_out");
 map<string, int> kmers;
 map<string, string> kmer_assignments;
 
-map<string, int> read_kmers(string kmer_counts_file, const int kmer_size,
+map<string, int> read_kmers(string kmer_counts_file,
 		int outer_threshold) {
 
 	map<string, int> kmers;
@@ -59,7 +57,7 @@ vector<string> get_core_kmers(map<string, int> kmers, int core_threshold) {
 
 	// Collect the core kmers and their counts
 	vector<pair<string, int> > core_kmers_pairs;
-	for (map<string, int>::iterator kmer = kmers.begin(); kmer < kmers.end();
+	for (map<string, int>::iterator kmer = kmers.begin(); kmer != kmers.end();
 			kmer++) {
 		if (kmer->second >= core_threshold) {
 			core_kmers_pairs.push_back(make_pair(kmer->first, kmer->second));
@@ -111,13 +109,10 @@ void build_clouds(string controlfile) {
 	int outer_threshold, core_threshold_1, core_threshold_2, core_threshold_3,
 			core_threshold_4;
 	int chunk_size;
-	unsigned int genome_size;
 
 	string kmer_counts_file, clouds_summary_file, core_kmers_assign_file,
 			outer_kmers_assign_file;
 	string genome_file, annotation_file, region_file;
-
-	int number_of_core_kmers, number_of_outer_kmers;
 
 	read_controlfile(controlfile, kmer_size, outer_threshold, core_threshold_1,
 			core_threshold_2, core_threshold_3, core_threshold_4, chunk_size,
@@ -127,7 +122,7 @@ void build_clouds(string controlfile) {
 
 	if (build_clouds) {
 		cout << "Building clouds" << endl;
-		kmers = read_kmers(kmer_counts_file, kmer_size, outer_threshold);
+		kmers = read_kmers(kmer_counts_file, outer_threshold);
 
 		vector<string> core_kmers = get_core_kmers(kmers, core_threshold_1);
 
