@@ -5,14 +5,11 @@
 #include <cmath>
 #include <vector>
 
-#include "macrodefine.h"
-#include "readfile.h"
-#include "stringhandle.h"
+#include "../include/macrodefine.h"
+#include "../filereader/readfile.h"
+#include "../stringhandler/stringhandle.h"
 
 using namespace std;
-
-using std::swap;
-using std::sort;
 
 // Added by STP
 #include <deque> // For clouds in regions
@@ -24,7 +21,20 @@ bool genome_has_header = false;
 //STP: This is the only function shared between build_clouds.cpp and
 // annotate_genome.cpp
 void kmer_sequence_to_number_pattern(const char *kmer_sequence,
-		unsigned long& number_pattern, const int& kmer_size);
+		unsigned long& number_pattern, const int& kmer_size) {
+	number_pattern = 0;
+	for (int i = 0; i < kmer_size; i++) {
+		number_pattern *= 4;
+		if (kmer_sequence[i] == 'a' or kmer_sequence[i] == 'A')
+			number_pattern += 0;
+		else if (kmer_sequence[i] == 'c' or kmer_sequence[i] == 'C')
+			number_pattern += 1;
+		else if (kmer_sequence[i] == 'g' or kmer_sequence[i] == 'G')
+			number_pattern += 2;
+		else if (kmer_sequence[i] == 't' or kmer_sequence[i] == 'T')
+			number_pattern += 3;
+	}
+}
 
 void update_index(unsigned long& index, char front, char back, int kmer_size) {
 	// subtract 4^(k-1) * value of front character
@@ -160,11 +170,9 @@ void find_repeat_regions(string genome_file, string region_file,
 	deque<int> cloud_ids_in_region;
 
 	long long genome_position = 0;
-	long long start = 0, end = 0;
+	long long start = 0;
 	long long former_start = 0;
 	long long former_end = -1; // This must be initialized to < 0 in case the
-							   // first window is repetitive
-	long long totalsize = 0;
 
 	bool previous_window_was_repetitive = false;
 	bool have_annotated_first_region = false;
@@ -348,13 +356,10 @@ void annotate_genome(string controlfile) {
 	int outer_threshold, core_threshold_1, core_threshold_2, core_threshold_3,
 			core_threshold_4;
 	int chunk_size;
-	unsigned int genome_size;
 
 	string kmer_counts_file, clouds_summary_file, core_kmers_assign_file,
 			outer_kmers_assign_file;
 	string genome_file, annotation_file, region_file;
-
-	int number_of_core_kmers, number_of_outer_kmers;
 
 	read_controlfile(controlfile, kmer_size, outer_threshold, core_threshold_1,
 			core_threshold_2, core_threshold_3, core_threshold_4, chunk_size,

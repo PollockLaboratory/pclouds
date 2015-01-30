@@ -4,15 +4,13 @@
 #include <algorithm>
 #include <math.h>
 #include <vector>
+#include <map>
 
-#include "macrodefine.h"
-#include "readfile.h"
-#include "stringhandle.h"
+#include "../include/macrodefine.h"
+#include "../filereader/readfile.h"
+#include "../stringhandler/stringhandle.h"
 
 using namespace std;
-
-using std::swap;
-using std::sort;
 
 // Added by STP
 bool keep_SSRs = false;
@@ -374,7 +372,7 @@ void get_three_substitutions(char* core_kmer,
 
 void count_core_and_outer_kmers(string kmer_counts_file,
 		int& number_of_core_kmers, int& number_of_outer_kmers,
-		const int kmer_size, const int core_threshold,
+		const int core_threshold,
 		const int outer_threshold) {
 
 	number_of_core_kmers = 0;
@@ -413,8 +411,6 @@ void count_core_and_outer_kmers(string kmer_counts_file,
 void read_core_kmers(string kmer_counts_file, CoreKmer* core_kmers,
 		int& number_of_core_kmers, const int kmer_size,
 		const int core_threshold) {
-
-	unsigned long index;
 
 	number_of_core_kmers = 0;
 	ifstream kmer_counts(kmer_counts_file.c_str());
@@ -991,7 +987,6 @@ void build_clouds(string controlfile) {
 	int outer_threshold, core_threshold_1, core_threshold_2, core_threshold_3,
 			core_threshold_4;
 	int chunk_size;
-	unsigned int genome_size;
 
 	string kmer_counts_file, clouds_summary_file, core_kmers_assign_file,
 			outer_kmers_assign_file;
@@ -1012,7 +1007,7 @@ void build_clouds(string controlfile) {
 	if (build_clouds) {
 		cout << "Building clouds" << endl;
 		count_core_and_outer_kmers(kmer_counts_file, number_of_core_kmers,
-				number_of_outer_kmers, kmer_size, core_threshold_1,
+				number_of_outer_kmers, core_threshold_1,
 				outer_threshold);
 
 		CoreKmer* core_kmers = new CoreKmer[number_of_core_kmers];
