@@ -7,7 +7,7 @@ add_executable (pclouds PClouds.cpp
 	#cloudbuilder/build_clouds.cpp
 	cloudbuilder/build_clouds_recursively.cpp
 	filereader/readfile.h
-	filereader/readfile.h
+	filereader/readfile.cpp
 	genomeannotator/annotate_genome.cpp
 	stringhandler/stringhandle.h
 	stringhandler/stringhandle.cpp
