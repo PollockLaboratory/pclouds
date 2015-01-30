@@ -12,7 +12,7 @@
 #include <string>
 
 #include "readfile.h"
-#include "stringhandle.h"
+#include "../stringhandler/stringhandle.h"
 // debug
 
 using namespace std;
