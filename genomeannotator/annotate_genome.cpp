@@ -21,7 +21,20 @@ bool genome_has_header = false;
 //STP: This is the only function shared between build_clouds.cpp and
 // annotate_genome.cpp
 void kmer_sequence_to_number_pattern(const char *kmer_sequence,
-		unsigned long& number_pattern, const int& kmer_size);
+		unsigned long& number_pattern, const int& kmer_size) {
+	number_pattern = 0;
+	for (int i = 0; i < kmer_size; i++) {
+		number_pattern *= 4;
+		if (kmer_sequence[i] == 'a' or kmer_sequence[i] == 'A')
+			number_pattern += 0;
+		else if (kmer_sequence[i] == 'c' or kmer_sequence[i] == 'C')
+			number_pattern += 1;
+		else if (kmer_sequence[i] == 'g' or kmer_sequence[i] == 'G')
+			number_pattern += 2;
+		else if (kmer_sequence[i] == 't' or kmer_sequence[i] == 'T')
+			number_pattern += 3;
+	}
+}
 
 void update_index(unsigned long& index, char front, char back, int kmer_size) {
 	// subtract 4^(k-1) * value of front character
