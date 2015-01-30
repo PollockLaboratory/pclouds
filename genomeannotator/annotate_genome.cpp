@@ -11,9 +11,6 @@
 
 using namespace std;
 
-using std::swap;
-using std::sort;
-
 // Added by STP
 #include <deque> // For clouds in regions
 bool print_clouds_in_regions = false;
@@ -160,11 +157,9 @@ void find_repeat_regions(string genome_file, string region_file,
 	deque<int> cloud_ids_in_region;
 
 	long long genome_position = 0;
-	long long start = 0, end = 0;
+	long long start = 0;
 	long long former_start = 0;
 	long long former_end = -1; // This must be initialized to < 0 in case the
-							   // first window is repetitive
-	long long totalsize = 0;
 
 	bool previous_window_was_repetitive = false;
 	bool have_annotated_first_region = false;
@@ -348,13 +343,10 @@ void annotate_genome(string controlfile) {
 	int outer_threshold, core_threshold_1, core_threshold_2, core_threshold_3,
 			core_threshold_4;
 	int chunk_size;
-	unsigned int genome_size;
 
 	string kmer_counts_file, clouds_summary_file, core_kmers_assign_file,
 			outer_kmers_assign_file;
 	string genome_file, annotation_file, region_file;
-
-	int number_of_core_kmers, number_of_outer_kmers;
 
 	read_controlfile(controlfile, kmer_size, outer_threshold, core_threshold_1,
 			core_threshold_2, core_threshold_3, core_threshold_4, chunk_size,
