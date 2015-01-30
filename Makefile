@@ -14,9 +14,6 @@ MISSING_DEPS = $(filter-out $(wildcard $(DEPS)), $(DEPS))
 # C++ compiler
 CXX = g++ 
 
-RM = del 2>nul
-# 2>nul suppresses error if file does not exist
-
 # C PreProcessor flags
 CPPFLAGS = -MMD #-fprofile-arcs -ftest-coverage
 # Special variable for implicit rule generation
@@ -60,7 +57,3 @@ endif
 
 $(EXECUTABLE) : $(OBJECTS)
 	$(CXX) $(LDFLAGS) -o $(EXECUTABLE) $(OBJECTS)
-
-# The recipes for the dependencies are determined using make's implicit rules
-include $(DEPS)
-
