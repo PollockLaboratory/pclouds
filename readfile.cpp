@@ -91,6 +91,10 @@ void read_controlfile(string controlfile_name, int& kmer_size,
 		} else if (not in_comment) {
 			if (option == "KmerSize")
 				controlfile >> kmer_size;
+			else if (option == "KmerCounts")
+				controlfile >> kmer_counts_file;
+			else if (option == "BuildClouds")
+				controlfile >> build_clouds;
 			else if (option == "OuterThreshold")
 				controlfile >> outer_threshold;
 			else if (option == "CoreThreshold_1")
@@ -103,24 +107,20 @@ void read_controlfile(string controlfile_name, int& kmer_size,
 				controlfile >> core_threshold_4;
 			else if (option == "GenomeChunkSize")
 				controlfile >> chunk_size;
-			else if (option == "WindowSize")
-				controlfile >> window_size;
-			else if (option == "PercentCutoff")
-				controlfile >> percent;
-			else if (option == "BuildClouds")
-				controlfile >> build_clouds;
-			else if (option == "AnnotateGenome")
-				controlfile >> annotate_genome;
-			else if (option == "KmerCounts")
-				controlfile >> kmer_counts_file;
-			else if (option == "Genome")
-				controlfile >> genome_file;
-			else if (option == "CloudSummaries")
-				controlfile >> clouds_summary_file;
 			else if (option == "CoreKmers")
 				controlfile >> core_kmers_assign_file;
 			else if (option == "OuterKmers")
 				controlfile >> outer_kmers_assign_file;
+			else if (option == "AnnotateGenome")
+				controlfile >> annotate_genome;
+			else if (option == "WindowSize")
+				controlfile >> window_size;
+			else if (option == "PercentCutoff")
+				controlfile >> percent;
+			else if (option == "Genome")
+				controlfile >> genome_file;
+			else if (option == "CloudSummaries")
+				controlfile >> clouds_summary_file;
 			else if (option == "RepeatRegion")
 				controlfile >> region_file;
 			else if (option == "KeepSSRs")
@@ -136,7 +136,6 @@ void read_controlfile(string controlfile_name, int& kmer_size,
 			else if (option == "GenomeHasHeader")
 				controlfile >> genome_has_header;
 			else if (option == "CutoffValues") {
-				cout << "Found Cutoff Values" << endl;
 				controlfile >> outer_threshold;
 				controlfile >> core_threshold_1;
 				controlfile >> core_threshold_2;
@@ -148,6 +147,6 @@ void read_controlfile(string controlfile_name, int& kmer_size,
 	if (dont_care_about_clouds and print_clouds_in_regions) {
 		cerr << "You have selected that you don't care about clouds\n"
 				<< "but you asked to print clouds in regions.\n"
-				<< "The cloud ids printed will not mean much.\n";
+				<< "The cloud ids printed will not mean anything.\n";
 	}
 }
