@@ -5,9 +5,9 @@
 #include <cmath>
 #include <vector>
 
-#include "macrodefine.h"
-#include "readfile.h"
-#include "stringhandle.h"
+#include "../include/macrodefine.h"
+#include "../filereader/readfile.h"
+#include "../stringhandler/stringhandle.h"
 
 using namespace std;
 
