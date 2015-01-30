@@ -4,15 +4,13 @@
 #include <algorithm>
 #include <math.h>
 #include <vector>
+#include <map>
 
 #include "../include/macrodefine.h"
 #include "../filereader/readfile.h"
 #include "../stringhandler/stringhandle.h"
 
 using namespace std;
-
-using std::swap;
-using std::sort;
 
 // Added by STP
 bool keep_SSRs = false;
