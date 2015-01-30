@@ -1,4 +1,4 @@
-EXECUTABLE = Pclouds_STP
+EXECUTABLE = pclouds.exe
 
 # List of sources to include
 include sources.mk
