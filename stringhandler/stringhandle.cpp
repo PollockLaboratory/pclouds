@@ -3,8 +3,8 @@
  *
  */
 
-#include "stringhandle.h"
-#include "macrodefine.h"
+#include "../stringhandler/stringhandle.h"
+#include "../include/macrodefine.h"
 #include <cstring>
 
 #include <string>
@@ -34,7 +34,7 @@ void strright(int i, char *source, char *temp) {
 }
 
 void strleft(int i, char* source, char* target) {
-	int count, j;
+	int count;
 
 	for (count = 0; count < i; count++)
 		*(target + count) = *(source + count);
@@ -122,8 +122,6 @@ std::string getreversecomplement(std::string kmer) {
 int stringcompare(char *pchSource, char *pchTarget) {
 	int count = 0;
 
-	int nCompared = 1;
-
 	for (count = 0; count < (signed) strlen(pchSource);) {
 		if ((*(pchSource + count) == *(pchTarget + count))
 				|| (*(pchSource + count) + 32 == *(pchTarget + count))
@@ -138,8 +136,6 @@ int stringcompare(char *pchSource, char *pchTarget) {
 
 int stringcompare(const char *pchSource, const char *pchTarget) {
 	int count = 0;
-
-	int nCompared = 1;
 
 	for (count = 0; count < (signed) strlen(pchSource);) {
 		if ((*(pchSource + count) == *(pchTarget + count))
@@ -200,7 +196,7 @@ void stringtoarray(const std::string& src, char* target) {
 
 bool is_SSR(const char *kmer) {
 	return is_one_SSR(kmer) or is_two_SSR(kmer) or is_three_SSR(kmer)
-			or is_four_SSR(kmer);
+		or is_four_SSR(kmer);
 }
 
 bool is_one_SSR(const char *kmer) {
