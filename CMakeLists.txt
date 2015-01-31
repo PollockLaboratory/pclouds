@@ -12,3 +12,5 @@ add_executable (pclouds PClouds.cpp
 	stringhandler/stringhandle.h
 	stringhandler/stringhandle.cpp
 	)
+
+add_subdirectory (processors)
