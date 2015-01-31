@@ -32,11 +32,17 @@
 #include <time.h>
 #include <string.h>
 
+using std::string;
+using std::vector;
+using std::pair;
+using std::endl;
+using std::cerr;
+using std::ifstream;
+using std::ofstream;
+
 // Delete any non-canonical nucleotide characters?
 const int totalDeleteNonCanonical = 0;
 const int spacerLength = 30;
-
-using namespace std;
 
 // primary functions
 void getSequenceNamesAndLengths(string fname, vector<string>& headers,
@@ -148,7 +154,7 @@ void getSequenceNamesAndLengths(string fname, vector<string>& headers,
 	ifstream in;
 	string delim = ">";
 
-	in.open(fname.c_str(), ios::in);
+	in.open(fname.c_str(), std::ios::in);
 
 	if (!in.is_open()) {
 		cerr << "Could not open file" << endl;

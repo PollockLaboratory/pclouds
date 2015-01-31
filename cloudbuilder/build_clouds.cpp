@@ -9,7 +9,13 @@
 #include "../filereader/readfile.h"
 #include "../stringhandler/stringhandle.h"
 
-using namespace std;
+using std::string;
+using std::cout;
+using std::endl;
+using std::cerr;
+using std::sort;
+using std::ofstream;
+using std::ifstream;
 
 namespace pclouds {
 

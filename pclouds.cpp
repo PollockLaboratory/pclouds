@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
+using std::string;
 
 namespace pclouds {
 void build_clouds(string controlfile); // In build_clouds.cpp

@@ -28,10 +28,17 @@
 #include <time.h>
 #include <string.h>
 
+using std::string;
+using std::vector;
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::ifstream;
+using std::ofstream;
+using std::stringstream;
+
 // Delete any non-canonical nucleotide characters?
 const int totalDeleteNonCanonical = 0;
-
-using namespace std;
 
 // primary functions
 void getFileContents( string fname, vector<string>& headers, vector<string>& seqs );
@@ -60,7 +67,7 @@ int main (int argc, const char * argv[]) {
 	// Open an output file
 	ofstream out;
 
-	out.open( outname.c_str(), ios::out );
+	out.open( outname.c_str(), std::ios::out );
 	if (!out.is_open()) {
 		cerr << "Error.  Could not open output file." << endl;
 		exit(-1);
@@ -101,7 +108,7 @@ void getFileContents( string fname, vector<string>& headers, vector<string>& seq
 	ifstream in;
 	string delim = ">";
 
-	in.open( fname.c_str(), ios::in );
+	in.open( fname.c_str(), std::ios::in );
 
 	if (!in.is_open()) {
 		cerr << "Could not open file" << endl;

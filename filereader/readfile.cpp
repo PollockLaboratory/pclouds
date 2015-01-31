@@ -13,9 +13,13 @@
 
 #include "readfile.h"
 #include "../stringhandler/stringhandle.h"
-// debug
 
-using namespace std;
+using std::string;
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::ifstream;
+// debug
 
 namespace pclouds {
 // Read a segment of sequence to a buffer from sequence file
