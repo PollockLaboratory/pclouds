@@ -196,7 +196,7 @@ void stringtoarray(const std::string& src, char* target) {
 
 bool is_SSR(const char *kmer) {
 	return is_one_SSR(kmer) or is_two_SSR(kmer) or is_three_SSR(kmer)
-			or is_four_SSR(kmer);
+		or is_four_SSR(kmer);
 }
 
 bool is_one_SSR(const char *kmer) {

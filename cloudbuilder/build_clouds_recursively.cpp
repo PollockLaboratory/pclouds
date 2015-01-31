@@ -32,7 +32,7 @@ map<string, int> read_kmers(string kmer_counts_file,
 
 	if (not kmer_counts.good()) {
 		cerr << "Can not find the repeat file: " << __LINE__ << kmer_counts_file
-				<< "\n";
+			<< "\n";
 		//STP: This is a fatal error
 		exit(-1);
 	}
@@ -89,8 +89,8 @@ void ExpandCloudAroundKmer(string cloud_id, string core_kmer,
 			// assigned yet
 			if (kmers.find(testmer) != kmers.end()
 					and kmer_assignments.find(testmer)
-							== kmer_assignments.end()) {
-// Keep track of edge from core kmer to testmer
+					== kmer_assignments.end()) {
+				// Keep track of edge from core kmer to testmer
 				edges_out << core_kmer << "\t" << testmer << "\n";
 
 				kmer_assignments[testmer] = cloud_id;
@@ -107,11 +107,11 @@ void build_clouds(string controlfile) {
 	bool build_clouds, annotate_genome;
 
 	int outer_threshold, core_threshold_1, core_threshold_2, core_threshold_3,
-			core_threshold_4;
+	    core_threshold_4;
 	int chunk_size;
 
 	string kmer_counts_file, clouds_summary_file, core_kmers_assign_file,
-			outer_kmers_assign_file;
+	       outer_kmers_assign_file;
 	string genome_file, annotation_file, region_file;
 
 	read_controlfile(controlfile, kmer_size, outer_threshold, core_threshold_1,
@@ -128,7 +128,7 @@ void build_clouds(string controlfile) {
 
 		for (vector<string>::iterator core_kmer = core_kmers.begin();
 				core_kmer < core_kmers.end(); core_kmer++) {
-// If the kmer has not been assigned.
+			// If the kmer has not been assigned.
 			if (kmer_assignments.find(*core_kmer) == kmer_assignments.end()) {
 				string cloud_id = *core_kmer;
 

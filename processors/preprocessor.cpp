@@ -43,119 +43,119 @@ void cleanseNonCanonical( string &in );
 bool _predicate(char c);
 
 int main (int argc, const char * argv[]) {
-    vector<string> headers;
-    vector<string> seqs;
-    
-    ifstream in;
+	vector<string> headers;
+	vector<string> seqs;
 
-    // Check for expected command line args
-    if (argc < 3) {
-        cerr << "Usage: preprocessor <fastafile> <output filename>" << endl;
-        return -1;
-    }
-    
-    string fname = argv[1];
-    string outname = argv[2];
+	ifstream in;
 
-    // Open an output file
-    ofstream out;
-    
-    out.open( outname.c_str(), ios::out );
-    if (!out.is_open()) {
-        cerr << "Error.  Could not open output file." << endl;
-        exit(-1);
-    }
+	// Check for expected command line args
+	if (argc < 3) {
+		cerr << "Usage: preprocessor <fastafile> <output filename>" << endl;
+		return -1;
+	}
 
-    // Read the FASTA file
-    getFileContents( fname, headers, seqs ); 
+	string fname = argv[1];
+	string outname = argv[2];
 
-    stringstream newSeq;
-    // For each sequence...
-    for (int i=0; i<headers.size(); i++) {
-        
-	    if (i>0) {
-		newSeq << "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNN";
-	    }
-	    
- 	    newSeq << seqs.at(i);
-    }
+	// Open an output file
+	ofstream out;
 
-    cout << "Processed " << headers.size() << " sequences" << endl << endl;
+	out.open( outname.c_str(), ios::out );
+	if (!out.is_open()) {
+		cerr << "Error.  Could not open output file." << endl;
+		exit(-1);
+	}
 
-    // Output
-    /*STP:
-     * tempHead is what causes the off by 18 problem in old p-clouds
-     */
-    stringstream tempHead;
+	// Read the FASTA file
+	getFileContents( fname, headers, seqs ); 
 
-    tempHead << ">Processed reads";
-//STP: tempHead is no longer printed.
-//    out << tempHead.str() << endl;
-    out << newSeq.str() << endl;
-    
-    out.close();
-    return 0;
+	stringstream newSeq;
+	// For each sequence...
+	for (int i=0; i<headers.size(); i++) {
+
+		if (i>0) {
+			newSeq << "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNN";
+		}
+
+		newSeq << seqs.at(i);
+	}
+
+	cout << "Processed " << headers.size() << " sequences" << endl << endl;
+
+	// Output
+	/*STP:
+	 * tempHead is what causes the off by 18 problem in old p-clouds
+	 */
+	stringstream tempHead;
+
+	tempHead << ">Processed reads";
+	//STP: tempHead is no longer printed.
+	//    out << tempHead.str() << endl;
+	out << newSeq.str() << endl;
+
+	out.close();
+	return 0;
 }
 
 void getFileContents( string fname, vector<string>& headers, vector<string>& seqs ) {
-    ifstream in;
-    string delim = ">";
-    
-    in.open( fname.c_str(), ios::in );
-    
-    if (!in.is_open()) {
-        cerr << "Could not open file" << endl;
-        exit(-1);
-    }
+	ifstream in;
+	string delim = ">";
 
-    // Clear the buffer
-    headers.clear();
-    seqs.clear();
-    
-    // Temp strings
-    string header;
-    string seq;
-    
-    int openSeq = 0;
-    
-    // Dump the file to buffer, line by line
-    string line;
-    while (in.good()) {
-        getline( in, line );
-        chomp( line );
-        
-        // New sequence?
-        if (std::string::npos != line.find( delim )) {
-            if ( openSeq == 1 ) {
-                if ( totalDeleteNonCanonical ) cleanseNonCanonical( seq );
-                headers.push_back( header );
-                seqs.push_back( seq );
-                
-                header.clear(); seq.clear();
-                openSeq = 0;
-            }
-            
-            // Prep the next one
-            findAndReplace( line, ">", "" );
-            header = line;
+	in.open( fname.c_str(), ios::in );
 
-            openSeq = 1;
-        } else {
-            seq += line;
-        }
-    } // while
+	if (!in.is_open()) {
+		cerr << "Could not open file" << endl;
+		exit(-1);
+	}
 
-    // Last one
-    if ( openSeq == 1 ) {
-        if ( totalDeleteNonCanonical ) cleanseNonCanonical( seq );
-        headers.push_back( header );
-        seqs.push_back( seq );
-        
-        header.clear(); seq.clear();
-        openSeq = 0;
-    }
+	// Clear the buffer
+	headers.clear();
+	seqs.clear();
 
-    in.close();
+	// Temp strings
+	string header;
+	string seq;
+
+	int openSeq = 0;
+
+	// Dump the file to buffer, line by line
+	string line;
+	while (in.good()) {
+		getline( in, line );
+		chomp( line );
+
+		// New sequence?
+		if (std::string::npos != line.find( delim )) {
+			if ( openSeq == 1 ) {
+				if ( totalDeleteNonCanonical ) cleanseNonCanonical( seq );
+				headers.push_back( header );
+				seqs.push_back( seq );
+
+				header.clear(); seq.clear();
+				openSeq = 0;
+			}
+
+			// Prep the next one
+			findAndReplace( line, ">", "" );
+			header = line;
+
+			openSeq = 1;
+		} else {
+			seq += line;
+		}
+	} // while
+
+	// Last one
+	if ( openSeq == 1 ) {
+		if ( totalDeleteNonCanonical ) cleanseNonCanonical( seq );
+		headers.push_back( header );
+		seqs.push_back( seq );
+
+		header.clear(); seq.clear();
+		openSeq = 0;
+	}
+
+	in.close();
 }
 
 
@@ -163,35 +163,35 @@ void getFileContents( string fname, vector<string>& headers, vector<string>& seq
 
 // trim whitespace from end
 static inline std::string &chomp(std::string &s) {
-    s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
-    return s;
+	s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+	return s;
 }
 
 // simple find and replace alowing literals
 void findAndReplace( std::string& source, const char* find, const char* replace ) {
-    size_t findLen = strlen(find);
-    size_t replaceLen = strlen(replace);
-    size_t pos = 0;
-    
-    //search for the next occurrence of find within source
-    while ((pos = source.find( find, pos)) != std::string::npos) {
-        source.replace( pos, findLen, replace );
-        pos += replaceLen; 
-    }
+	size_t findLen = strlen(find);
+	size_t replaceLen = strlen(replace);
+	size_t pos = 0;
+
+	//search for the next occurrence of find within source
+	while ((pos = source.find( find, pos)) != std::string::npos) {
+		source.replace( pos, findLen, replace );
+		pos += replaceLen; 
+	}
 }
 
 // return true if character should be removed, false otherwise
 bool _predicate(char c) {
-    char valid[9] = "ATCGatcg";
-    
-    for (int i=0; i < 9; i++) {
-        if ( c == valid[i] ) return false;
-    }
-    
-    return true;
+	char valid[9] = "ATCGatcg";
+
+	for (int i=0; i < 9; i++) {
+		if ( c == valid[i] ) return false;
+	}
+
+	return true;
 }
 
 void cleanseNonCanonical( string &in ) {
-    // Remove all non-canonical nucleotide characters
-    in.erase(std::remove_if(in.begin(), in.end(), _predicate), in.end());
+	// Remove all non-canonical nucleotide characters
+	in.erase(std::remove_if(in.begin(), in.end(), _predicate), in.end());
 }

@@ -38,11 +38,11 @@ for my $cloudmer_sequence_length (8 .. 35) {
 	# Reset the file pointer
 	open $fp_in, "<", "regions_short";
 	<$fp_in>;
-	
+
 	my $total_cloudmers = 0;
 	while(<$fp_in>) {
 		my $fields = [split];
-		
+
 		my $region_clouds = $fields;
 		for my $position (0 .. (scalar(@$region_clouds) - $cloudmer_sequence_length)) {
 			my $clouds = [@$region_clouds[$position..($position + $cloudmer_sequence_length - 1)]];
@@ -54,7 +54,7 @@ for my $cloudmer_sequence_length (8 .. 35) {
 			}
 		} 
 	}
-	
+
 	foreach my $cloudmer (keys %{$cloudmers}) {
 		#print "$region_length\t$cloudmer\t$cloudmers->{$cloudmer}\n";
 	}
