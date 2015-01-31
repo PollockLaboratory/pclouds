@@ -33,11 +33,11 @@ my $cloudmers = {};
 
 while(<$fp_in>) {
 	next if not $_;
-	
+
 	my $fields = [split];
 	my $start = shift @$fields;
 	my $end = shift @$fields;
-	
+
 	if ($end - $start == $region_length) {
 		my $clouds = $fields;
 		my $cloudmer = join "_", @$clouds;
@@ -54,7 +54,7 @@ while(<$fp_in>) {
 	my $fields = [split];
 	# Remove the start and end numbers
 	shift @$fields; shift @$fields;
-	
+
 	my $region_clouds = $fields;
 	for my $position (0 .. (scalar(@$region_clouds) - $cloudmer_sequence_length)) {
 		my $clouds = [@$region_clouds[$position..($position + $cloudmer_sequence_length - 1)]];

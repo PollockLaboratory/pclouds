@@ -85,7 +85,7 @@ void UpdatePatternAndCloudIdVectors(string kmer_assign_file,
 	ifstream kmers(kmer_assign_file.c_str());
 	if (not kmers.good()) {
 		cerr << "Can not read the kmer assign file: " << kmer_assign_file
-				<< "\n";
+			<< "\n";
 		exit(-1);
 	}
 
@@ -145,7 +145,7 @@ void find_repeat_regions(string genome_file, string region_file,
 	char *genome_chunk = (char*) malloc(sizeof(char) * genome_chunk_size);
 	if (genome_chunk == NULL) {
 		cerr
-				<< "The system can not allocate the memory for the genome chunk!\n";
+			<< "The system can not allocate the memory for the genome chunk!\n";
 		exit(-1);
 	}
 
@@ -191,9 +191,9 @@ void find_repeat_regions(string genome_file, string region_file,
 	while (not feof(genome)) {
 
 		/* Does this handle the stretch of sequence at the junction
-		 between reads? Those need to be handled specially.
-		 They are handled specially below when the new iOffset is
-		 calculated. */
+		   between reads? Those need to be handled specially.
+		   They are handled specially below when the new iOffset is
+		   calculated. */
 
 		read_chunk_from_genome_file(genome, genome_chunk, genome_chunk_start,
 				genome_chunk_size);
@@ -258,7 +258,7 @@ void find_repeat_regions(string genome_file, string region_file,
 
 							if (print_clouds_in_regions) {
 								int number_of_clouds_to_print = former_end
-										- kmer_size - former_start + 1;
+									- kmer_size - former_start + 1;
 								regions << "\t";
 								for (int cloud = 0;
 										cloud < number_of_clouds_to_print;
@@ -308,76 +308,76 @@ void find_repeat_regions(string genome_file, string region_file,
 		// Subtract kmer size in order to handle the break between chunks
 		// properly
 		genome_chunk_start += genome_chunk_size - kmer_size + 1;
-	}
-
-	fclose(genome);
-
-	// If the last window was repetitive, update the former end
-	// This essentially makes the former end to be the genome_file size
-	if (previous_window_was_repetitive) {
-		/*
-		 * The new way to calculate the former end is
-		 * more true to the method published in the
-		 * pclouds paper by wanjun.
-		 */
-		former_end = genome_position - 1 + kmer_size; // ends are exclusive
-	}
-
-	if (have_annotated_first_region) {
-		regions << former_start << "\t" << former_end;
-		if (print_clouds_in_regions) {
-			int number_of_clouds_to_print = former_end - kmer_size
-					- former_start + 1;
-			regions << "\t";
-
-			for (int cloud = 0; cloud < number_of_clouds_to_print; cloud++) {
-				if (cloud == 0) {
-					regions << cloud_ids_in_region.front();
-				}
-				else {
-					regions << " " << cloud_ids_in_region.front();
-				}
-				cloud_ids_in_region.pop_front();
-			}
 		}
-		regions << "\n";
+
+		fclose(genome);
+
+		// If the last window was repetitive, update the former end
+		// This essentially makes the former end to be the genome_file size
+		if (previous_window_was_repetitive) {
+			/*
+			 * The new way to calculate the former end is
+			 * more true to the method published in the
+			 * pclouds paper by wanjun.
+			 */
+			former_end = genome_position - 1 + kmer_size; // ends are exclusive
+		}
+
+		if (have_annotated_first_region) {
+			regions << former_start << "\t" << former_end;
+			if (print_clouds_in_regions) {
+				int number_of_clouds_to_print = former_end - kmer_size
+					- former_start + 1;
+				regions << "\t";
+
+				for (int cloud = 0; cloud < number_of_clouds_to_print; cloud++) {
+					if (cloud == 0) {
+						regions << cloud_ids_in_region.front();
+					}
+					else {
+						regions << " " << cloud_ids_in_region.front();
+					}
+					cloud_ids_in_region.pop_front();
+				}
+			}
+			regions << "\n";
+		}
+
+
+		free(kmer_sequence);
+		free(reverse_complement_sequence);
+		free(genome_chunk);
 	}
 
+	void annotate_genome(string controlfile) {
+		int kmer_size, window_size, percent;
+		bool build_clouds, annotate_genome;
 
-	free(kmer_sequence);
-	free(reverse_complement_sequence);
-	free(genome_chunk);
-}
+		int outer_threshold, core_threshold_1, core_threshold_2, core_threshold_3,
+		    core_threshold_4;
+		int chunk_size;
 
-void annotate_genome(string controlfile) {
-	int kmer_size, window_size, percent;
-	bool build_clouds, annotate_genome;
+		string kmer_counts_file, clouds_summary_file, core_kmers_assign_file,
+		       outer_kmers_assign_file;
+		string genome_file, annotation_file, region_file;
 
-	int outer_threshold, core_threshold_1, core_threshold_2, core_threshold_3,
-			core_threshold_4;
-	int chunk_size;
+		read_controlfile(controlfile, kmer_size, outer_threshold, core_threshold_1,
+				core_threshold_2, core_threshold_3, core_threshold_4, chunk_size,
+				window_size, percent, build_clouds, annotate_genome,
+				kmer_counts_file, genome_file, clouds_summary_file,
+				core_kmers_assign_file, outer_kmers_assign_file, region_file);
 
-	string kmer_counts_file, clouds_summary_file, core_kmers_assign_file,
-			outer_kmers_assign_file;
-	string genome_file, annotation_file, region_file;
+		if (annotate_genome) {
+			cout << "Annotating the genome" << endl;
+			vector<bool> pattern_vector(pow(4, kmer_size), false);
+			vector<int> cloud_id_vector(pow(4, kmer_size), 0);
 
-	read_controlfile(controlfile, kmer_size, outer_threshold, core_threshold_1,
-			core_threshold_2, core_threshold_3, core_threshold_4, chunk_size,
-			window_size, percent, build_clouds, annotate_genome,
-			kmer_counts_file, genome_file, clouds_summary_file,
-			core_kmers_assign_file, outer_kmers_assign_file, region_file);
+			UpdatePatternAndCloudIdVectors(core_kmers_assign_file, pattern_vector,
+					cloud_id_vector, kmer_size);
+			UpdatePatternAndCloudIdVectors(outer_kmers_assign_file, pattern_vector,
+					cloud_id_vector, kmer_size);
 
-	if (annotate_genome) {
-		cout << "Annotating the genome" << endl;
-		vector<bool> pattern_vector(pow(4, kmer_size), false);
-		vector<int> cloud_id_vector(pow(4, kmer_size), 0);
-
-		UpdatePatternAndCloudIdVectors(core_kmers_assign_file, pattern_vector,
-				cloud_id_vector, kmer_size);
-		UpdatePatternAndCloudIdVectors(outer_kmers_assign_file, pattern_vector,
-				cloud_id_vector, kmer_size);
-
-		find_repeat_regions(genome_file, region_file, pattern_vector,
-				cloud_id_vector, kmer_size, window_size, percent, chunk_size);
+			find_repeat_regions(genome_file, region_file, pattern_vector,
+					cloud_id_vector, kmer_size, window_size, percent, chunk_size);
+		}
 	}
-}

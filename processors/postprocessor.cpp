@@ -57,8 +57,8 @@ int main(int argc, const char * argv[]) {
 	// Check for expected command line args
 	if (argc != 4) {
 		cerr
-				<< "Usage: postprocessor <fastafile> <regionfile> <output annotation filename>"
-				<< endl;
+			<< "Usage: postprocessor <fastafile> <regionfile> <output annotation filename>"
+			<< endl;
 		exit(-1);
 	}
 
@@ -104,10 +104,10 @@ int main(int argc, const char * argv[]) {
 			}
 		}
 		contig_regions_out << sequence_names.at(correct_contig) << "\t"
-				<< (regions.at(i).first - starting_positions.at(correct_contig))
-				<< "\t"
-				<< (regions.at(i).second - starting_positions.at(correct_contig))
-				<< "\n";
+			<< (regions.at(i).first - starting_positions.at(correct_contig))
+			<< "\t"
+			<< (regions.at(i).second - starting_positions.at(correct_contig))
+			<< "\n";
 	}
 
 	return 0;
@@ -135,8 +135,8 @@ void ReadRegionsFile(string regions_file,
 
 		if (region.first >= region.second) {
 			cerr << "Found a region with beginning equal to or after the end. "
-					<< "Start: " << region.first << " End: " << region.second
-					<< endl;
+				<< "Start: " << region.first << " End: " << region.second
+				<< endl;
 			exit(-1);
 		}
 		regions.push_back(region);
@@ -215,7 +215,7 @@ void getSequenceNamesAndLengths(string fname, vector<string>& headers,
 static inline std::string &chomp(std::string &s) {
 	s.erase(
 			std::find_if(s.rbegin(), s.rend(),
-					std::not1(std::ptr_fun<int, int>(std::isspace))).base(),
+				std::not1(std::ptr_fun<int, int>(std::isspace))).base(),
 			s.end());
 	return s;
 }

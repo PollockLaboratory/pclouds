@@ -23,11 +23,11 @@ open my $regions, ">regions";
 while(<$fp_in>) {
 	print $. if $. % 10000 == 0; 
 	next if not $_;
-	
+
 	my $fields = [split];
 	my $start = shift @$fields;
 	my $end = shift @$fields;
-	
+
 	if (@$fields < 35) {
 		print $patterns @$fields;
 	}
