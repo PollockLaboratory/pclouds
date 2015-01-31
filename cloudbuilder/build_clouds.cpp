@@ -125,20 +125,7 @@ int get_kmer_count(char* line) {
 // transform the pattern sequence to the index of the array
 // coding method: A=0, C=1, G=2, T=3,
 void kmer_sequence_to_number_pattern(const char *kmer_sequence,
-		unsigned long& number_pattern, const int& kmer_size) {
-	number_pattern = 0;
-	for (int i = 0; i < kmer_size; i++) {
-		number_pattern *= 4;
-		if (kmer_sequence[i] == 'a' or kmer_sequence[i] == 'A')
-			number_pattern += 0;
-		else if (kmer_sequence[i] == 'c' or kmer_sequence[i] == 'C')
-			number_pattern += 1;
-		else if (kmer_sequence[i] == 'g' or kmer_sequence[i] == 'G')
-			number_pattern += 2;
-		else if (kmer_sequence[i] == 't' or kmer_sequence[i] == 'T')
-			number_pattern += 3;
-	}
-}
+		unsigned long& number_pattern, const int& kmer_size);
 
 void number_pattern_to_kmer_sequence(char *pchPattern,
 		const unsigned long& index, const int& patternsize) {
