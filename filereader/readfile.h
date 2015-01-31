@@ -12,6 +12,8 @@ using std::string;
 //               when it read the end of the file, piReadcount will be less than iLength;
 //               or these two values should be the same.
 
+namespace pclouds {
+
 void read_chunk_from_genome_file(FILE *genome_file, char *genome_chunk,
 		long long genome_chunk_start, int& genome_chunk_size);
 
@@ -24,5 +26,7 @@ void read_controlfile(string controlfile, int& kmer_size,
 		string& genome_file, string& clouds_summary_file,
 		string& core_kmers_assign_file, string& outer_kmers_assign_file,
 		string& region_file);
+
+}
 
 #endif

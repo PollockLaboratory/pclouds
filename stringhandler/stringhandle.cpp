@@ -9,6 +9,8 @@
 
 #include <string>
 
+namespace pclouds {
+
 int strcompare(int i, char *source, char *target) {
 	int count;
 	for (count = 0; count < i; count++)
@@ -280,3 +282,4 @@ bool is_segment_valid(char *sequence_start, int size) {
 	return is_valid;
 }
 
+}

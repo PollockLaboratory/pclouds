@@ -17,6 +17,7 @@
 
 using namespace std;
 
+namespace pclouds {
 // Read a segment of sequence to a buffer from sequence file
 // input: pfSource, source file pointer; pchBuff, the buffer to store the read data;
 //	 iOffset, the position to start to read data from the beginning of file;
@@ -150,3 +151,4 @@ void read_chunk_from_genome_file(FILE *genome_file, char *genome_chunk,
 				<< "The cloud ids printed will not mean anything.\n";
 		}
 	}
+}

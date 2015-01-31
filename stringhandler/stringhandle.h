@@ -3,6 +3,8 @@
 
 #include <string>
 
+namespace pclouds {
+
 void strright(int i, char *source, char *target);
 
 int straddright(char *source, char *target, char *add);
@@ -45,5 +47,7 @@ bool is_four_SSR(const char *kmer);
 bool issegmentvalid(char *pchPattern);
 
 bool is_segment_valid(char *sequence_start, int size);
+
+}
 
 #endif // stringhandle_h__

@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cmath>
 #include <vector>
+#include <deque> // For clouds in regions
 
 #include "../include/macrodefine.h"
 #include "../filereader/readfile.h"
@@ -11,8 +12,8 @@
 
 using namespace std;
 
-// Added by STP
-#include <deque> // For clouds in regions
+namespace pclouds {
+
 bool print_clouds_in_regions = false;
 bool genome_has_header = false;
 
@@ -381,3 +382,5 @@ void find_repeat_regions(string genome_file, string region_file,
 					cloud_id_vector, kmer_size, window_size, percent, chunk_size);
 		}
 	}
+
+}

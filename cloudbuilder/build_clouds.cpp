@@ -12,7 +12,8 @@
 
 using namespace std;
 
-// Added by STP
+namespace pclouds {
+
 bool keep_SSRs = false;
 bool expand_recursively = false;
 bool dont_care_about_clouds = false;
@@ -137,4 +138,6 @@ void build_clouds(string controlfile) {
 			}
 		}
 	}
+}
+
 }
