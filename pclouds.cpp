@@ -10,7 +10,7 @@ void annotate_genome(string controlfile); // In annotate_genome.cpp
 
 
 int main() {
-	string controlfile = "Controlfile";
+	string controlfile = "controlfile";
 
 	build_clouds(controlfile);
 
