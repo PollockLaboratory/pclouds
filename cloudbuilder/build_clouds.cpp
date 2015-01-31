@@ -80,7 +80,7 @@ vector<string> get_core_kmers(map<string, int> kmers, int core_threshold) {
 void ExpandCloudAroundKmer(string cloud_id, string core_kmer,
 		int core_threshold) {
 	char nucs[] = "ACGT";
-	for (int position = 0; position < core_kmer.length(); position++) {
+	for (int position = 0; position < static_cast<int>(core_kmer.length()); position++) {
 		for (int nuc = 0; nuc < 4; nuc++) {
 			string testmer = core_kmer;
 			testmer.at(position) = nucs[nuc];
