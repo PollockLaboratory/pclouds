@@ -1,5 +1,5 @@
 //
-//  Post-processor for P-Clouds 
+//  Post-processor for P-Clouds
 //
 //  Created by A.P. Jason de Koning on 7/5/12.
 //  Copyright (c) 2012 University of Colorado Denver, School of Medicine. All rights reserved.
@@ -25,8 +25,8 @@
 #include <map>
 #include <utility>
 
-#include <algorithm> 
-#include <functional> 
+#include <algorithm>
+#include <functional>
 #include <locale>
 
 #include <time.h>
@@ -79,7 +79,7 @@ int main(int argc, const char * argv[]) {
 	long long int positionPointer = 0;
 
 	vector<long long int> starting_positions(sequence_names.size());
-	for (int i = 0; i < sequence_names.size(); i++) {
+	for (int i = 0; i < static_cast<int>(sequence_names.size()); i++) {
 		starting_positions.at(i) = positionPointer;
 
 		positionPointer += sequence_lengths.at(i) + spacerLength;
@@ -100,10 +100,10 @@ int main(int argc, const char * argv[]) {
 	}
 
 	// Determine the contig for each region
-	for (int i = 0; i < regions.size(); i++) {
+	for (int i = 0; i < static_cast<int>(regions.size()); i++) {
 		//STP: Default to the last contig
 		int correct_contig = starting_positions.size() - 1;
-		for (int contig = 1; contig < starting_positions.size(); contig++) {
+		for (int contig = 1; contig < static_cast<int>(starting_positions.size()); contig++) {
 			if (regions.at(i).first < starting_positions.at(contig)) {
 				correct_contig = contig - 1;
 				break;

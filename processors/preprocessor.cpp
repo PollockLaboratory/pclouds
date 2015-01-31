@@ -78,7 +78,7 @@ int main (int argc, const char * argv[]) {
 
 	stringstream newSeq;
 	// For each sequence...
-	for (int i=0; i<headers.size(); i++) {
+	for (int i=0; i < static_cast<int>(headers.size()); i++) {
 
 		if (i>0) {
 			newSeq << "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNN";
