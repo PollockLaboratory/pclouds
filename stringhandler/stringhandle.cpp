@@ -83,7 +83,7 @@ void getreversecomplement(const char* pchSource, char* pchTarget) {
 
 	int size = strlen(pchSource);
 
-	for (count = 0; count < strlen(pchSource); count++) {
+	for (count = 0; count < static_cast<int>(strlen(pchSource)); count++) {
 		if (*(pchSource + count) == 'A' || *(pchSource + count) == 'a')
 			*(pchTarget + size - 1 - count) = 'T';
 		else if (*(pchSource + count) == 'T' || *(pchSource + count) == 't')
@@ -101,7 +101,7 @@ void getreversecomplement(const char* pchSource, char* pchTarget) {
 
 std::string getreversecomplement(std::string kmer) {
 	std::string complement = "";
-	for (int site = 0; site < kmer.length(); site++) {
+	for (int site = 0; site < static_cast<int>(kmer.length()); site++) {
 		char nucleotide = kmer[site];
 		if (nucleotide == 'A' or nucleotide == 'a')
 			complement += 'T';
@@ -202,7 +202,7 @@ bool is_SSR(const char *kmer) {
 bool is_one_SSR(const char *kmer) {
 	int i;
 
-	for (i = 0; i < strlen(kmer) - 1; i++) {
+	for (i = 0; i < static_cast<int>(strlen(kmer)) - 1; i++) {
 		if (kmer[i + 1] != kmer[i])
 			return (false);
 	}
@@ -213,7 +213,7 @@ bool is_one_SSR(const char *kmer) {
 bool is_two_SSR(const char *kmer) {
 	int i;
 
-	for (i = 0; i < strlen(kmer) - 2; i++) {
+	for (i = 0; i < static_cast<int>(strlen(kmer)) - 2; i++) {
 		if (kmer[i + 2] != kmer[i])
 			return (false);
 	}
@@ -224,7 +224,7 @@ bool is_two_SSR(const char *kmer) {
 bool is_three_SSR(const char *kmer) {
 	int i;
 
-	for (i = 0; i < strlen(kmer) - 3; i++) {
+	for (i = 0; i < static_cast<int>(strlen(kmer)) - 3; i++) {
 		if (kmer[i + 3] != kmer[i])
 			return (false);
 	}
@@ -235,7 +235,7 @@ bool is_three_SSR(const char *kmer) {
 bool is_four_SSR(const char *kmer) {
 	int i;
 
-	for (i = 0; i < strlen(kmer) - 4; i++) {
+	for (i = 0; i < static_cast<int>(strlen(kmer)) - 4; i++) {
 		if (kmer[i + 4] != kmer[i])
 			return (false);
 	}
