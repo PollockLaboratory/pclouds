@@ -1,3 +1,5 @@
+https://travis-ci.org/PollockLab/pclouds.svg?branch=feature%2Ftravis-ci
+
 PClouds
 -------
 
