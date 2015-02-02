@@ -5,12 +5,14 @@
 #include <math.h>
 #include <vector>
 
-#include "build_clouds.hpp"
+#include "./build_clouds.hpp"
+#include "./utilities.hpp"
 #include "../include/macrodefine.h"
 #include "../filereader/readfile.h"
 #include "../stringhandler/stringhandle.h"
 
 using std::string;
+using std::vector;
 using std::cout;
 using std::endl;
 using std::cerr;
@@ -28,83 +30,7 @@ bool print_testmers = false;
 ofstream testmers("testmers");
 ofstream edges_out("edges_out");
 
-int sbsearch2(int n, const Kmer *argv, const unsigned long& key) {
-	int m;
-	int site = 0;
-
-	while (n >= 1) {
-		m = n / 2;
-		if (argv[site + m].number_pattern == key)
-			return (site + m);
-		else if (argv[site + m].number_pattern > key)
-			n = m;
-		else {
-			site = site + m + 1;
-			n = n - m - 1;
-		}
-	}
-
-	return (-1);
-}
-
 //STP: Is this a binary search algorithm?
-int sbsearch3(int number_of_kmers, const CoreKmer *oligos, const unsigned long& key) {
-	int m;
-	int site = 0;
-
-	while (number_of_kmers >= 1) {
-		m = number_of_kmers / 2;
-		if (oligos[site + m].number_pattern == key)
-			return (site + m);
-		else if (oligos[site + m].number_pattern > key)
-			number_of_kmers = m;
-		else {
-			site = site + m + 1;
-			number_of_kmers = number_of_kmers - m - 1;
-		}
-	}
-
-	return (-1);
-}
-
-bool highnumber3(CoreKmer a, CoreKmer b) {
-	if (a.count > b.count)
-		return (1);
-	else
-		return (0);
-}
-
-bool lowsequence2(Kmer a, Kmer b) {
-	if (a.number_pattern < b.number_pattern)
-		return (1);
-	else
-		return (0);
-}
-
-bool lowsequence3(CoreKmer a, CoreKmer b) {
-	if (a.number_pattern < b.number_pattern)
-		return (1);
-	else
-		return (0);
-}
-
-int get_kmer_count(char* line) {
-	int i = 0;
-	int count = 0;
-
-	while (line[i] != ' ')
-		i++;
-
-	i++;
-
-	while ((line[i] >= ZERO) && (line[i] <= NINE)) {
-		count = count * 10 + line[i] - ZERO;
-		i++;
-	}
-
-	return (count);
-}
-
 void number_pattern_to_kmer_sequence(char *pchPattern, const unsigned long& index, const int& patternsize) {
 	int i;
 	unsigned long value;
@@ -391,7 +317,7 @@ void read_core_kmers(string kmer_counts_file, CoreKmer* core_kmers, int& number_
 //STP: Which algorithm??
 void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file, const int& number_of_core_kmers, const int& kmer_size, const int& core_threshold) {
 	// Sort to descending order of kmer count
-	sort(core_kmers, core_kmers + number_of_core_kmers, highnumber3);
+	sort(core_kmers, core_kmers + number_of_core_kmers, greater_count);
 
 	unsigned long* core_kmer_number_patterns = (unsigned long*) malloc(
 			sizeof(unsigned long) * number_of_core_kmers);
@@ -400,12 +326,12 @@ void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file, const in
 		core_kmer_number_patterns[k] = core_kmers[k].number_pattern;
 
 	// Sort by number pattern (used to be called 'index')
-	sort(core_kmers, core_kmers + number_of_core_kmers, lowsequence3);
+	sort(core_kmers, core_kmers + number_of_core_kmers, lesser_pattern);
 
 	int core_kmer_index_from_top = 0;
 	// This finds the index for the core oligo with the index main_oligos_index[count]
 	// This maps from index in main_oligos_index to index in main_oligos
-	int core_kmer_index = sbsearch3(number_of_core_kmers, core_kmers,
+	int core_kmer_index = search(number_of_core_kmers, core_kmers,
 			core_kmer_number_patterns[core_kmer_index_from_top]);
 
 	char* seed_sequence = (char*) malloc(sizeof(char) * (kmer_size + 1));
@@ -508,7 +434,7 @@ void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file, const in
 				//STP: result is now the index in main_oligos for the pattern given
 				// by the 'index' piCoreThreesubstitution[i] if found or -1 if not
 				// found
-				result = sbsearch3(number_of_core_kmers, core_kmers,
+				result = search(number_of_core_kmers, core_kmers,
 						piCoreThreesubstitution[i]);
 
 				//If you find the pattern above in main_oligos
@@ -566,7 +492,7 @@ void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file, const in
 
 						// Do the second round of expansion
 						for (int j = 0; j < iRepeatThreesubstitution; j++) {
-							result = sbsearch3(number_of_core_kmers, core_kmers,
+							result = search(number_of_core_kmers, core_kmers,
 									piRepeatThreesubstitution[j]);
 
 							if (result >= 0) {
@@ -628,7 +554,7 @@ void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file, const in
 				// This is doing extra work. It should be outside this while loop.
 				if (core_kmer_index_from_top <= number_of_core_kmers - 1)
 					core_kmer_index =
-						sbsearch3(number_of_core_kmers, core_kmers,
+						search(number_of_core_kmers, core_kmers,
 								core_kmer_number_patterns[core_kmer_index_from_top]);
 
 			}
@@ -666,7 +592,7 @@ void output_cloud_cores(CoreKmer* core_kmers, string core_kmers_assign_file, con
 
 	char *pchPattern = (char*) malloc(sizeof(char) * (size + 1));
 
-	sort(core_kmers, core_kmers + number_of_core_kmers, highnumber3);
+	sort(core_kmers, core_kmers + number_of_core_kmers, greater_count);
 
 	for (int i = 0; i < number_of_core_kmers; i++) {
 		number_pattern_to_kmer_sequence(pchPattern,
@@ -726,10 +652,10 @@ void read_cloud_cores(string core_assign_file, Kmer* tertiary_cores, int& number
 	}
 
 	sort(tertiary_cores, tertiary_cores + number_of_tertiary_cores,
-			lowsequence2);
+			lesser_pattern);
 	sort(secondary_cores, secondary_cores + number_of_secondary_cores,
-			lowsequence2);
-	sort(primary_cores, primary_cores + number_of_primary_cores, lowsequence2);
+			lesser_pattern);
+	sort(primary_cores, primary_cores + number_of_primary_cores, lesser_pattern);
 }
 
 // assign the oligos in accessory regions into P clouds constructed in former step
@@ -748,7 +674,7 @@ void build_cloud_outer(string kmer_counts_file, string outer_kmers_assign_file, 
 		exit(-1);
 	}
 
-	Kmer* outer_kmers = (Kmer*) malloc(sizeof(Kmer) * MAX_OUTER_KMERS);
+	vector <Kmer> outer_kmers;
 
 	string kmer = "";
 	int kmer_count = 0;
@@ -772,8 +698,8 @@ void build_cloud_outer(string kmer_counts_file, string outer_kmers_assign_file, 
 	//STP: This is not possible because the counts are not included in
 	// this type of cloud.
 	//			sort(core_kmers_above_tertiary, core_kmers_above_tertiary + number_of_cores_above_tertiary, highnumber2);
-	//			sort(core_kmers_above_secondary, core_kmers_above_secondary+ number_of_cores_above_secondary, highnumber3);
-	//			sort(core_kmers_above_primary, core_kmers_above_primary + number_of_cores_above_primary, highnumber3);
+	//			sort(core_kmers_above_secondary, core_kmers_above_secondary+ number_of_cores_above_secondary, greater_count);
+	//			sort(core_kmers_above_primary, core_kmers_above_primary + number_of_cores_above_primary, greater_count);
 
 	char *core_kmer = (char*) malloc(sizeof(char) * (kmer_size + 1));
 	char *testmer = (char*) malloc(sizeof(char) * (kmer_size + 1));
@@ -803,7 +729,7 @@ void build_cloud_outer(string kmer_counts_file, string outer_kmers_assign_file, 
 				number_of_distance_3_tesmers);
 
 		for (int count = 0; count < number_of_distance_3_tesmers; count++) {
-			int index = sbsearch2(number_of_outer_kmers, outer_kmers,
+			int index = search(number_of_outer_kmers, outer_kmers,
 					distance_3_tesmers[count]);
 
 			if (index >= 0) {
@@ -843,7 +769,7 @@ void build_cloud_outer(string kmer_counts_file, string outer_kmers_assign_file, 
 				number_of_distance_2_tesmers);
 
 		for (int count = 0; count < number_of_distance_2_tesmers; count++) {
-			int index = sbsearch2(number_of_outer_kmers, outer_kmers,
+			int index = search(number_of_outer_kmers, outer_kmers,
 					distance_2_tesmers[count]);
 
 			if (index >= 0) {
@@ -874,7 +800,7 @@ void build_cloud_outer(string kmer_counts_file, string outer_kmers_assign_file, 
 				number_of_distance_1_tesmers);
 
 		for (int count = 0; count < number_of_distance_1_tesmers; count++) {
-			int index = sbsearch2(number_of_outer_kmers, outer_kmers,
+			int index = search(number_of_outer_kmers, outer_kmers,
 					distance_1_testmers[count]);
 
 			if (index >= 0) {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace pclouds {
 
@@ -15,13 +16,6 @@ struct CoreKmer {
 	int cloud = 0;
 	bool has_been_extended = 0;
 };
-
-int sbsearch2(int n, const Kmer *argv, const unsigned long& key);
-int sbsearch3(int number_of_kmers, const CoreKmer *oligos, const unsigned long& key);
-bool highnumber3(CoreKmer a, CoreKmer b);
-bool lowsequence2(Kmer a, Kmer b);
-bool lowsequence3(CoreKmer a, CoreKmer b);
-int get_kmer_count(char* line);
 
 // transform the pattern sequence to the index of the array
 // coding method: A=0, C=1, G=2, T=3,
