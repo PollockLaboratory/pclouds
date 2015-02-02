@@ -8,18 +8,12 @@ namespace pclouds {
 
 template <typename t>
 int greater_count (t a, t b) {
-	if (a.count > b.count)
-		return (1);
-	else
-		return (0);
+	return (a.count > b.count);
 }
 
 template <typename t>
 bool lesser_pattern (t a, t b) {
-	if (a.number_pattern < b.number_pattern)
-		return (1);
-	else
-		return (0);
+	return (a.number_pattern < b.number_pattern);
 }
 
 template <typename t>
