@@ -8,6 +8,7 @@ env:
         - BUILD_TYPE=Debug
 
 install:
+        - mkdir build
         - cd build
         - cmake ..
         - make
