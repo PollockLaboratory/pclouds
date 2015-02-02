@@ -1,4 +1,4 @@
-https://travis-ci.org/PollockLab/pclouds.svg?branch=feature%2Ftravis-ci
+[![Build Status](https://travis-ci.org/PollockLab/pclouds.svg?branch=feature%2Ftravis-ci)](https://travis-ci.org/PollockLab/pclouds)
 
 PClouds
 -------
