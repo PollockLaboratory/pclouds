@@ -10,10 +10,8 @@ struct Kmer {
 	int cloud = 0;
 };
 
-struct CoreKmer {
-	unsigned long number_pattern;
+struct CoreKmer : public Kmer {
 	int count = 0;
-	int cloud = 0;
 	bool has_been_extended = 0;
 };
 
