@@ -1,0 +1,13 @@
+language: cpp
+
+compiler:
+        - clang
+        - gcc
+
+env:
+        - BUILD_TYPE=Debug
+
+install:
+        - cd build
+        - cmake ..
+        - make
