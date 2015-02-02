@@ -7,11 +7,12 @@ compiler:
 env:
         - BUILD_TYPE=Debug
 
-install:
+before_script:
         - mkdir build
         - cd build
         - cmake ..
-        - make
+
+script: make
 
 os:
         - linux
