@@ -5,6 +5,7 @@
 #include <math.h>
 #include <vector>
 
+#include "build_clouds.hpp"
 #include "../include/macrodefine.h"
 #include "../filereader/readfile.h"
 #include "../stringhandler/stringhandle.h"
@@ -27,29 +28,6 @@ bool print_testmers = false;
 ofstream testmers("testmers");
 ofstream edges_out("edges_out");
 
-struct Kmer {
-	unsigned long number_pattern;
-	int cloud;
-	Kmer() {
-		number_pattern = 0;
-		cloud = 0;
-	}
-};
-
-struct CoreKmer {
-	unsigned long number_pattern;
-	int count;
-	int cloud;
-	bool has_been_extended;
-
-	CoreKmer() {
-		number_pattern = -1;
-		count = 0;
-		cloud = 0;
-		has_been_extended = 0;
-	}
-};
-
 int sbsearch2(int n, const Kmer *argv, const unsigned long& key) {
 	int m;
 	int site = 0;
@@ -70,8 +48,7 @@ int sbsearch2(int n, const Kmer *argv, const unsigned long& key) {
 }
 
 //STP: Is this a binary search algorithm?
-int sbsearch3(int number_of_kmers, const CoreKmer *oligos,
-		const unsigned long& key) {
+int sbsearch3(int number_of_kmers, const CoreKmer *oligos, const unsigned long& key) {
 	int m;
 	int site = 0;
 
@@ -128,13 +105,7 @@ int get_kmer_count(char* line) {
 	return (count);
 }
 
-// transform the pattern sequence to the index of the array
-// coding method: A=0, C=1, G=2, T=3,
-void kmer_sequence_to_number_pattern(const char *kmer_sequence,
-		unsigned long& number_pattern, const int& kmer_size);
-
-void number_pattern_to_kmer_sequence(char *pchPattern,
-		const unsigned long& index, const int& patternsize) {
+void number_pattern_to_kmer_sequence(char *pchPattern, const unsigned long& index, const int& patternsize) {
 	int i;
 	unsigned long value;
 	unsigned long temp = index;
@@ -159,9 +130,7 @@ void number_pattern_to_kmer_sequence(char *pchPattern,
 // Generates all the possible kmers (and their reverse complements) that are
 // one substitution away from core_kmer
 // This fails to get the reverse complement
-void get_one_substitutions(const char* core_kmer,
-		unsigned long* array_of_testmer_number_patterns,
-		int& number_of_testmers) {
+void get_one_substitutions(const char* core_kmer, unsigned long* array_of_testmer_number_patterns, int& number_of_testmers) {
 	char alphabet[5] = "ACGT";
 
 	int size = strlen(core_kmer);
@@ -214,13 +183,9 @@ void get_one_substitutions(const char* core_kmer,
 
 	delete[] (reverse_core_kmer);
 	delete[] (testmer);
-	/*free(reverse_core_kmer);
-	  free(testmer);*/
 }
 
-void get_two_substitutions(const char* core_kmer,
-		unsigned long* array_of_testmer_number_patterns,
-		int& number_of_testmers) {
+void get_two_substitutions(const char* core_kmer, unsigned long* array_of_testmer_number_patterns, int& number_of_testmers) {
 	char alphabet[5] = "ACGT";
 
 	int size = strlen(core_kmer);
@@ -284,9 +249,7 @@ void get_two_substitutions(const char* core_kmer,
 	free(testmer);
 }
 
-void get_three_substitutions(char* core_kmer,
-		unsigned long* array_of_testmer_number_patterns,
-		int& number_of_testmers) {
+void get_three_substitutions(char* core_kmer, unsigned long* array_of_testmer_number_patterns, int& number_of_testmers) {
 	char alphabet[5] = "ACGT";
 
 	int size = strlen(core_kmer);
@@ -363,11 +326,7 @@ void get_three_substitutions(char* core_kmer,
 	free(testmer);
 }
 
-void count_core_and_outer_kmers(string kmer_counts_file,
-		int& number_of_core_kmers, int& number_of_outer_kmers,
-		const int core_threshold,
-		const int outer_threshold) {
-
+void count_core_and_outer_kmers(string kmer_counts_file, int& number_of_core_kmers, int& number_of_outer_kmers, const int core_threshold, const int outer_threshold) {
 	number_of_core_kmers = 0;
 	number_of_outer_kmers = 0;
 
@@ -401,10 +360,7 @@ void count_core_and_outer_kmers(string kmer_counts_file,
 
 // read the oligos which is in mainclouds into repeats1 array
 //STP: This does not take into account reverse complement of kmers.
-void read_core_kmers(string kmer_counts_file, CoreKmer* core_kmers,
-		int& number_of_core_kmers, const int kmer_size,
-		const int core_threshold) {
-
+void read_core_kmers(string kmer_counts_file, CoreKmer* core_kmers, int& number_of_core_kmers, const int kmer_size, const int core_threshold) {
 	number_of_core_kmers = 0;
 	ifstream kmer_counts(kmer_counts_file.c_str());
 
@@ -433,10 +389,7 @@ void read_core_kmers(string kmer_counts_file, CoreKmer* core_kmers,
 
 // build main clouds based on the algorithm
 //STP: Which algorithm??
-void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file,
-		const int& number_of_core_kmers, const int& kmer_size,
-		const int& core_threshold) {
-
+void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file, const int& number_of_core_kmers, const int& kmer_size, const int& core_threshold) {
 	// Sort to descending order of kmer count
 	sort(core_kmers, core_kmers + number_of_core_kmers, highnumber3);
 
@@ -708,8 +661,7 @@ void build_cloud_cores(CoreKmer* core_kmers, string cloud_summary_file,
 }
 
 //output the mainclouds assignments of each oligo in main clouds
-void output_cloud_cores(CoreKmer* core_kmers, string core_kmers_assign_file,
-		const int& number_of_core_kmers, const int& size) {
+void output_cloud_cores(CoreKmer* core_kmers, string core_kmers_assign_file, const int& number_of_core_kmers, const int& size) {
 	FILE *core_kmers_assign = fopen(core_kmers_assign_file.c_str(), "wb");
 
 	char *pchPattern = (char*) malloc(sizeof(char) * (size + 1));
@@ -731,13 +683,7 @@ void output_cloud_cores(CoreKmer* core_kmers, string core_kmers_assign_file,
 }
 
 // read main clouds assignments information into three different sets
-void read_cloud_cores(string core_assign_file, Kmer* tertiary_cores,
-		int& number_of_tertiary_cores, Kmer* secondary_cores,
-		int& number_of_secondary_cores, Kmer* primary_cores,
-		int& number_of_primary_cores, const int& size,
-		const int& primary_threshold, const int& secondary_threshold, const
-		int& tertiary_threshold) {
-
+void read_cloud_cores(string core_assign_file, Kmer* tertiary_cores, int& number_of_tertiary_cores, Kmer* secondary_cores, int& number_of_secondary_cores, Kmer* primary_cores, int& number_of_primary_cores, const int& size, const int& primary_threshold, const int& secondary_threshold, const int& tertiary_threshold) {
 	number_of_tertiary_cores = 0;
 	number_of_secondary_cores = 0;
 	number_of_primary_cores = 0;
@@ -787,14 +733,7 @@ void read_cloud_cores(string core_assign_file, Kmer* tertiary_cores,
 }
 
 // assign the oligos in accessory regions into P clouds constructed in former step
-void build_cloud_outer(string kmer_counts_file, string outer_kmers_assign_file,
-		Kmer* core_kmers_above_tertiary,
-		const int number_of_cores_above_tertiary,
-		Kmer* core_kmers_above_secondary,
-		const int number_of_cores_above_secondary,
-		Kmer* core_kmers_above_primary, const int number_of_cores_above_primary,
-		const int kmer_size, const int core_threshold,
-		const int outer_threshold) {
+void build_cloud_outer(string kmer_counts_file, string outer_kmers_assign_file, Kmer* core_kmers_above_tertiary, const int number_of_cores_above_tertiary, Kmer* core_kmers_above_secondary, const int number_of_cores_above_secondary, Kmer* core_kmers_above_primary, const int number_of_cores_above_primary, const int kmer_size, const int core_threshold, const int outer_threshold) {
 
 	ofstream outer_assign(outer_kmers_assign_file.c_str());
 
