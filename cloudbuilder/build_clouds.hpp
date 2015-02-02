@@ -6,13 +6,13 @@
 namespace pclouds {
 
 struct Kmer {
-	unsigned long number_pattern = 0;
-	int cloud = 0;
+	unsigned long number_pattern;
+	int cloud;
 };
 
 struct CoreKmer : public Kmer {
-	int count = 0;
-	bool has_been_extended = 0;
+	int count;
+	bool has_been_extended;
 };
 
 bool greater_core_count (const CoreKmer& a, const CoreKmer& b) {
@@ -26,7 +26,6 @@ bool lesser_core_pattern (const CoreKmer& a, const CoreKmer& b) {
 bool lesser_pattern (const Kmer& a, const Kmer& b) {
 	return (a.number_pattern < b.number_pattern);
 }
-
 
 // transform the pattern sequence to the index of the array
 // coding method: A=0, C=1, G=2, T=3,

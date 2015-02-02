@@ -4,10 +4,10 @@
 #include <algorithm>
 #include <vector>
 
-#include "./build_clouds.hpp"
 #include "../macrodefine.h"
-#include "../filereader/readfile.h"
-#include "../stringhandler/stringhandle.h"
+#include "./build_clouds.hpp"
+#include "../filereader/readfile.hpp"
+#include "../stringhandler/stringhandle.hpp"
 
 using std::string;
 using std::vector;

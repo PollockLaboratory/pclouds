@@ -7,8 +7,8 @@
 #include <deque> // For clouds in regions
 
 #include "../macrodefine.h"
-#include "../filereader/readfile.h"
-#include "../stringhandler/stringhandle.h"
+#include "../filereader/readfile.hpp"
+#include "../stringhandler/stringhandle.hpp"
 
 using std::string;
 using std::vector;

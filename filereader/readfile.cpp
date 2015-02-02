@@ -11,8 +11,8 @@
 #include <iostream>
 #include <string>
 
-#include "readfile.h"
-#include "../stringhandler/stringhandle.h"
+#include "readfile.hpp"
+#include "../stringhandler/stringhandle.hpp"
 
 using std::string;
 using std::cout;

@@ -3,8 +3,8 @@
  *
  */
 
-#include "../stringhandler/stringhandle.h"
 #include "../macrodefine.h"
+#include "./stringhandle.hpp"
 #include <cstring>
 
 #include <string>
