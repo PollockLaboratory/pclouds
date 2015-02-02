@@ -4,7 +4,7 @@
  */
 
 #include "../stringhandler/stringhandle.h"
-#include "../include/macrodefine.h"
+#include "../macrodefine.h"
 #include <cstring>
 
 #include <string>
