@@ -335,7 +335,7 @@ void read_core_kmers(string kmer_counts_file, vector <CoreKmer> core_kmers, int&
 //STP: Which algorithm??
 void build_cloud_cores(vector <CoreKmer> core_kmers, string cloud_summary_file, const int number_of_core_kmers, const int& kmer_size, const int& core_threshold) {
 	// Sort to descending order of kmer count
-	sort(core_kmers.begin(), core_kmers.begin() + number_of_core_kmers, greater_count);
+	sort(core_kmers.begin(), core_kmers.begin() + number_of_core_kmers, greater_core_count);
 
 	unsigned long* core_kmer_number_patterns = (unsigned long*) malloc(
 			sizeof(unsigned long) * number_of_core_kmers);
@@ -344,7 +344,7 @@ void build_cloud_cores(vector <CoreKmer> core_kmers, string cloud_summary_file, 
 		core_kmer_number_patterns[k] = core_kmers[k].number_pattern;
 
 	// Sort by number pattern (used to be called 'index')
-	sort(core_kmers.begin(), core_kmers.begin() + number_of_core_kmers, lesser_pattern);
+	sort(core_kmers.begin(), core_kmers.begin() + number_of_core_kmers, lesser_core_pattern);
 
 	int core_kmer_index_from_top = 0;
 	// This finds the index for the core oligo with the index main_oligos_index[count]
@@ -610,7 +610,7 @@ void output_cloud_cores(vector <CoreKmer> core_kmers, string core_kmers_assign_f
 
 	char *pchPattern = (char*) malloc(sizeof(char) * (size + 1));
 
-	sort(core_kmers.begin(), core_kmers.begin() + number_of_core_kmers, greater_count);
+	sort(core_kmers.begin(), core_kmers.begin() + number_of_core_kmers, greater_core_count);
 
 	for (int i = 0; i < number_of_core_kmers; i++) {
 		number_pattern_to_kmer_sequence(pchPattern,
@@ -627,7 +627,7 @@ void output_cloud_cores(vector <CoreKmer> core_kmers, string core_kmers_assign_f
 }
 
 // read main clouds assignments information into three different sets
-void read_cloud_cores(string core_assign_file, vector <Kmer> tertiary_cores, int& number_of_tertiary_cores, vector <Kmer> secondary_cores, int& number_of_secondary_cores, vector <Kmer> primary_cores, int& number_of_primary_cores, const int& size, const int& primary_threshold, const int& secondary_threshold, const int& tertiary_threshold) {
+void read_cloud_cores(string core_assign_file, vector <CoreKmer> tertiary_cores, int& number_of_tertiary_cores, vector <CoreKmer> secondary_cores, int& number_of_secondary_cores, vector <CoreKmer> primary_cores, int& number_of_primary_cores, const int& size, const int& primary_threshold, const int& secondary_threshold, const int& tertiary_threshold) {
 	number_of_tertiary_cores = 0;
 	number_of_secondary_cores = 0;
 	number_of_primary_cores = 0;
@@ -669,13 +669,13 @@ void read_cloud_cores(string core_assign_file, vector <Kmer> tertiary_cores, int
 		}
 	}
 
-	sort(tertiary_cores.begin(), tertiary_cores.begin() + number_of_tertiary_cores, lesser_pattern);
-	sort(secondary_cores.begin(), secondary_cores.begin()+ number_of_secondary_cores, lesser_pattern);
-	sort(primary_cores.begin(), primary_cores.begin() + number_of_primary_cores, lesser_pattern);
+	sort(tertiary_cores.begin(), tertiary_cores.begin() + number_of_tertiary_cores, lesser_core_pattern);
+	sort(secondary_cores.begin(), secondary_cores.begin()+ number_of_secondary_cores, lesser_core_pattern);
+	sort(primary_cores.begin(), primary_cores.begin() + number_of_primary_cores, lesser_core_pattern);
 }
 
 // assign the oligos in accessory regions into P clouds constructed in former step
-void build_cloud_outer(string kmer_counts_file, string outer_kmers_assign_file, Kmer* core_kmers_above_tertiary, const int number_of_cores_above_tertiary, Kmer* core_kmers_above_secondary, const int number_of_cores_above_secondary, Kmer* core_kmers_above_primary, const int number_of_cores_above_primary, const int kmer_size, const int core_threshold, const int outer_threshold) {
+void build_cloud_outer(string kmer_counts_file, string outer_kmers_assign_file, vector <CoreKmer> core_kmers_above_tertiary, const int number_of_cores_above_tertiary, vector <CoreKmer> core_kmers_above_secondary, const int number_of_cores_above_secondary, vector <CoreKmer> core_kmers_above_primary, const int number_of_cores_above_primary, const int kmer_size, const int core_threshold, const int outer_threshold) {
 
 	ofstream outer_assign(outer_kmers_assign_file.c_str());
 
@@ -894,7 +894,7 @@ void build_clouds(string controlfile) {
 		output_cloud_cores(core_kmers, core_kmers_assign_file,
 				number_of_core_kmers, kmer_size);
 
-		Kmer* tertiary_cores = (Kmer*) malloc(sizeof(Kmer) * MAX_CORE_KMERS);
+		vector <CoreKmer> tertiary_cores;
 		/*
 		 * STP: We could also use vectors. I'm not sure they will be slower but
 		 * it would be much more readable.
@@ -903,8 +903,8 @@ void build_clouds(string controlfile) {
 		 * tertiary_coresv.reserve(MAX_CORE_KMERS);
 		 */
 
-		Kmer* secondary_cores = (Kmer*) malloc(sizeof(Kmer) * MAX_CORE_KMERS);
-		Kmer* primary_cores = (Kmer*) malloc(sizeof(Kmer) * MAX_CORE_KMERS);
+		vector <CoreKmer> secondary_cores;
+		vector <CoreKmer> primary_cores;
 		int number_of_tertiary_cores, number_of_secondary_cores,
 		    number_of_primary_cores;
 

@@ -17,11 +17,11 @@ struct CoreKmer {
 	bool has_been_extended = 0;
 };
 
-bool greater_count (const CoreKmer& a, const CoreKmer& b) {
+bool greater_core_count (const CoreKmer& a, const CoreKmer& b) {
 	return (a.count > b.count);
 }
 
-bool lesser_pattern (const CoreKmer& a, const CoreKmer& b) {
+bool lesser_core_pattern (const CoreKmer& a, const CoreKmer& b) {
 	return (a.number_pattern < b.number_pattern);
 }
 
