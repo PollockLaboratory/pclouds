@@ -18,3 +18,15 @@ target_link_libraries (pclouds genomeannotator_lib)
 target_link_libraries (pclouds stringhandler_lib)
 
 add_subdirectory (processors)
+
+if (test)
+	enable_testing ()
+
+	add_executable (cloudbuilder cloudbuilder/test.cpp)
+	target_link_libraries (cloudbuilder cloudbuilder_lib)
+	target_link_libraries (cloudbuilder filereader_lib)
+	target_link_libraries (cloudbuilder genomeannotator_lib)
+	target_link_libraries (cloudbuilder stringhandler_lib)
+
+	add_test (cloud_builder_test cloudbuilder)
+endif ()

@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
-#include "../../catch/single_include/catch.hpp"
-#include "../include/build_clouds.hpp"
+#include "../catch/single_include/catch.hpp"
+#include "./build_clouds.hpp"
 
 TEST_CASE( "Factorials are computed", "[factorial]" ) {
 	REQUIRE( pclouds::Factorial(0) == 1 );

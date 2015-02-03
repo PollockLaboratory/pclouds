@@ -28,6 +28,18 @@ bool print_testmers = false;
 ofstream testmers("testmers");
 ofstream edges_out("edges_out");
 
+bool greater_core_count (const CoreKmer& a, const CoreKmer& b) {
+	return (a.count > b.count);
+}
+
+bool lesser_core_pattern (const CoreKmer& a, const CoreKmer& b) {
+	return (a.number_pattern < b.number_pattern);
+}
+
+bool lesser_pattern (const Kmer& a, const Kmer& b) {
+	return (a.number_pattern < b.number_pattern);
+}
+
 template <typename t>
 int search(int number_of_kmers, const std::vector <t> ts, const unsigned long key) {
 	int m;
