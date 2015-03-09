@@ -1,6 +1,8 @@
 PClouds
 -------
 
+[![Join the chat at https://gitter.im/PollockLab/pclouds](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/PollockLab/pclouds?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Goal: Identify repeat structure in large eukaryotic genomes using oligonucleotide counts. It works efficiently on a single desktop computer with 1 Gb memory.
 
 Abstract
