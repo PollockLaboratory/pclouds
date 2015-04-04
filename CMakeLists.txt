@@ -27,6 +27,5 @@ if (PCLOUDS_TEST)
 		filereader_lib
 		genomeannotator_lib
 		stringhandler_lib)
-
 	add_test (cloud_builder_test cloudbuilder)
-endif ()
+endif (PCLOUDS_TEST)
