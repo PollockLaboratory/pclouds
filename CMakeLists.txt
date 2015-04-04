@@ -12,21 +12,21 @@ add_library (genomeannotator_lib genomeannotator/annotate_genome.cpp)
 add_library (stringhandler_lib stringhandler/stringhandle.hpp stringhandler/stringhandle.cpp)
 
 add_executable (pclouds macrodefine.h pclouds/pclouds.cpp)
-target_link_libraries (pclouds cloudbuilder_lib)
-target_link_libraries (pclouds filereader_lib)
-target_link_libraries (pclouds genomeannotator_lib)
-target_link_libraries (pclouds stringhandler_lib)
+target_link_libraries (pclouds
+	cloudbuilder_lib
+	filereader_lib
+	genomeannotator_lib
+	stringhandler_lib)
 
 add_subdirectory (processors)
 
 if (PCLOUDS_TEST)
 	enable_testing ()
-
-	add_executable (cloudbuilder cloudbuilder/test.cpp)
-	target_link_libraries (cloudbuilder cloudbuilder_lib)
-	target_link_libraries (cloudbuilder filereader_lib)
-	target_link_libraries (cloudbuilder genomeannotator_lib)
-	target_link_libraries (cloudbuilder stringhandler_lib)
+	add_executable (cloudbuilder cloudbuilder/test.cpp
+		cloudbuilder_lib
+		filereader_lib
+		genomeannotator_lib
+		stringhandler_lib)
 
 	add_test (cloud_builder_test cloudbuilder)
 endif ()
