@@ -288,8 +288,8 @@ void count_core_and_outer_kmers(string kmer_counts_file, int& number_of_core_kme
 
 	ifstream kmer_counts(kmer_counts_file.c_str());
 	if (not kmer_counts.good()) {
-		cerr << "Can not find the kmer counts file: " << __LINE__
-			<< kmer_counts_file << "\n";
+		cerr << "Can not find the kmer counts file (error at line " << __LINE__
+			<< " " << kmer_counts_file << ").\n";
 		//STP: This is a fatal error
 		exit(-1);
 	}
@@ -696,8 +696,8 @@ void build_cloud_outer(string kmer_counts_file, string outer_kmers_assign_file, 
 
 	ifstream kmer_counts(kmer_counts_file.c_str());
 	if (not kmer_counts.good()) {
-		cerr << "Can not find the kmer counts file: " << __LINE__
-			<< kmer_counts_file << "\n";
+		cerr << "Can not find the kmer counts file (error at line " << __LINE__
+			<< " " << kmer_counts_file << ").\n";
 		//STP: This is a fatal error
 		exit(-1);
 	}

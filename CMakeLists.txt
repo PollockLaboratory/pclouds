@@ -22,10 +22,11 @@ add_subdirectory (processors)
 
 if (PCLOUDS_TEST)
 	enable_testing ()
-	add_executable (cloudbuilder cloudbuilder/test.cpp
-		cloudbuilder_lib
-		filereader_lib
-		genomeannotator_lib
-		stringhandler_lib)
-	add_test (cloud_builder_test cloudbuilder)
+	file (COPY controlfile DESTINATION ./)
+	#add_executable (cloudbuilder cloudbuilder/test.cpp
+	#	cloudbuilder_lib
+	#	filereader_lib
+	#	genomeannotator_lib
+	#	stringhandler_lib)
+	#add_test (cloud_builder_test cloudbuilder)
 endif (PCLOUDS_TEST)
