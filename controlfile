@@ -1,8 +1,9 @@
 CoreKmers	core_kmers
-KmerCounts	kmer_counts
-CloudSummaries	cloud.summaries
-CutoffValues	2 3 100 100 100
 OuterKmers	outer_kmers
+CloudSummaries	cloud.summaries
+CutoffValues	2 10 100 200 2000
 BuildClouds	1
-KmerSize	8
-AnnotateGenome	0
+KmerSize	16
+KmerCounts	genome.counts
+AnnotateGenome	1
+Genome		genome.fa
