@@ -24,6 +24,7 @@ int stringinitial(char *pchSource, int iLength);
 int stringcopy(char *pchSource, char *pchTarget, int iLength);
 
 void getreversecomplement(const char* pchSource, char* pchTarget);
+std::string getreversecomplement(std::string kmer);
 
 int stringtonumber(const std::string& m_strTemp);
 
@@ -31,14 +32,18 @@ unsigned int stringtolargenumber(const std::string& m_strTemp);
 
 void stringtoarray(const std::string& src, char* target);
 
-bool isonessr(char *pchPattern);
+bool is_SSR(const char *kmer);
 
-bool istwossr(char *pchPattern);
+bool is_one_SSR(const char *kmer);
 
-bool isthreessr(char *pchPattern);
+bool is_two_SSR(const char *kmer);
 
-bool isfourssr(char *pchPattern);
+bool is_three_SSR(const char *kmer);
+
+bool is_four_SSR(const char *kmer);
 
 bool issegmentvalid(char *pchPattern);
+
+bool is_segment_valid(char *sequence_start, int size);
 
 #endif // stringhandle_h__

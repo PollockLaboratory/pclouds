@@ -1,1 +1,1 @@
-stringhandle.o: stringhandle.c stringhandle.h macrodefine.h
+stringhandle.o: stringhandle.cpp stringhandle.h macrodefine.h
