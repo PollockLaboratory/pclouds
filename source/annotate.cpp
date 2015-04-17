@@ -8,19 +8,12 @@
 // This program takes an input FASTA formatted file and a set of P-Clouds and finds the locations of the
 // P-Cloud kmers in the fasta sequence. Output is in bed file format.
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <array>
-#include <vector>
-
-#include <algorithm>
-#include <functional>
-#include <locale>
-
 #include <string>
 #include <unordered_map>
+#include <vector>
 #include <map>
+#include <iostream>
+#include <fstream>
 using std::unordered_map;
 using std::string;
 using std::cerr;
