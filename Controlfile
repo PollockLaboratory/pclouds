@@ -1,0 +1,38 @@
+Word size:
+#OligoSize -> 5
+
+Parameters to build P clouds:
+#COPYTHRESHOLD -> 2
+#ENDTHRESHOLD -> 10
+#STEP1THRESHOLD -> 20
+#STEP2THRESHOLD -> 200
+#STEP3THRESHOLD -> 2000
+#CALCHUNCKSIZE -> 10000000
+#GENOMESIZE -> 4000000000
+
+Parameters to define the repeat region:
+#WindowSize -> 10
+#PercentCutoff -> 80
+
+Inputfile:
+Input file to calculate counts:
+#CountGenome -> repeats.nu
+
+Input file to build p clouds and dissection
+#OligoSets -> out_lumped.txt
+#GenomeInput -> human.up
+
+Outputfile:
+Clouds associated:
+#MaincloudsInfo -> mainclouds.info
+#MaincloudsAssign -> mainclouds.assign
+#AcccloudsAssign -> accclouds.assign
+
+Genome related:
+#CloudAnnotation -> human.cloud
+#RepeatRegion -> human.region
+
+Selection of Program parameter: (0 = not run, 1 = run)
+#CALCOUNTS -> 1
+#GETPCLOUDS -> 0
+#DISSECTION -> 0
