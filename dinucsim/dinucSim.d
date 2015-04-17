@@ -1,0 +1,1 @@
+dinucSim.o: dinucSim.cpp

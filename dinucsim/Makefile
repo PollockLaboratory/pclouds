@@ -1,4 +1,4 @@
-EXECUTABLE = ./Pclouds
+EXECUTABLE = ../../bin/DinucSimulator
 SOURCE = $(wildcard *.c) $(wildcard *.cpp)
 OBJS = $(patsubst %.c, %.o, $(patsubst %.cpp, %.o, $(SOURCE)))
 DEPS = $(patsubst %.o, %.d, $(OBJS))
@@ -19,14 +19,10 @@ deps : $(DEPS)
 objs : $(OBJS)
 	
 clean: 
+	rm ../../bin/DinucSimulator
 	@$(RM-F) *.o
 	@$(RM-F) *.d
-
-veryclean: clean
-	@$(RM-F) $(EXECUTABLE)
-
-rebuild: veryclean all
-
+	
 ifneq ($(MISSING_DEPS),)
 $(MISSING_DEPS) :
 	@$(RM-F) $(patsubst %.d, %.o, $@)
@@ -36,3 +32,4 @@ endif
 
 $(EXECUTABLE) : $(OBJS)
 	$(CC) -o $(EXECUTABLE) $(OBJS)
+

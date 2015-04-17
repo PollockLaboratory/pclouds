@@ -1,4 +1,4 @@
-EXECUTABLE = ./Pclouds
+EXECUTABLE = ../bin/Pclouds
 SOURCE = $(wildcard *.c) $(wildcard *.cpp)
 OBJS = $(patsubst %.c, %.o, $(patsubst %.cpp, %.o, $(SOURCE)))
 DEPS = $(patsubst %.o, %.d, $(OBJS))

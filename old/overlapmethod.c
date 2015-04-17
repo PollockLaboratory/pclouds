@@ -90,7 +90,7 @@ int overlapmethod(char *pchSource, char* pchCountfile, const int& m_nSize, const
 int repeatfinding(FILE *pfSource, FILE *pfResult, const char* pchCountfile, const int& m_nSize, const int& m_nChunck, const unsigned int& m_nGenome)
 {
 	int iRead, iPatternoffset, iReadPattern;
-	unsigned long long iOffset, genomesize;
+	long long iOffset, genomesize;
 	int *piReadCount = NULL;
 	char * pchBuff = NULL;
 
@@ -121,28 +121,20 @@ int repeatfinding(FILE *pfSource, FILE *pfResult, const char* pchCountfile, cons
 		strcat(pchInput, ".txt");
 	
 		strcpy(pchOutput, pchCountfile);
-		
-		if(size < m_nSize) // Only use the numerical filenaming convention if this is an intermediate stage.
-		{
-			temp = 48 + size / 10;
-			strncat(pchOutput, &temp, 1);
-			temp = 48 + size %10;
-			strncat(pchOutput, &temp, 1);
-			strcat(pchOutput, ".txt");
-		}
-		printf("Reading from %s and writing to %s\n",pchInput,pchOutput);
-		iPatternoffset = 0;
+		temp = 48 + size / 10;
+		strncat(pchOutput, &temp, 1);
+		temp = 48 + size %10;
+		strncat(pchOutput, &temp, 1);
+		strcat(pchOutput, ".txt");
 
-		// Create the pattern file in overwrite mode so that patterns can be written in append mode without adding to a possibly pre-existing file.
-		FILE *pfOut = fopen(pchOutput, "wb");
-		fclose(pfOut);
+		iPatternoffset = 0;
 
 		//begin loop of different patterns in pattern file;
 		do 
 		{
-			char** indextwble  = (char**) malloc(sizeof(char) * LOWOLIGONUMBER* (size)*2);
+			char** indextwble  = (char**) malloc(sizeof(char) * LOWOLIGONUMBER* (size));
                         iReadPattern = readlowrepeats(pchInput, indextwble, iPatternoffset, LOWOLIGONUMBER, number, size-1);
-			printf("iReadPattern = %d   iPatternoffset = %d\n",iReadPattern,iPatternoffset);
+
 			if (iReadPattern != 0)
 
 			{
@@ -151,8 +143,6 @@ int repeatfinding(FILE *pfSource, FILE *pfResult, const char* pchCountfile, cons
 
 				do 
 				{	
-					printf("iOffset = %ld   iPatternoffset = %d\n",iOffset,iPatternoffset);
-			
 					//allocate memory to read the sequence, store the number of read nucleotide
 					piReadCount = (int*) malloc(sizeof(int));
                                         if ( NULL == pchBuff ) 
@@ -198,7 +188,7 @@ int repeatfinding(FILE *pfSource, FILE *pfResult, const char* pchCountfile, cons
  
 					free(piReadCount);
 		
-					iOffset += (unsigned long long)((unsigned long long)m_nChunck - (unsigned long long)m_nSize +(unsigned long long)1);
+					iOffset += m_nChunck - m_nSize +1;
 				}
 				while ((iOffset < genomesize - m_nSize +1) && (iRead == 2)); 
 
@@ -291,20 +281,6 @@ int readlowrepeats(char *pchLowfile, char** indextwble, const int& offset, const
 				strncpy( *(indextwble + number), pchLine, size); 
 				*(*(indextwble + number) + size) = '\0';
 				number += 1;
-				// because of how the algorithm works, we need to account for the reverse compliment also
-				// KTH this -could- result in duplicate entries in the indextwble if the out_lumped.txt file already has the RC in it	
-			        char *pchTemp = (char*) malloc(sizeof(char)* (size+1));
-				char *pchReverse = (char*) malloc(sizeof(char)* (size+1));
-				strncpy(pchTemp, pchLine, size);
-				pchTemp[size] = '\0';
-				getreversecomplement(pchTemp, pchReverse);
-
-				// according to each line, build the sequence index array
-				*(indextwble + number) = (char*) malloc(sizeof(char)*(size+1));
-				strncpy( *(indextwble + number), pchReverse, size); 
-				*(*(indextwble + number) + size) = '\0';
-				number += 1;
-				// end KTH
 			}
 		}
 
@@ -346,7 +322,7 @@ int getpatterns(char *pchSequence,  char** indextwble, const int& number, unsign
 
 			// search the indextwble to find whether the left substring is a significant pattern
 			int result = search(number, indextwble, pchTemp);
-			
+
 			// if it is a significant pattern of length (size)
 			if (result >= 0 )
 			{
@@ -369,44 +345,6 @@ int getpatterns(char *pchSequence,  char** indextwble, const int& number, unsign
 				// increment the number of the pattern
 				pPattern[index] += 1;
 			}
-			else // KTH 
-			{
-				
-			        char *pchReverse = (char *) malloc(sizeof(char) * (size+2));
-				getreversecomplement(pchPattern, pchReverse);
-
-				
-				// get the left substring of the pattern (Length = size )
-				strncpy(pchTemp, pchReverse, size);
-				pchTemp[size] = '\0';
-
-				// search the indextwble to find whether the left substring is a significant pattern
-				result = search(number, indextwble, pchTemp);
-			
-				// if it is a significant pattern of length (size)
-				if (result >= 0 )
-				{
-					// according to the index, get the index number of the pattern of length size in the array
-					char temp = pchReverse[strlen(pchReverse) - 1];
-				
-					int i;
-
-					if ((temp == 'A') || (temp == 'a'))
-						i = 0;
-					else if ((temp == 'C') || (temp == 'c'))
-						i = 1;
-					else if ((temp == 'G') || (temp == 'g'))
-						i = 2;
-					else if ((temp == 'T') || (temp == 't'))
-						i = 3;
-
-					int index = 4* result + i;
-	
-					// increment the number of the pattern
-					pPattern[index] += 1;
-				}
-				free(pchReverse);
-			}// end KTH
 		}
 	}
 
@@ -417,7 +355,7 @@ int getpatterns(char *pchSequence,  char** indextwble, const int& number, unsign
 
 int parsepatternsandoutput(unsigned long *pPattern, char** indextwble, char *pchOut, const int& number, const int& size)
 {
-	FILE *pfOut = fopen(pchOut, "ab");
+	FILE *pfOut = fopen(pchOut, "wb");
 
 	char *pchPattern = (char*) malloc(sizeof(char) * size+2);	
         for (int count = 0; count < number*4; count++)

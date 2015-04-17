@@ -142,7 +142,7 @@ windowsize, int& percent, int& m_nGetclouds, int& m_nDissection, char* pchrepeat
 	return(true);
 }
 
-bool ReadCountsControlfile(const char* pchControlfile, int& size, int& m_nChunksize, unsigned int& m_nGenomesize, int& m_nCounts, char* pchGenome, char* pchCountfile, unsigned int& m_nMemory)
+bool ReadCountsControlfile(const char* pchControlfile, int& size, int& m_nChunksize, unsigned int& m_nGenomesize, int& m_nCounts, char* pchGenome, char* pchCountfile)
 {
 	ifstream ifControlfile(pchControlfile);
 	
@@ -206,8 +206,6 @@ bool ReadCountsControlfile(const char* pchControlfile, int& size, int& m_nChunks
 				stringtoarray(m_strResult, pchGenome);
 			else if (m_strTemp == "OligoSets")
 				stringtoarray(m_strResult, pchCountfile);
-			else if (m_strTemp == "ExpectedAvailableMemory")
-				m_nMemory = stringtolargenumber(m_strResult);
 		}
 	}
 	       printf("countssize=%d\n",size); // DEBUG
