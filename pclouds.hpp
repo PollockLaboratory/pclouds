@@ -1,57 +1,66 @@
 #pragma once
 
+#include "../threadpool/ThreadPool.h"
 #include "../sequence/sequence.hpp"
 
 #include <json.hpp>
 
-#include <vector>
-#include <map>
 #include <set>
+#include <map>
+#include <algorithm>
 
 namespace grizzly {
 namespace pclouds {
 
 struct parameters {
 	unsigned int core;
-	unsigned int outer;
+	unsigned int shell;
 };
 
-class cloud {
-	unsigned int id{ };
-	std::vector <sequence::kmer> kmers;
+class cloud : public sequence::kmer {
+	sequence::kmer root;
+	std::set <sequence::kmer> kmers;
 
 	public:
-	cloud( const std::string id );
-	void find_edge( const unsigned int outer );
-	std::vector <sequence::kmer> get_kmers( );
-	unsigned int get_id( );
+	cloud( const sequence::kmer &root );
+	std::set <sequence::kmer> find_edge( const unsigned int shell, const std::set <sequence::kmer> &kmers ) const;
 
 	void json( nlohmann::json );
 	nlohmann::json json( );
 };
 
-std::vector <cloud> get_core( const unsigned int &core_threshold, const std::vector <sequence::kmer> &kmers );
-void outline( std::vector <cloud> &clouds );
+std::set <cloud> get_core( const unsigned int &core_threshold, const std::set <sequence::kmer> &kmers );
 
-std::vector <cloud> build( const parameters param, const std::string &sequence ) {
-	vector <sequence::kmer> kmers = sequence::count( sequence );
+std::set <cloud> build( const parameters param, const std::string &sequence ) {
+	std::set <sequence::kmer> kmers = sequence::count( sequence );
 
-	std::vector <cloud> clouds = get_core( param.core, kmers );
-
-	std::set <unsigned int> unprocessed;
+	std::set <cloud> clouds = get_core( param.core, kmers );
 	for (auto &cloud: clouds) {
-		unprocessed.insert( cloud.get_id() );
-	}
-
-	for (auto &cloud: clouds) {
-		if ( unprocessed.count( cloud.get_id() ) == 0 ) {
-			cloud.find_edge( param.outer );
-			//erase any in kmer list that were found as an edge
-			unprocessed.erase( cloud.get_id( ) );
-		}
+		kmers = cloud.find_edge( param.shell, kmers );
 	}
 
 	return clouds;
+}
+
+std::set <sequence::kmer> cloud::find_edge( const unsigned int shell, const std::set <kmer> &kmers ) const {
+	unsigned int threads = std::thread::hardware_concurrency( );
+	if ( threads > 1 )
+		threads = threads - 1;
+	ThreadPool pool( threads );
+
+	std::set <sequence::kmer> leftover = kmers;
+	// recurse function
+	// algorithm: pursue any that are at least 3 nucleotides away
+	// branch: if < 3 away, start new recurse at position
+	// finish: once count is below threshold, stop
+
+
+	leftover.erase( kmers.find( this->root) );
+	std::remove_if( leftover.begin(), leftover.end(),
+			[&](const std::set<sequence::kmer>::iterator kmer_iter){
+				return leftover.count( *kmer_iter );
+			});
+	return leftover;
 }
 
 
