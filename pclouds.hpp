@@ -18,14 +18,12 @@ struct parameters {
 };
 
 class cloud : public sequence::kmer {
-	sequence::kmer root;
-	std::set <sequence::kmer> kmers;
-	std::mutex kmers_access;
-	void add_kmer( sequence::kmer ); //needs to be thread safe
+	mutable sequence::kmer root;
+	mutable std::set <sequence::kmer> kmers;
 
 	public:
 	cloud( const sequence::kmer &root );
-	std::set <sequence::kmer> populate_edge( const unsigned int shell, const std::set <sequence::kmer> &kmers ) const;
+	std::set <sequence::kmer> populate_shell( const unsigned int shell, const std::set <sequence::kmer> &kmers ) const;
 
 	void json( nlohmann::json );
 	nlohmann::json json( );
@@ -38,32 +36,17 @@ std::set <cloud> build( const parameters param, const std::string &sequence ) {
 
 	std::set <cloud> clouds = get_core( param.core, kmers );
 	for (auto &cloud: clouds) {
-		kmers = cloud.populate_edge( param.shell, kmers );
+		kmers = cloud.populate_shell( param.shell, kmers );
 	}
 
 	return clouds;
 }
 
-std::set <sequence::kmer> cloud::populate_edge( const unsigned int shell, const std::set <kmer> &kmers ) const {
-	unsigned int threads = std::thread::hardware_concurrency( );
-	if ( threads > 1 )
-		threads = threads - 1;
-	ThreadPool pool( threads );
+std::set <sequence::kmer>
+recurse_edges( const std::set <sequence::kmer>::iterator &begin, const std::set <sequence::kmer>::iterator &end, const unsigned int threshold );
 
-	// recurse function
-	// algorithm: pursue any that are at least 3 nucleotides away
-	// branch: if < 3 away, add to this->kmers and start new recurse at position
-	// finish: once count is below threshold, stop
-
-	// recurse = functor( kmer_inc, kmer_end, iter_th_safe_container_begin ) {
-		// for (  iter = kmer_inc; iter < kmer_end; iter++ )
-			// if ( seq::dist (iter, iter inc)j < max_dist && iter.count > shell_thresh )
-				// lock mutex
-				// add kmer
-				// unlock mutex
-				// add (recurse (iter, kmer_begin, kmer_end) )
-			// else
-				// thread.join
+std::set <sequence::kmer> cloud::populate_shell( const unsigned int shell_threshold, const std::set <kmer> &kmers ) const {
+	this->kmers = recurse_edges( kmers.cbegin(), kmers.cend(), shell_threshold );
 
 	std::set <sequence::kmer> leftover = kmers;
 	leftover.erase( kmers.find( this->root) );
@@ -74,6 +57,24 @@ std::set <sequence::kmer> cloud::populate_edge( const unsigned int shell, const 
 	return leftover;
 }
 
+std::set <sequence::kmer>
+recurse_edges( const std::set <sequence::kmer> &begin, const std::set <sequence::kmer> &end, const unsigned int threshold ) {
+	// algorithm: pursue any that are at least 3 nucleotides away
+	// branch: if < 3 away, add to this->kmers and start new recurse at position
+	// finish: once count is below threshold, stop
+	unsigned int threads = std::thread::hardware_concurrency( );
+	if ( threads > 1 )
+		threads = threads - 1;
+	ThreadPool pool( threads );
+	// for (  iter = kmer_inc; iter < kmer_end; iter++ )
+		// if ( seq::dist (iter, iter inc)j < max_dist && iter.count > shell_thresh )
+			// lock mutex
+			// add kmer to iter_th_safe_container
+			// unlock mutex
+			// add (recurse (iter, kmer_begin, kmer_end) )
+		// else
+			// thread.join
+}
 
 }
 }
