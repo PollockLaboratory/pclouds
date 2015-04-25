@@ -20,6 +20,8 @@ struct parameters {
 class cloud : public sequence::kmer {
 	sequence::kmer root;
 	std::set <sequence::kmer> kmers;
+	std::mutex kmers_access;
+	void add_kmer( sequence::kmer ); //needs to be thread safe
 
 	public:
 	cloud( const sequence::kmer &root );
@@ -53,6 +55,16 @@ std::set <sequence::kmer> cloud::populate_edge( const unsigned int shell, const 
 	// branch: if < 3 away, add to this->kmers and start new recurse at position
 	// finish: once count is below threshold, stop
 
+	// recurse = functor( kmer_inc, kmer_end, iter_th_safe_container_begin ) {
+		// for (  iter = kmer_inc; iter < kmer_end; iter++ )
+			// if ( seq::dist (iter, iter inc)j < max_dist && iter.count > shell_thresh )
+				// lock mutex
+				// add kmer
+				// unlock mutex
+				// add (recurse (iter, kmer_begin, kmer_end) )
+			// else
+				// thread.join
+
 	std::set <sequence::kmer> leftover = kmers;
 	leftover.erase( kmers.find( this->root) );
 	std::remove_if( leftover.begin(), leftover.end(),
@@ -64,4 +76,4 @@ std::set <sequence::kmer> cloud::populate_edge( const unsigned int shell, const 
 
 
 }
-i
+}
