@@ -51,29 +51,34 @@ std::vector <cloud> generate_clouds( const unsigned int &core_threshold, const s
 }
 
 std::vector <cloud> expand_clouds( const unsigned int &shell_threshold, const std::vector <cloud> &clouds, const std::vector <sequence::kmer> &kmers ) {
-	// algorithm: pursue any that are at least 3 nucleotides away
-	// branch: if < 3 away, add to this->kmers and start new recurse at position
-	// finish: once count is below threshold, stop
 	unsigned int threads = std::thread::hardware_concurrency( );
 	if ( threads > 1 )
 		threads = threads - 1;
 	ThreadPool pool( threads );
-	// for (  iter = kmer_inc; iter < kmer_end; iter++ )
-		// if ( seq::dist (iter, iter inc)j < max_dist && iter.count > shell_thresh )
-			// lock mutex
-			// add kmer to iter_th_safe_container
-			// unlock mutex
-			// add (recurse (iter, kmer_begin, kmer_end) )
-		// else
-			// thread.join
 
-	std::vector <sequence::kmer> leftover = kmers;
-	leftover.erase( kmers.find( this->root) );
-	std::remove_if( leftover.begin(), leftover.end(),
-			[&](const std::vector<sequence::kmer>::iterator kmer_iter){
-				return this->kmers.count( *kmer_iter );
-			});
-	return leftover;
+	for (auto &cloud: clouds) {
+		// for (  iter = kmer_inc; iter < kmer_end; iter++ )
+			// if ( seq::dist (iter, iter inc)j < max_dist && iter.count > shell_thresh )
+				// lock mutex
+				// add kmer to iter_th_safe_container
+				// unlock mutex
+				// add (recurse (iter, kmer_begin, kmer_end) )
+				// recurse:
+					// algorithm: pursue any that are at least 3 nucleotides away
+					// branch: if < 3 away, add to this->kmers and start new recurse at position
+					// finish: once count is below threshold, stop
+					std::vector <sequence::kmer> leftover = kmers;
+					leftover.erase( kmers.find( this->root) );
+					std::remove_if( leftover.begin(), leftover.end(),
+							[&](const std::vector<sequence::kmer>::iterator kmer_iter){
+								return this->kmers.count( *kmer_iter );
+							});
+			// else
+				// wait for pool to return?
+
+		return leftover;
+
+	}
 }
 
 }
