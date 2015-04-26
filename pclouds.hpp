@@ -5,7 +5,7 @@
 
 #include <json.hpp>
 
-#include <set>
+#include <vector>
 #include <map>
 #include <algorithm>
 
@@ -17,48 +17,40 @@ struct parameters {
 	unsigned int shell;
 };
 
-class cloud : public sequence::kmer {
+class cloud {
 	const sequence::kmer root;
-	mutable std::set <sequence::kmer> kmers;
+	std::vector <sequence::kmer> kmers;
+
+	std::vector <sequence::kmer>
+		recurse_edges( const std::vector <sequence::kmer>::iterator &begin,
+				const std::vector <sequence::kmer>::iterator &end,
+				const unsigned int threshold );
 
 	public:
 	cloud( const sequence::kmer &root );
-	std::set <sequence::kmer> populate_shell( const unsigned int shell, const std::set <sequence::kmer> &kmers ) const;
 
 	void json( nlohmann::json );
 	nlohmann::json json( );
 };
 
-std::set <cloud> get_core( const unsigned int &core_threshold, const std::set <sequence::kmer> &kmers );
+std::vector <cloud> build( const parameters param, const std::string &sequence );
+std::vector <cloud> generate_clouds( const unsigned int &core_threshold, const std::vector <sequence::kmer> &kmers );
+std::vector <cloud> expand_clouds( const unsigned int &shell_threshold, const std::vector <cloud> &clouds, const std::vector <sequence::kmer> &kmers );
 
-std::set <cloud> build( const parameters param, const std::string &sequence ) {
-	std::set <sequence::kmer> kmers = sequence::count( sequence );
+std::vector <cloud> build( const parameters param, const std::string &sequence ) {
+	std::vector <sequence::kmer> kmers = sequence::count( sequence );
 
-	std::set <cloud> clouds = get_core( param.core, kmers );
-	for (auto &cloud: clouds) {
-		kmers = cloud.populate_shell( param.shell, kmers );
-	}
+	std::vector <cloud> clouds = generate_clouds( param.core, kmers );
+	clouds = expand_clouds( param.shell, clouds, kmers );
 
 	return clouds;
 }
 
-std::set <sequence::kmer>
-recurse_edges( const std::set <sequence::kmer>::iterator &begin, const std::set <sequence::kmer>::iterator &end, const unsigned int threshold );
 
-std::set <sequence::kmer> cloud::populate_shell( const unsigned int shell_threshold, const std::set <kmer> &kmers ) const {
-	this->kmers = recurse_edges( kmers.cbegin(), kmers.cend(), shell_threshold );
-
-	std::set <sequence::kmer> leftover = kmers;
-	leftover.erase( kmers.find( this->root) );
-	std::remove_if( leftover.begin(), leftover.end(),
-			[&](const std::set<sequence::kmer>::iterator kmer_iter){
-				return this->kmers.count( *kmer_iter );
-			});
-	return leftover;
+std::vector <cloud> generate_clouds( const unsigned int &core_threshold, const std::vector <sequence::kmer> &kmers ) {
 }
 
-std::set <sequence::kmer>
-recurse_edges( const std::set <sequence::kmer> &begin, const std::set <sequence::kmer> &end, const unsigned int threshold ) {
+std::vector <cloud> expand_clouds( const unsigned int &shell_threshold, const std::vector <cloud> &clouds, const std::vector <sequence::kmer> &kmers ) {
 	// algorithm: pursue any that are at least 3 nucleotides away
 	// branch: if < 3 away, add to this->kmers and start new recurse at position
 	// finish: once count is below threshold, stop
@@ -74,6 +66,14 @@ recurse_edges( const std::set <sequence::kmer> &begin, const std::set <sequence:
 			// add (recurse (iter, kmer_begin, kmer_end) )
 		// else
 			// thread.join
+
+	std::vector <sequence::kmer> leftover = kmers;
+	leftover.erase( kmers.find( this->root) );
+	std::remove_if( leftover.begin(), leftover.end(),
+			[&](const std::vector<sequence::kmer>::iterator kmer_iter){
+				return this->kmers.count( *kmer_iter );
+			});
+	return leftover;
 }
 
 }
