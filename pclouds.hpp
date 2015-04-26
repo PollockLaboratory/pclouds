@@ -18,7 +18,7 @@ struct parameters {
 };
 
 class cloud : public sequence::kmer {
-	mutable sequence::kmer root;
+	const sequence::kmer root;
 	mutable std::set <sequence::kmer> kmers;
 
 	public:
