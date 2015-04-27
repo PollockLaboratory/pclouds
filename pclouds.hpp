@@ -38,8 +38,7 @@ class cloud {
 std::vector <cloud> build( const parameters param, const std::string &sequence );
 std::vector <cloud> generate_clouds( const unsigned int &core_threshold, const std::vector <sequence::kmer> &kmers );
 std::vector <cloud> expand_clouds( const unsigned int &shell_threshold, const std::vector <cloud> &clouds, const std::vector <sequence::kmer> &kmers );
-std::vector <sequence::kmer>::const_iterator expand_cloud(const unsigned int &threshold,
-		cloud &cloud, ThreadPool &pool,
+void expand_cloud(const unsigned int &threshold, cloud &cloud, ThreadPool &pool,
 		std::vector <sequence::kmer>::const_iterator start,
 		std::vector <sequence::kmer>::const_iterator end);
 
@@ -70,33 +69,31 @@ std::vector <cloud> expand_clouds( const unsigned int &shell_threshold, const st
 		threads = threads - 1;
 	ThreadPool pool( threads );
 
-	for (auto &cloud: clouds) {
+	std::vector <cloud> new_clouds = clouds;
+	for (auto &cloud: new_clouds) {
 		expand_cloud( shell_threshold, cloud, pool, kmers.cbegin(), kmers.cend() );
 	}
+	return new_clouds;
 }
 
-std::vector <sequence::kmer>::const_iterator expand_cloud( const unsigned int &threshold,
-		cloud &cloud, ThreadPool &pool,
+void expand_cloud( const unsigned int &threshold, cloud &cloud, ThreadPool &pool,
 		std::vector <sequence::kmer>::const_iterator start,
 		std::vector <sequence::kmer>::const_iterator end ) {
-	// algorithm: pursue any that are at least 3 nucleotides away and count about threshold
-	// branch: if < 3 away, add to this->kmers and start new recurse at position
-	// finish: once count is below threshold, stop
+	// algorithm: if <= 3 away and count > threshold, add to this->kmers and start new recurse at position
+	// finish: once next kmer count is below threshold
+
 	std::mutex cloud_lock;
-	for ( auto kmer = start; kmer < end; kmer++ ) {
-		if ( sequence::distance (*kmer, cloud.get_root_kmer()) < 3 && kmer->get_count() > threshold ) {
+	sequence::kmer root_kmer = cloud.get_root_kmer();
+	for ( auto kmer = start; kmer < end; ++kmer ) {
+		if ( sequence::distance (*kmer, root_kmer) <= 3 && kmer->get_count() > threshold ) {
 			cloud_lock.lock(); // move to add_kmer ?
 			cloud.add_kmer( *kmer );
 			cloud_lock.unlock();
 
-			pool.enqueue( expand_cloud( threshold, cloud, ++kmer, end))
-				// add (recurse (iter, kmer_begin, kmer_end) )
-				// else
-				// wait for pool to return?
+			pool.enqueue( expand_cloud, threshold, cloud, pool, ++kmer, end );
 		}
-
 	}
-};
+}
 
 }
 }
