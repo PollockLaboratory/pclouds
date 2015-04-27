@@ -28,6 +28,8 @@ class cloud {
 
 	public:
 	cloud( const sequence::kmer &root );
+	sequence::kmer get_root_kmer( ) const;
+	void add_kmer( sequence::kmer );
 
 	void json( nlohmann::json );
 	nlohmann::json json( );
@@ -36,6 +38,10 @@ class cloud {
 std::vector <cloud> build( const parameters param, const std::string &sequence );
 std::vector <cloud> generate_clouds( const unsigned int &core_threshold, const std::vector <sequence::kmer> &kmers );
 std::vector <cloud> expand_clouds( const unsigned int &shell_threshold, const std::vector <cloud> &clouds, const std::vector <sequence::kmer> &kmers );
+std::vector <sequence::kmer>::const_iterator expand_cloud(const unsigned int &threshold,
+		cloud &cloud, ThreadPool &pool,
+		std::vector <sequence::kmer>::const_iterator start,
+		std::vector <sequence::kmer>::const_iterator end);
 
 std::vector <cloud> build( const parameters param, const std::string &sequence ) {
 	std::vector <sequence::kmer> kmers = sequence::count( sequence );
@@ -48,6 +54,14 @@ std::vector <cloud> build( const parameters param, const std::string &sequence )
 
 
 std::vector <cloud> generate_clouds( const unsigned int &core_threshold, const std::vector <sequence::kmer> &kmers ) {
+	// sort kmers
+
+	std::vector <cloud> clouds;
+	for (const auto &kmer: kmers) {
+		if (kmer.get_count() > core_threshold)
+				clouds.push_back( cloud( kmer ));
+	};
+	return clouds;
 }
 
 std::vector <cloud> expand_clouds( const unsigned int &shell_threshold, const std::vector <cloud> &clouds, const std::vector <sequence::kmer> &kmers ) {
@@ -57,29 +71,32 @@ std::vector <cloud> expand_clouds( const unsigned int &shell_threshold, const st
 	ThreadPool pool( threads );
 
 	for (auto &cloud: clouds) {
-		// for (  iter = kmer_inc; iter < kmer_end; iter++ )
-			// if ( seq::dist (iter, iter inc)j < max_dist && iter.count > shell_thresh )
-				// lock mutex
-				// add kmer to iter_th_safe_container
-				// unlock mutex
-				// add (recurse (iter, kmer_begin, kmer_end) )
-				// recurse:
-					// algorithm: pursue any that are at least 3 nucleotides away
-					// branch: if < 3 away, add to this->kmers and start new recurse at position
-					// finish: once count is below threshold, stop
-					std::vector <sequence::kmer> leftover = kmers;
-					leftover.erase( kmers.find( this->root) );
-					std::remove_if( leftover.begin(), leftover.end(),
-							[&](const std::vector<sequence::kmer>::iterator kmer_iter){
-								return this->kmers.count( *kmer_iter );
-							});
-			// else
-				// wait for pool to return?
-
-		return leftover;
-
+		expand_cloud( shell_threshold, cloud, pool, kmers.cbegin(), kmers.cend() );
 	}
 }
+
+std::vector <sequence::kmer>::const_iterator expand_cloud( const unsigned int &threshold,
+		cloud &cloud, ThreadPool &pool,
+		std::vector <sequence::kmer>::const_iterator start,
+		std::vector <sequence::kmer>::const_iterator end ) {
+	// algorithm: pursue any that are at least 3 nucleotides away and count about threshold
+	// branch: if < 3 away, add to this->kmers and start new recurse at position
+	// finish: once count is below threshold, stop
+	std::mutex cloud_lock;
+	for ( auto kmer = start; kmer < end; kmer++ ) {
+		if ( sequence::distance (*kmer, cloud.get_root_kmer()) < 3 && kmer->get_count() > threshold ) {
+			cloud_lock.lock(); // move to add_kmer ?
+			cloud.add_kmer( *kmer );
+			cloud_lock.unlock();
+
+			pool.enqueue( expand_cloud( threshold, cloud, ++kmer, end))
+				// add (recurse (iter, kmer_begin, kmer_end) )
+				// else
+				// wait for pool to return?
+		}
+
+	}
+};
 
 }
 }
