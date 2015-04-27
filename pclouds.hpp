@@ -53,10 +53,10 @@ std::vector <cloud> build( const parameters param, const std::string &sequence )
 
 
 std::vector <cloud> generate_clouds( const unsigned int &core_threshold, const std::vector <sequence::kmer> &kmers ) {
-	// sort kmers
+	auto sorted = sequence::sort( kmers );
 
 	std::vector <cloud> clouds;
-	for (const auto &kmer: kmers) {
+	for (const auto &kmer: sorted) {
 		if (kmer.get_count() > core_threshold)
 				clouds.push_back( cloud( kmer ));
 	};
@@ -85,7 +85,7 @@ void expand_cloud( const unsigned int &threshold, cloud &cloud, ThreadPool &pool
 	std::mutex cloud_lock;
 	sequence::kmer root_kmer = cloud.get_root_kmer();
 	for ( auto kmer = start; kmer < end; ++kmer ) {
-		if ( sequence::distance (*kmer, root_kmer) <= 3 && kmer->get_count() > threshold ) {
+		if ( sequence::distance (kmer->get_sequence(), root_kmer.get_sequence()) <= 3 && kmer->get_count() > threshold ) {
 			cloud_lock.lock(); // move to add_kmer ?
 			cloud.add_kmer( *kmer );
 			cloud_lock.unlock();
