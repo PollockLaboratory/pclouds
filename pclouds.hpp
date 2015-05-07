@@ -19,17 +19,53 @@ struct parameters {
 };
 
 class cloud {
-	sequence::kmer root;
+	sequence::kmer root{ };
 	std::vector <sequence::kmer> kmers{ };
 
 	public:
 	cloud( const sequence::kmer &root );
 	sequence::kmer get_root_kmer( ) const;
-	void add_kmer( sequence::kmer );
+	void add_kmer( const sequence::kmer& );
 
 	void json( nlohmann::json );
 	nlohmann::json json( );
 };
+
+cloud::cloud( const sequence::kmer &root ) {
+	this->root = root;
+}
+
+sequence::kmer cloud::get_root_kmer( ) const {
+	return this->root;
+}
+
+void cloud::add_kmer( const sequence::kmer &kmer) {
+	this->kmers.push_back( kmer );
+}
+
+void cloud::json( nlohmann::json json ) {
+	const auto jroot = *json.find("sequence");
+	sequence::kmer root;
+	root.json( jroot );
+	this->root = root;
+	const auto jkmers = json.find("kmers")->get<std::vector <nlohmann::json>>();
+	for (const auto &jkmer: jkmers) {
+		sequence::kmer kmer;
+		kmer.json( jkmer );
+		this->kmers.push_back( kmer );
+	}
+}
+
+nlohmann::json cloud::json( ) {
+	nlohmann::json json;
+	json["root"] = this->root.json();
+	std::vector <nlohmann::json> jkmers;
+	for (const auto &kmer: this->kmers) {
+		jkmers.push_back( kmer.json() );
+	}
+	json["kmers"] = jkmers;
+	return json;
+}
 
 std::vector <cloud> build( const parameters param, const std::string &sequence );
 // get starting clouds
@@ -104,10 +140,6 @@ void recurse_edges( const unsigned int &threshold, cloud &cloud, ThreadPool &poo
 			// It might, in which case, status.get() just means wait if it hasn't already finished
 		}
 	}
-}
-
-cloud::cloud( const sequence::kmer &root ) {
-	this->root = root;
 }
 
 }
